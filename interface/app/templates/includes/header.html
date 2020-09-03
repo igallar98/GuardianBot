@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    {% block head %}
+
+    <title>GuardianBot - {% block title %}{% endblock %}</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <!-- Metro 4 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/metro-all.min.css') }}">
+    <script src="{{ url_for('static', filename='js/metro.min.js') }}"></script>
+  {% endblock %}
+  </head>
+
+<body style="">
+  <aside class="sidebar pos-absolute z-2"
+         data-role="sidebar"
+         data-toggle="#sidebar-toggle-4"
+         id="sb4"
+         data-shift=".shifted-content-2"
+         data-static-shift=".shifted-content-2"
+         data-static="md">
+      <div class="sidebar-header bg-cyan">
+
+          <span class="title fg-white">GuardianBot</span>
+          <span class="subtitle fg-white">Cortafuegos de alto rendimiento</span>
+      </div>
+      <ul class="sidebar-menu">
+          <li><a><span class="mif-home icon"></span>Inicio</a></li>
+          <li><a><span class="mif-books icon"></span>Guide</a></li>
+          <li><a><span class="mif-files-empty icon"></span>Examples</a></li>
+          <li class="divider"></li>
+          <li><a><span class="mif-images icon"></span>Icons</a></li>
+      </ul>
+  </aside>
+  <div class="shifted-content-2 h-100 p-ab">
+      <div class="appbar pos-absolute bg-darkCyan z-1" data-role="appbar">
+          <button class="app-bar-item c-pointer" id="sidebar-toggle-4">
+              <span class="mif-menu fg-white"></span>
+          </button>
+      </div>
+
+      <div class="h-100 p-4">{% block content %}{% endblock %}</div>
+
+  <footer>
+  		<span class="online_users"> <span class="reload_users"></span>
+  </footer>
+
+
+</body>
+
+</html>
