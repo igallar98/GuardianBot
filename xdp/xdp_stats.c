@@ -2,6 +2,8 @@
 static const char *__doc__ = "XDP data program\n"
 	" - Finding xdp_data_map via --dev name info\n";
 
+#define _GNU_SOURCE
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -24,7 +26,7 @@ static const char *__doc__ = "XDP data program\n"
 #include "bpf_util.h" /* bpf_num_possible_cpus */
 
 #include "maps_expected_user.h"
-
+#include "../common/shared_memory.h"
 
 
 static const struct option_wrapper long_options[] = {
@@ -66,14 +68,10 @@ static double calc_period(struct record *rec)
 	return period_;
 }
 
-static void stats_print_header()
-{
-	/* Print stats "header" */
-	printf("%-12s\n", "XDP-action");
-}
 
 
-static void stats_print(int fd, int xdp_data_map_s_fd)
+
+char * stats_print( int fd, int xdp_data_map_s_fd, int * tam)
 {
 	struct record aux = {{0, 0}, {{0, 0},{0, 0}}};
 	struct record *rec = &aux;
@@ -81,19 +79,18 @@ static void stats_print(int fd, int xdp_data_map_s_fd)
 	double period;
 	double pps; /* packets per sec */
 	double bps; /* bits per sec */
-	int i = 0;
 	__u32 key = -1;
-	stats_print_header(); /* Print stats "header" */
+	char * data;
 
-	/* Print for each XDP actions stats */
+
 	while (bpf_map_get_next_key(xdp_data_map_s_fd, &key, &key) == 0)
 	{
 
 		bpf_map_lookup_elem(xdp_data_map_s_fd, &key, rec);
 
-		char *fmt = "%d.%d.%d.%d %'11lld pkts (%'10.0f pps)"
-			" %'11lld Kbytes (%'6.0f Mbits/s)"
-			" period:%f\n";
+		char *fmt = "%s%d.%d.%d.%d|%lld|%.0f|"
+			"%lld|%0.f|"
+			"%f\n";
 
 		__u32 ip = key;
 
@@ -107,7 +104,7 @@ static void stats_print(int fd, int xdp_data_map_s_fd)
 
 		period = calc_period(rec);
 		if (period == 0)
-		       return;
+		       return "";
 
 		packets = rec->total[1].rx_packets - rec->total[0].rx_packets;
 		pps     = packets / period;
@@ -115,19 +112,24 @@ static void stats_print(int fd, int xdp_data_map_s_fd)
 		bytes   = rec->total[1].rx_bytes   - rec->total[0].rx_bytes;
 		bps     = (bytes * 8)/ period / 1000000;
 
-		printf(fmt, ipbytes[0], ipbytes[1], ipbytes[2], ipbytes[3], rec->total[1].rx_packets, pps,
+		/* Reservar memoria e imprimir en string*/
+
+
+		*tam =  asprintf(&data, fmt, data, ipbytes[0], ipbytes[1], ipbytes[2], ipbytes[3], rec->total[1].rx_packets, pps,
 		       rec->total[1].rx_bytes / 1000 , bps,
 		       period);
-		i++;
+
+		/*printf(fmt, ipbytes[0], ipbytes[1], ipbytes[2], ipbytes[3], rec->total[1].rx_packets, pps,
+		       rec->total[1].rx_bytes / 1000 , bps,
+		       period);*/
 	}
-	printf("\n");
+
+	return data;
 }
 
 
-/* BPF_MAP_TYPE_PERCPU_ARRAY */
 void map_get_value_percpu_array(int fd, __u32 key, struct datarec *value)
 {
-	/* For percpu maps, userspace gets a value per possible CPU */
 	unsigned int nr_cpus = bpf_num_possible_cpus();
 	struct datarec values[nr_cpus];
 	__u64 sum_bytes = 0;
@@ -155,7 +157,6 @@ static bool map_collect(int fd, __u32 key, struct record *rec, int xdp_data_map_
 {
 	struct datarec value;
 
-	/* Get time as close as possible to reading map contents */
 	rec->timestamp[idrec] = gettime();
 
 	map_get_value_percpu_array(fd, key, &value);
@@ -169,7 +170,6 @@ static bool map_collect(int fd, __u32 key, struct record *rec, int xdp_data_map_
 
 static void stats_collect(int map_fd, int xdp_data_map_s_fd, int idrec)
 {
-	/* Collect all XDP actions stats  */
 	__u32 key = -1;
 
 
@@ -184,10 +184,8 @@ static int stats_poll(const char *pin_dir, int map_fd, __u32 id, int interval, i
 {
 	struct bpf_map_info info = {};
 
-	/* Trick to pretty printf with thousands separators use %' */
 	setlocale(LC_NUMERIC, "en_US");
 
-	/* Get initial reading quickly */
 
 
 	while (1) {
@@ -214,12 +212,15 @@ static int stats_poll(const char *pin_dir, int map_fd, __u32 id, int interval, i
 		} */
 
 
-
-
 		stats_collect(map_fd, xdp_data_map_s_fd, 0);
 		usleep(2000000);
 		stats_collect(map_fd, xdp_data_map_s_fd, 1);
-		stats_print(map_fd, xdp_data_map_s_fd);
+		int tam = 0;
+		char * data = stats_print(map_fd, xdp_data_map_s_fd, &tam);
+
+		send_to_python(data, tam);
+
+		free(data);
 
 		close(map_fd);
 		close(xdp_data_map_s_fd);
