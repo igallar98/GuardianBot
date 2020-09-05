@@ -18,16 +18,27 @@
 
 
 
-<table class="table striped table-border mt-4"
+<table id="t1" class="table compact table-border mt-4"
        data-role="table"
-       data-rows="5"
+       data-rows="99999"
        data-rows-steps="5, 10"
        data-show-activity="false"
-       data-source="https://metroui.org.ua/examples/table/table.json"
-       data-rownum="true"
-       data-check="true"
+       data-source="/table.json"
        data-check-style="2"
 >
 </table>
+
+<script>
+
+$( document ).ready(function() {
+function pollDOM () {
+
+    $('#t1').data('table').loadData('/table.json');
+    setTimeout(pollDOM, 10000);
+}
+pollDOM();
+
+});
+  </script>
 
 {% endblock %}

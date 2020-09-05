@@ -5,7 +5,7 @@
 #include <sys/shm.h>
 #include "shared_memory.h"
 #define GETEKYDIR ("/tmp")
-#define PROJECTID  (8888)
+#define PROJECTID  8888
 #include <unistd.h>
 
 int send_to_python(char * data, int tam)
@@ -32,12 +32,12 @@ int send_to_python(char * data, int tam)
     }
 
     strcpy( addr, data );
-    sleep(5);
+
 
 
     if ( shmdt(addr) < 0)
         return -1;
-
+    sleep(5);
     if (shmctl(shmid, IPC_RMID, NULL) == -1)
         return -1;
 
