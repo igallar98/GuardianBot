@@ -68,6 +68,33 @@ static double calc_period(struct record *rec)
 	return period_;
 }
 
+char * string_ip6(struct in6_addr * addr){
+			char * ipbytes;
+			asprintf(&ipbytes, "%02x%02x:%02x%02x:%02x%02x:%02x%02x:%02x%02x:%02x%02x:%02x%02x:%02x%02x",
+     	(int)addr->s6_addr[0], (int)addr->s6_addr[1],
+			(int)addr->s6_addr[2], (int)addr->s6_addr[3],
+			(int)addr->s6_addr[4], (int)addr->s6_addr[5],
+			(int)addr->s6_addr[6], (int)addr->s6_addr[7],
+			(int)addr->s6_addr[8], (int)addr->s6_addr[9],
+			(int)addr->s6_addr[10], (int)addr->s6_addr[11],
+			(int)addr->s6_addr[12], (int)addr->s6_addr[13],
+			(int)addr->s6_addr[14], (int)addr->s6_addr[15]);
+			return ipbytes;
+}
+
+char * string_ip(__be32 ip){
+
+			unsigned char ipbytes[4];
+	    ipbytes[0] = ip & 0xFF;
+	    ipbytes[1] = (ip >> 8) & 0xFF;
+	    ipbytes[2] = (ip >> 16) & 0xFF;
+	    ipbytes[3] = (ip >> 24) & 0xFF;
+			char *rbytes = "";
+
+			asprintf(&rbytes, "%d.%d.%d.%d",ipbytes[0], ipbytes[1], ipbytes[2], ipbytes[3]);
+
+			return rbytes;
+}
 
 
 
@@ -79,26 +106,34 @@ char * stats_print( int fd, int xdp_data_map_s_fd, int * tam)
 	double period;
 	double pps; /* packets per sec */
 	double bps; /* bits per sec */
-	__u32 key = -1;
-	char * data;
-
+	struct keyip key = {};
+	char * data = "";
+	char * ips;
+	char * ipd;
 
 	while (bpf_map_get_next_key(xdp_data_map_s_fd, &key, &key) == 0)
 	{
 
 		bpf_map_lookup_elem(xdp_data_map_s_fd, &key, rec);
 
-		char *fmt = "%s%d.%d.%d.%d|%lld|%.0f|"
+
+		/*isipv6 | saddr | daddr | pkts | pps | kb | Mbits/s | periodo*/
+
+		char *fmt = "%s%d|%s|%s|%lld|%.0f|"
 			"%lld|%0.f|"
 			"%f\n";
 
-		__u32 ip = key;
+		if(key.isv6 == 1){
+			ips = string_ip6(&key.ip6_saddr);
+			ipd = string_ip6(&key.ip6_daddr);
 
-		unsigned char ipbytes[4];
-    ipbytes[0] = ip & 0xFF;
-    ipbytes[1] = (ip >> 8) & 0xFF;
-    ipbytes[2] = (ip >> 16) & 0xFF;
-    ipbytes[3] = (ip >> 24) & 0xFF;
+		} else {
+
+			ips = string_ip(key.ip_saddr);
+			ipd = string_ip(key.ip_daddr);
+
+		}
+
 
 
 
@@ -115,20 +150,22 @@ char * stats_print( int fd, int xdp_data_map_s_fd, int * tam)
 		/* Reservar memoria e imprimir en string*/
 
 
-		*tam =  asprintf(&data, fmt, data, ipbytes[0], ipbytes[1], ipbytes[2], ipbytes[3], rec->total[1].rx_packets, pps,
+		*tam =  asprintf(&data, fmt, data, key.isv6, ips, ipd , rec->total[1].rx_packets, pps,
 		       rec->total[1].rx_bytes / 1000 , bps,
 		       period);
 
-		/*printf(fmt, ipbytes[0], ipbytes[1], ipbytes[2], ipbytes[3], rec->total[1].rx_packets, pps,
-		       rec->total[1].rx_bytes / 1000 , bps,
-		       period);*/
+		/*printf("%s\n", data);*/
+
+		free(ips);
+		free(ipd);
 	}
+
 
 	return data;
 }
 
 
-void map_get_value_percpu_array(int fd, __u32 key, struct datarec *value)
+void map_get_value_percpu_array(int fd, struct keyip key, struct datarec *value)
 {
 	unsigned int nr_cpus = bpf_num_possible_cpus();
 	struct datarec values[nr_cpus];
@@ -136,11 +173,9 @@ void map_get_value_percpu_array(int fd, __u32 key, struct datarec *value)
 	__u64 sum_pkts = 0;
 	int i = 0;
 
-	if ((bpf_map_lookup_elem(fd, &key, values)) != 0) {
-		fprintf(stderr,
-			"ERR: bpf_map_lookup_elem failed key:0x%X\n", key);
+	if ((bpf_map_lookup_elem(fd, &key, values)) != 0)
 		return;
-	}
+
 
 	/* Sum values from each CPU */
 	for (i = 0; i < nr_cpus; i++) {
@@ -153,7 +188,7 @@ void map_get_value_percpu_array(int fd, __u32 key, struct datarec *value)
 
 }
 
-static bool map_collect(int fd, __u32 key, struct record *rec, int xdp_data_map_s_fd, int idrec)
+static bool map_collect(int fd, struct keyip key, struct record *rec, int xdp_data_map_s_fd, int idrec)
 {
 	struct datarec value;
 
@@ -170,13 +205,15 @@ static bool map_collect(int fd, __u32 key, struct record *rec, int xdp_data_map_
 
 static void stats_collect(int map_fd, int xdp_data_map_s_fd, int idrec)
 {
-	__u32 key = -1;
+	struct keyip key = {};
 
 
 	while (bpf_map_get_next_key(map_fd, &key, &key) == 0) {
+
 		struct record rec = {{0, 0}, {{0, 0},{0, 0}}};
 		bpf_map_lookup_elem(xdp_data_map_s_fd, &key, &rec);
 		map_collect(map_fd, key, &rec, xdp_data_map_s_fd, idrec);
+
 	}
 }
 

@@ -6,7 +6,7 @@
 
 
 #include "maps_kern.h"
-#include "../common/parsing_helpers.h"
+
 
 
 static __always_inline
@@ -15,30 +15,41 @@ __u32 xdp_stats_record_action(struct xdp_md *ctx)
 	void *data_end = (void *)(long)ctx->data_end;
 	void *data     = (void *)(long)ctx->data;
 
-	__u32 key = -1;
-
 	int ip_type, eth_type;
 	struct ethhdr *eth;
 	struct hdr_cursor nh;
 	struct iphdr *iph;
+	struct ipv6hdr *ipv6hdr;
+	struct keyip key = {};
 
 	/* Packet parsing */
 	nh.pos = data;
 
 	eth_type = parse_ethhdr(&nh, data_end, &eth);
 
-	if (eth_type != bpf_htons(ETH_P_IP)) {
-			return XDP_PASS;
-	}
+	if (eth_type == bpf_htons(ETH_P_IP)) {
+			ip_type = parse_iphdr(&nh, data_end, &iph);
 
+			if(ip_type == -1)
+				return XDP_PASS;
 
-	ip_type = parse_iphdr(&nh, data_end, &iph);
+			key.ip_saddr = iph->saddr;
+			key.ip_daddr = iph->daddr;
+			key.isv6 = 0;
 
-	if(ip_type == -1)
+	} else if (eth_type == bpf_htons(ETH_P_IPV6)){
+			ip_type = parse_ip6hdr(&nh, data_end, &ipv6hdr);
+
+			if(ip_type == -1)
+					return XDP_PASS;
+					
+				key.ip6_saddr = ipv6hdr->saddr;
+				key.ip6_daddr = ipv6hdr->daddr;
+				key.isv6 = 1;
+
+	} else {
 		return XDP_PASS;
-
-
-	key = iph->saddr;
+	}
 
 
 	/* Update packet length */
