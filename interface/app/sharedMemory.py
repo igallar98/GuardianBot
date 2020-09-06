@@ -6,7 +6,6 @@ KEY = 8888
 
 
 class sharedMemory:
-
     def __init__(self):
         self.table = [];
         return

@@ -5,12 +5,6 @@ from app import sharedMemory, jsonTable
 @app.route('/')
 @app.route('/index')
 def index():
-    url_for('static', filename='path/to/file')
-    sMemory = sharedMemory.sharedMemory()
-    sMemory.refresh_table()
-    for row in sMemory.get_table():
-        table = row.split("|")
-        print(table[0])
 
 
     return render_template('index.html', title = "Información general")
@@ -21,3 +15,13 @@ def index():
 def rjsonTable():
     jTable = jsonTable.jsonTable()
     return jTable.getTable()
+
+
+@app.route('/config')
+def config():
+    return render_template('config.html', title = "Configuración del cortafuegos")
+
+
+@app.route('/lock')
+def lock():
+    return render_template('lock.html', title = "Iniciar sesión")

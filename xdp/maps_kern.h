@@ -6,6 +6,8 @@
 #ifndef XDP_ACTION_MAX
 #define XDP_ACTION_MAX (XDP_REDIRECT + 1)
 #include "../common/parsing_helpers.h"
+#define IP_HASH_ENTRIES_MAX	32767
+
 /* DATA IP MAP PER CPU */
 struct datarec {
 	__u64 rx_packets;
@@ -25,7 +27,7 @@ struct bpf_map_def SEC("maps") xdp_data_map = {
 	.type        = BPF_MAP_TYPE_PERCPU_HASH,
 	.key_size    = sizeof(struct keyip),
 	.value_size  = sizeof(struct datarec),
-	.max_entries = 128,
+	.max_entries = IP_HASH_ENTRIES_MAX,
 };
 
 
@@ -41,7 +43,7 @@ struct bpf_map_def SEC("maps") xdp_data_map_s = {
 	.type        = BPF_MAP_TYPE_HASH,
 	.key_size    = sizeof(struct keyip),
 	.value_size  = sizeof(struct record),
-	.max_entries = 128,
+	.max_entries = IP_HASH_ENTRIES_MAX,
 };
 
 

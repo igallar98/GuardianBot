@@ -5,6 +5,8 @@
  #include <linux/ipv6.h>
 #ifndef MAPS_USER_EXPECTED_H
 #define MAPS_USER_EXPECTED_H
+#define IP_HASH_ENTRIES_MAX	32767
+
 
 /* DATA IP PER CPU MAP EXCEPT */
 
@@ -22,7 +24,7 @@ struct keyip {
 const struct bpf_map_info map_expect = {
   .key_size    = sizeof(struct keyip),
   .value_size  = sizeof(struct datarec),
-  .max_entries = 128,
+  .max_entries = IP_HASH_ENTRIES_MAX,
 };
 
 /* SUM DATA IP MAP EXCEPT */
@@ -35,7 +37,7 @@ struct record {
 const struct bpf_map_info xdp_data_map_s_ex = {
 	.key_size    = sizeof(struct keyip),
 	.value_size  = sizeof(struct record),
-	.max_entries = 128,
+	.max_entries = IP_HASH_ENTRIES_MAX,
 };
 
 

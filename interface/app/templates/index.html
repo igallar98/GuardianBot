@@ -3,42 +3,86 @@
 {% block content %}
 
 <div class="row border-bottom bd-lightGray m-3">
-    <div class="cell-md-4 d-flex flex-align-center">
-        <h3 class="dashboard-section-title  text-center text-left-md w-100">Estadísticas Generales <small>IPV4</small></h3>
+    <div class="cell-md-5 d-flex flex-align-center">
+        <h3 class="dashboard-section-title  text-center text-left-md w-100">Estadísticas Generales <small>Protocolo IP</small></h3>
     </div>
-
 
 </div>
 
 
 
 
+<div class="d-flex flex-justify-center flex-wrap">
+
+<button class="tool-button primary rounded m-2"
+        onclick="$('#t1').data('table').loadData('/table.json')">
+        <span class="mif-refresh"></span></button>
+
+        <button class="tool-button secondary rounded m-2"
+                onclick="$('#t1').data('table').export('CSV', 'all', 'GuardianBot.csv')">
+                <span class="mif-download2"></span></button>
+
+        <button class="image-button alert m-2">
+                            <span class="mif-blocked icon"></span>
+                            <span class="caption">Bloquear</span>
+                        </button>
+
+                        <button class="image-button success m-2">
+                            <span class="mif-checkmark icon"></span>
+                            <span class="caption">Desbloquear</span>
+                        </button>
+                        <button class="image-button info m-2">
+                          <span class="mif-info icon"></span>
+                          <span class="caption">Información</span>
+                      </button>
+        <div class="my-search-wrapper m-2"></div>
+
+        <input id="check" type="checkbox flex-justify-center m-2"
+               data-role="switch"
+               data-caption="Recargar automáticamente"
+               data-cls-switch="mySwitch"
+               data-cls-caption="fg-cyan text-bold"
+               data-cls-check="bd-cyan myCheck">
+             </div>
 
 
-
-
-
-<table id="t1" class="table compact table-border mt-4"
+<table id="t1" class="table compact table-border mt-5"
        data-role="table"
-       data-rows="99999"
+       data-rows="50"
+       data-table-search-title="Buscar: "
        data-rows-steps="5, 10"
        data-show-activity="false"
+       	data-show-rows-steps	="false"
        data-source="/table.json"
+      data-check="true"
        data-check-style="2"
->
+       data-info-wrapper=".my-info-wrapper"
+      data-pagination-prev-title="Página Anterior"
+      data-pagination-next-title="Página Siguiente"
+      data-table-info-title="Mostrando $2/<b>$3</b>"
+      data-search-wrapper=".my-search-wrapper"
+      data-pagination-wrapper=".my-pagination-wrapper"
+
+      >
 </table>
 
 <script>
 
 $( document ).ready(function() {
 function pollDOM () {
+    var checkbox = $('#check');
+    if(checkbox.is(":checked")){
+      $('#t1').data('table').loadData('/table.json');
+    }
 
-    $('#t1').data('table').loadData('/table.json');
     setTimeout(pollDOM, 10000);
 }
 pollDOM();
 
 });
   </script>
+
+
+
 
 {% endblock %}

@@ -1,0 +1,77 @@
+{% extends "includes/header.html" %}
+{% block title %}{{title}}{% endblock %}
+{% block content %}
+
+<div class="row border-bottom bd-lightGray m-3">
+    <div class="cell-md-5 d-flex flex-align-center">
+        <h3 class="dashboard-section-title  text-center text-left-md w-100">Configuración <small>Versión 0.1</small></h3>
+    </div>
+
+</div>
+
+
+<div class="m-3">
+     <div class="row">
+         <div class="cell-lg-6">
+             <div class="bg-lightGray p-4 m-2">
+                 <h4>Ajustes generales</h4>
+                 <form>
+
+                     <div class="form-group">
+                         <label>Eliminar registro cada:</label><br>
+                         <small>Si la dirección no tiene actividad en ese tiempo (minutos) se borrará el registro.</small>
+                         <input type="text" data-role="spinner" data-min-value="1" data-max-value="60">
+
+                     </div>
+
+                     <div class="form-group">
+                         <label>Limitar paquetes por segundo globales:</label>
+                         <input type="text" data-role="spinner" data-min-value="1" data-max-value="60">
+                     </div>
+                     <div class="form-group">
+                         <label>Limitar MBits/s globales:</label>
+                         <input type="text" data-role="spinner" data-min-value="1" data-max-value="60">
+                     </div>
+                     <div class="form-group">
+        <button class="button success">Guardar</button>
+        <input type="button" class="button" value="Cancelar">
+    </div>
+                 </form>
+             </div>
+
+
+
+         </div>
+
+         <div class="cell-lg-6">
+             <div class="bg-lightGray p-4 m-2">
+                 <h4>Protocolo IP</h4>
+                 <form>
+                   <div class="form-group">
+                       <label>Duración del bloqueo: </label><br>
+                       <small>Si la dirección se pasa de los límites o es detectada como maliciosa se bloqueará durante esos minutos. Una vez pasado se volverá a comprobar.</small>
+                       <input type="text" data-role="spinner" data-min-value="1" data-max-value="60">
+                   </div>
+                   <div class="form-group">
+                       <label>Limitar paquetes por segundo por ip:</label>
+                       <input type="text" data-role="spinner" data-min-value="0" data-max-value="60">
+                   </div>
+                   <div class="form-group">
+                       <label>Limitar MBits/s por ip:</label>
+                       <input type="text" data-role="spinner" data-min-value="0" data-max-value="60">
+                   </div>
+                     <div class="form-group">
+        <button class="button success">Guardar</button>
+        <input type="button" class="button" value="Cancelar">
+    </div>
+
+             </div>
+
+
+         </div>
+     </div>
+</div>
+
+
+
+{% endblock %}
