@@ -21,14 +21,24 @@ __u32 xdp_stats_record_action(struct xdp_md *ctx)
 	struct iphdr *iph;
 	struct ipv6hdr *ipv6hdr;
 	struct keyip key = {};
+	/*struct icmphdr_common *icmphdr;*/
+	struct udphdr *udphdr;
+	struct tcphdr *tcphdr;
+	int tcp_type, udp_type;
 
 	/* Packet parsing */
 	nh.pos = data;
+
+	struct datarec aux = {0, 0, 0, 0, 0};
+	struct record auxrec = {{0, 0}, {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}}};
+	aux.proto = 'n';
+
 
 	eth_type = parse_ethhdr(&nh, data_end, &eth);
 
 	if (eth_type == bpf_htons(ETH_P_IP)) {
 			ip_type = parse_iphdr(&nh, data_end, &iph);
+			aux.proto = 'p';
 
 			if(ip_type == -1)
 				return XDP_PASS;
@@ -39,10 +49,11 @@ __u32 xdp_stats_record_action(struct xdp_md *ctx)
 
 	} else if (eth_type == bpf_htons(ETH_P_IPV6)){
 			ip_type = parse_ip6hdr(&nh, data_end, &ipv6hdr);
+			aux.proto = '6';
 
 			if(ip_type == -1)
 					return XDP_PASS;
-					
+
 				key.ip6_saddr = ipv6hdr->saddr;
 				key.ip6_daddr = ipv6hdr->daddr;
 				key.isv6 = 1;
@@ -52,11 +63,45 @@ __u32 xdp_stats_record_action(struct xdp_md *ctx)
 	}
 
 
+
+	switch(ip_type) {
+
+	 case IPPROTO_ICMPV6 || IPPROTO_ICMP:
+			/*icmp_type = parse_icmphdr_common(&nh, data_end, &icmphdr);*/
+			aux.proto = 'i';
+			aux.source = 1;
+
+			break;
+
+	 case IPPROTO_TCP:
+		 tcp_type = parse_tcphdr(&nh, data_end, &tcphdr);
+		 if(tcp_type != -1){
+			 aux.source = tcphdr->source;
+			 aux.dest = tcphdr->dest;
+			 aux.proto = 't';
+		 }
+
+
+		 break;
+
+		case IPPROTO_UDP:
+		udp_type = parse_udphdr(&nh, data_end, &udphdr);
+		if(udp_type != -1){
+			aux.source = udphdr->source;
+			aux.dest = udphdr->dest;
+			aux.proto = 'u';
+		}
+
+		break;
+	}
+
+
 	/* Update packet length */
 	__u64 bytes = data_end - data;
 
-	struct datarec aux = {0, 0};
-	struct record auxrec = {{0, 0}, {{0, 0},{0, 0}}};
+
+
+
 
 	struct datarec * rec = bpf_map_lookup_elem(&xdp_data_map, &key);
 	if(!rec) {

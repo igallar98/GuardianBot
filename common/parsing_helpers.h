@@ -28,7 +28,7 @@
 #include <linux/icmpv6.h>
 #include <linux/udp.h>
 #include <linux/tcp.h>
-
+#include <linux/in.h>
 /* Header cursor to keep track of current parsing position */
 struct hdr_cursor {
 	void *pos;

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/metro-all.min.css') }}">
+    <script src="{{ url_for('static', filename='js/metro.min.js') }}"></script>
+  </head>
+
+  <body>
+    <script type="text/javascript">
+      function actualizar(){location.reload(true);}
+      setInterval("actualizar()",2000);
+    </script>
+
+            <div class="skill-box">
+                <div class="header">
+                    <div >{{proto}}</div>
+                    <div class="subtitle">{{sip+":"+info[8]}} --> {{dip +":"+info[9]}}</div>
+                </div>
+                <ul class="skills">
+                    <li>
+                        <span>Paquetes</span>
+                        <span class="badge bg-orange fg-white m-1">{{info[3]}} paquetes</span>
+                        <span class="badge bg-orange fg-white m-1">{{info[4]}} paquetes/s</span>
+                    </li>
+                    <li>
+                        <span>Datos</span>
+                        <span class="badge bg-blue fg-white m-1">{{info[5]}} KBytes</span>
+                        <span class="badge bg-blue fg-white m-1">{{info[6]}} Mbits/s</span>
+                    </li>
+                    <li>
+                        <span>Protocolo Actual</span>
+                        <span class="badge bg-green fg-white">{{proto}}</span>
+                    </li>
+                    <li>
+                        <span>Bloqueo</span>
+                        <span class="badge bg-red fg-white">Sin bloqueo</span>
+                    </li>
+                </ul>
+
+            </div>
+            <br>
+            <center>Información protocolos</center>
+            {% for s in save %}
+              {% if not s[0].isdigit() %}
+              <table class="table striped">
+                                          <tbody>
+                                            <tr>
+                                                <td>Protocolo</td>
+                                                <td>{{s[0]}}</td>
+                                            </tr>
+                                            <tr>
+                                              <td>Puertos</td>
+                                              <td>{{s[1]}} --> {{s[2]}}</td>
+
+                                          </tr>
+                                          <tr>
+                                              <td>Periodo</td>
+                                              <td>{{info[7]}}</td>
+                                          </tr>
+
+                                      </tbody></table>
+                                      {% endif %}
+            {% endfor %}
+  </body>
+
+</html>

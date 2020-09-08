@@ -5,22 +5,27 @@
  #include <linux/ipv6.h>
 #ifndef MAPS_USER_EXPECTED_H
 #define MAPS_USER_EXPECTED_H
-#define IP_HASH_ENTRIES_MAX	32767
+#define IP_HASH_ENTRIES_MAX	16382
 
-
-/* DATA IP PER CPU MAP EXCEPT */
-
+/* DATA IP MAP PER CPU */
 struct datarec {
 	__u64 rx_packets;
 	__u64 rx_bytes;
+	__u16   source;
+	__u16   dest;
+  char proto;
 };
+
+
+
 struct keyip {
-		int isv6;
+	char isv6;
 	__be32 	ip_saddr;
 	__be32 	ip_daddr;
 	struct in6_addr ip6_saddr;
 	struct in6_addr ip6_daddr;
 };
+
 const struct bpf_map_info map_expect = {
   .key_size    = sizeof(struct keyip),
   .value_size  = sizeof(struct datarec),

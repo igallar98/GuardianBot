@@ -10,36 +10,59 @@
 </div>
 
 
+<div class="p-2"
+id="window"
+    data-role="window"
+    data-title="Información en tiempo real"
+    data-resizable="true"
+    data-draggable="true"
+    data-shadow="true"
+    data-icon="<span class='mif-info'></span>"
+    data-close-action="Metro.actions.HIDE"
+    data-width="390"
+    data-height="560"
+    data-top="10">
+    <iframe id="inlineFrame"
+    title="Inline Frame Example"
+    width="350"
+    height="560"
+    src="">
+</iframe>
 
+</div>
 
 <div class="d-flex flex-justify-center flex-wrap">
 
-<button class="tool-button primary rounded m-2"
+<button class="tool-button primary rounded m-1"
         onclick="$('#t1').data('table').loadData('/table.json')">
         <span class="mif-refresh"></span></button>
 
-        <button class="tool-button secondary rounded m-2"
+        <button class="tool-button secondary rounded m-1"
                 onclick="$('#t1').data('table').export('CSV', 'all', 'GuardianBot.csv')">
                 <span class="mif-download2"></span></button>
 
-        <button class="image-button alert m-2">
+        <button class="image-button alert m-1">
                             <span class="mif-blocked icon"></span>
                             <span class="caption">Bloquear</span>
                         </button>
 
-                        <button class="image-button success m-2">
+                        <button class="image-button success m-1">
                             <span class="mif-checkmark icon"></span>
                             <span class="caption">Desbloquear</span>
                         </button>
-                        <button class="image-button info m-2">
+                        <button onclick="onclickinfo()" class="image-button info m-1">
                           <span class="mif-info icon"></span>
                           <span class="caption">Información</span>
                       </button>
-        <div class="my-search-wrapper m-2"></div>
+                      <button class="image-button warning  m-1">
+                          <span class="mif-bin icon"></span>
+                          <span class="caption">Limpiar</span>
+                      </button>
+        <div class="my-search-wrapper m-1"></div>
 
-        <input id="check" type="checkbox flex-justify-center m-2"
+        <input id="check" type="checkbox flex-justify-center m-1"
                data-role="switch"
-               data-caption="Recargar automáticamente"
+               data-caption="Auto-Recargar"
                data-cls-switch="mySwitch"
                data-cls-caption="fg-cyan text-bold"
                data-cls-check="bd-cyan myCheck">
@@ -56,6 +79,7 @@
        data-source="/table.json"
       data-check="true"
        data-check-style="2"
+       data-check-type="radio"
        data-info-wrapper=".my-info-wrapper"
       data-pagination-prev-title="Página Anterior"
       data-pagination-next-title="Página Siguiente"
@@ -67,8 +91,39 @@
 </table>
 
 <script>
+  function showClassError(){
+        var notify = Metro.notify;
+        notify.create("No has selecionado ningún elemento.", "Alert", {
+            cls: "alert"
+        });
+    }
+
+function loadIframe(iframeName, url) {
+    var $iframe = $('#' + iframeName);
+    if ( $iframe.length ) {
+        $iframe.attr('src',url);
+        return false;
+    }
+    return true;
+}
+
+
+function onclickinfo(){
+  var tableshowip = $('#t1').data('table').getSelectedItems();
+if(tableshowip.length < 1){
+showClassError();
+} else {
+  console.log(tableshowip);
+    loadIframe('inlineFrame','/getipinfo?sip='+tableshowip[0][0]+'&dip='+tableshowip[0][1])
+    $('#window').data('window').show();
+
+}
+}
 
 $( document ).ready(function() {
+  $('#window').data('window').hide();
+
+
 function pollDOM () {
     var checkbox = $('#check');
     if(checkbox.is(":checked")){

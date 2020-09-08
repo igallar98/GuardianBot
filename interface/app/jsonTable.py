@@ -28,7 +28,8 @@ class jsonTable:
         pkts = {  "name": "pkts",
                     "title": "Paquetes",
                     "format": "int",
-                    "sortable": True}
+                    "sortable": True,
+                    "sortDir": "desc"}
         pps = {  "name": "pps",
                     "title": "Paquetes/s",
                     "format": "int",
@@ -36,24 +37,30 @@ class jsonTable:
         KBytes = {  "name": "KBytes",
                     "title": "KB",
                     "format": "int",
-                    "sortable": True,
-                    "sortDir": "desc"}
+                    "sortable": True}
         Mbits = {  "name": "Mbits",
                     "title": "Mbits/s",
                     "format": "int",
-                    "sortable": True}
+                    "sortable": True,
+                    "sortDir": "desc"}
         periodo = {  "name": "periodo",
                     "title": "Periodo",
                     "format": "int",
                     "sortable": True}
+
+        #protocolo = {  "name": "protocolo",
+        #            "title": "Protocolo",
+        #            "sortable": True}
         return [ ips, ipd, pkts, pps, KBytes, Mbits, periodo]
 
     def data(self):
         table = []
         self.sMemory.refresh_table()
         sharedTable = self.sMemory.get_table()
+        print(sharedTable)
         del sharedTable[-1]
         for row in sharedTable:
+            print("123")
             r = row.split("|")
             table.append([r[1], r[2], r[3], r[4], r[5], r[6], r[7]])
         return table

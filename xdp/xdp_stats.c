@@ -100,7 +100,7 @@ char * string_ip(__be32 ip){
 
 char * stats_print( int fd, int xdp_data_map_s_fd, int * tam)
 {
-	struct record aux = {{0, 0}, {{0, 0},{0, 0}}};
+	struct record aux = {{0, 0}, {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}}};
 	struct record *rec = &aux;
 	__u64 packets, bytes;
 	double period;
@@ -117,11 +117,10 @@ char * stats_print( int fd, int xdp_data_map_s_fd, int * tam)
 		bpf_map_lookup_elem(xdp_data_map_s_fd, &key, rec);
 
 
-		/*isipv6 | saddr | daddr | pkts | pps | kb | Mbits/s | periodo*/
+		/*isipv6 | saddr | daddr | pkts | pps | kb | Mbits/s | periodo | sport | dport | proto*/
 
 		char *fmt = "%s%d|%s|%s|%lld|%.0f|"
-			"%lld|%0.f|"
-			"%f\n";
+			"%lld|%0.f|%f|%d|%d|%c\n";
 
 		if(key.isv6 == 1){
 			ips = string_ip6(&key.ip6_saddr);
@@ -152,12 +151,14 @@ char * stats_print( int fd, int xdp_data_map_s_fd, int * tam)
 
 		*tam =  asprintf(&data, fmt, data, key.isv6, ips, ipd , rec->total[1].rx_packets, pps,
 		       rec->total[1].rx_bytes / 1000 , bps,
-		       period);
+		       period, rec->total[1].source, rec->total[1].dest,  rec->total[1].proto);
 
 		/*printf("%s\n", data);*/
 
 		free(ips);
+		ips = NULL;
 		free(ipd);
+		ipd = NULL;
 	}
 
 
@@ -171,16 +172,28 @@ void map_get_value_percpu_array(int fd, struct keyip key, struct datarec *value)
 	struct datarec values[nr_cpus];
 	__u64 sum_bytes = 0;
 	__u64 sum_pkts = 0;
+
 	int i = 0;
 
 	if ((bpf_map_lookup_elem(fd, &key, values)) != 0)
 		return;
 
 
+
 	/* Sum values from each CPU */
 	for (i = 0; i < nr_cpus; i++) {
 		sum_pkts  += values[i].rx_packets;
 		sum_bytes += values[i].rx_bytes;
+
+		if(values[i].source>0){
+
+			value->source =  values[i].source;
+			value->dest =  values[i].dest;
+			value->proto =  values[i].proto;
+
+		}
+
+
 	}
 	value->rx_packets = sum_pkts;
 	value->rx_bytes   = sum_bytes;
@@ -198,6 +211,9 @@ static bool map_collect(int fd, struct keyip key, struct record *rec, int xdp_da
 
 	rec->total[idrec].rx_packets = value.rx_packets;
 	rec->total[idrec].rx_bytes   = value.rx_bytes;
+	rec->total[idrec].source   = value.source;
+	rec->total[idrec].dest   = value.dest;
+	rec->total[idrec].proto   = value.proto;
 	bpf_map_update_elem(xdp_data_map_s_fd, &key, rec, BPF_ANY);
 
 	return true;
@@ -210,7 +226,7 @@ static void stats_collect(int map_fd, int xdp_data_map_s_fd, int idrec)
 
 	while (bpf_map_get_next_key(map_fd, &key, &key) == 0) {
 
-		struct record rec = {{0, 0}, {{0, 0},{0, 0}}};
+		struct record rec = {{0, 0}, {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}}};
 		bpf_map_lookup_elem(xdp_data_map_s_fd, &key, &rec);
 		map_collect(map_fd, key, &rec, xdp_data_map_s_fd, idrec);
 
@@ -258,6 +274,7 @@ static int stats_poll(const char *pin_dir, int map_fd, __u32 id, int interval, i
 		send_to_python(data, tam);
 
 		free(data);
+		data = NULL;
 
 		close(map_fd);
 		close(xdp_data_map_s_fd);
