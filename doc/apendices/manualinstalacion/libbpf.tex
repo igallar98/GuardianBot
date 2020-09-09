@@ -1,0 +1,12 @@
+Se aprovecha la biblioteca libbpf para proveer de funciones de desarrollo y facilitar la carga de los programas XDP. Existen varias versiones de esta biblioteca por lo que se suele usar un submódulo git.
+\begin{center}
+    \textbf{submodule update --init}
+\end{center}
+Añadimos el submódulo a nuestro proyecto:
+\begin{center}
+    \textbf{git submodule add https://github.com/libbpf/libbpf/ libbpf}
+\end{center}
+Para permitir compartir los mapas eBFP entre diferentes programas hay que montar:  
+\begin{center}
+    \textbf{mount -t bpf bpf /sys/fs/bpf/}
+\end{center}

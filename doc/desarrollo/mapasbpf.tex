@@ -1,0 +1,13 @@
+Los mapas eBPF son mapas hash de clave/valor que permiten la comunicación entre el espacio de usuario y el kernel. Un programa que use estos mapas no puede ser cargado en el núcleo hasta que cada mapa es creado mediante una llamada a la función del sistema bpf(). Para identificar cada mapa se genera un descriptor el cual hay que reescribir en cada referencia del código ELF. La biblioteca libbpf realiza esto de forma transparente al usuario. \\*
+El mapa no conoce la estructura de datos utilizada para el registro valor, que generalmente solo conoce el tamaño. Aunque el tipo de formato BFP permite obtener la estructura de datos mediante la información de depuración \cite{BTF}, es más sencillo sincronizarlos mediante una estructura de datos común. \\*
+El núcleo de Linux es capaz de ejecutar código de forma concurrente usando varios procesadores, por tanto, los datos de cada mapa eBPF se deben sumar en el espacio usuario o en el propio núcleo. Usar funciones atómicas en el núcleo es costoso ya que hay que restringir el acceso a memoria para evitar datos erróneos. Para usar una matriz de datos que almacene los valores por CPU basta utilizar BPF\_MAP\_TYPE\_PERCPU\_ARRAY trasladando así la carga al espacio usuario que deberá crear una función que sume los valores totales. \\
+Para compartir los mapas entre varios programas se crea un archivo para cada mapa montado en un sistema de archivos especial de tipo bpf. Este sistema de archivos debe de ser montado de forma manual:
+
+\begin{center}
+    \textbf{mount -t bpf bpf /sys/fs/bpf/}
+\end{center}
+
+\CCode[COD:MAPEXAMPLE]{Definición mapa eBPF}{Muestra la definición de un mapa eBPF.}{desarrollo/map_example.c}{1}{6}{1}
+
+
+\clearpage

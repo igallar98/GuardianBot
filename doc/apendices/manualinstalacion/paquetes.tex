@@ -1,0 +1,27 @@
+\paragraph{Paquetes en Fedora}
+
+Si su distribución de linux es Fedora necesitará los siguientes paquetes:
+
+\begin{center}
+    \textbf{sudo dnf install clang llvm}
+\end{center}
+\begin{center}
+    \textbf{sudo dnf install elfutils-libelf-devel libpcap-devel perf}
+\end{center}
+Fedora limita la cantidad de memoria del núcleo, lo que puede interferir con los mapas BPF. Hay que ejecutar este comando para aumentar el límite:
+\begin{center}
+    \textbf{ulimit -l 1024}
+\end{center}
+
+\paragraph{Paquetes en openSUSE}
+
+\begin{center}
+    \textbf{sudo zypper install clang llvm libelf-devel libpcap-devel}
+\end{center}
+\paragraph{Paquetes en Debian/Ubuntu}
+\begin{center}
+    \textbf{sudo apt install clang llvm libelf-dev libpcap-dev gcc-multilib build-essential}
+\end{center}
+
+
+

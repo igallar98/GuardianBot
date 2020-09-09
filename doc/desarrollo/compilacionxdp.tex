@@ -1,0 +1,14 @@
+Los programas eBPF se realizan generalmente en C y constan de dos archivos:
+\begin{itemize}
+        \item \_kern.c que contiene el código fuente que se ejecutará en el núcleo como código bytes eBPF.
+        \item \_user.c que incluye el programa de espacio de usuario y el cargador del código eBPF al núcleo.
+\end{itemize}
+Actualmente GCC carece de compatibilidad con eBPF, por tanto, se utiliza LLVM+clang que es capaz de generar el código en bytes eBPF en un archivo ELF objeto.
+Las secciones ELF de este archivo se usan para distinguir definiciones de mapas eBPF, utilizados para compartir información y código ejecutable. Cada sección contiene, generalmente, una única función y sirve para separar el programa con el fin de poder seleccionar la sección o secciones que quieren ser cargadas.
+
+Para inspeccionar este código se puede usar: llvm-objdump -S objeto\_elf\_bpf.o
+\CCode[COD:PASSKERN]{Código eBPF}{Muestra la estructura de un programa eBPF XDP con su correspondencia en código bytes eBPF.}{desarrollo/pass_kern.c}{4}{11}{1}
+
+
+Se puede observar que XDP\_PASS tiene un valor de dos, según el ENUM en el que esta definido. Estos valores por defecto que puede devolver la función, en concreto, XDP\_ABORTED, XDP\_DROP, XDP\_PASS, XDP\_TX, XDP\_REDIRECT se utilizan para eliminar el paquete de la pila, aceptarlo o redirigirlo. La diferencia entre los dos primeros, ya que los dos eliminan el paquete, es que en el segundo activa un punto de rastreo que puede ser registrado y estudiado. SEC("xdp") define una sección.
+

@@ -1,0 +1,9 @@
+El cargador crea mapas a partir de su definición en ELF usando bpf(BPF\_MAP\_CREATE) y reescribe todas las referencias a mapas por los descriptores devueltos. Una vez que el código es convertido a bytes con el compilador pasa por un verificador que comprueba que el código es seguro y termina antes de acoplarse con el kernel.
+\begin{figure}[Flujo de compilación y carga de eBPF]{FIG:BPFCOMPILAR}{En este esquema se muestra el flujo de compilación y carga de un programa eBPF.}
+  \begin{image}{}{}{estadodelarte/bpfcompilar.png}
+  \end{image}
+\end{figure}
+
+Mediante la llamada a la función del sistema bpf(BPF\_PROG\_LOAD) el verificador comprueba fallos de compilación como que no haya bucles infinitos o problemas con las zonas de memoria, que podrían afectar gravemente a la seguridad o dejar colgado todo el núcleo. \\*
+El compilador en tiempo real (JIT) se introdujo en 2011 en el kernel de linux \cite{JITkernel}. Este compilador traduce el código en bytes de eBPF a código ensamblador compatible con la plataforma elegida con el objetivo de mejorar el rendimiento.
+Finalmente, el código es inyectado en el núcleo directamente sobre los controladores del dispositivo. Algunos programas eBPF XDP puede ser cargados en el hardware del NIC si este lo soporta. En nuestro caso, permite llevar y administrar paquetes sin que pasen por la pila de red lo que conlleva un aumento de rendimiento.

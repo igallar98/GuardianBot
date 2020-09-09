@@ -1,0 +1,19 @@
+El archivo xdp\_prog\_kern.c contiene el código que se cargará en el \textbf{núcleo}. El compilador se encargará de convertir el código en C restringido en bytes BPF. Este programa tiene una única secuencia XDP que en función de el parámetro devuelto (XDP\_PASS, XDP\_DROP) se aceptará o bloqueará el paquete.
+\\Para \textbf{analizar los paquetes} y obtener la información de los protocolos se utilizan las funciones definidas en \textbf{/common/parsing/parsing\_helpers.h}.
+\\Al programar en la aplicación que se enganchará en el núcleo es muy importante controlar el gasto de memoria porque el núcleo limita la memoria con el fin de protegerse ante posibles ataques o perder rendimiento. Por tanto, se deben evitar variables sin usar o listas y estructuras de gran tamaño.
+\\Los \textbf{mapas eBPF} también tienen esta limitación, por tanto su tamaño es limitado. Estos mapas se usan para comunicar el núcleo con el espacio usuario. Los tipos de mapas más importantes que utiliza la aplicación son:
+\begin{description}
+
+  \item [BPF\_MAP\_TYPE\_HASH] Mapa hash de clave/valor. Para acceder y modificar la información es necesario bloquear la sección critica mediante el uso, por ejemplo, de semaforos.
+  \item [BPF\_MAP\_TYPE\_PERCPU\_HASH] Mapa hash pero por CPU. Es necesario sumar en el espacio usuario todos los valores de los paquetes analizados.
+  \item [Tipo ARRAY] En vez de hash es posible crear mapas de tipo lista. La clave es el índice de la lista y los elementos no se pueden eliminar.
+\end{description}
+
+\CCode[COD:EJEMPLOMAPACPU]{Ejemplo de mapa por CPU}{Muestra como se suman las estadísticas en un mapa eBPF por CPU}{manualprogramador/ejemplo_mapacpu.c}{1}{7}{1}
+
+Para \textbf{compilar} la aplicación se ha creado un Makefile que compilará el programa y el cargador. Para cargar el programa hay que ejecutar el comando:
+\begin{center}
+    \textbf{sudo ./xdp\_loader --help}
+\end{center}
+Esto mostrará las diferentes opciones para ejecutar la aplicación y seleccionar la interfaz a la que se aplicará el filtro y análisis.
+\\Para \textbf{depurar} el programa se puede utilizar la función bpf\_trace\_printk que imprime una traza en /sys/kernel/debug/tracing/trace\_pipe
