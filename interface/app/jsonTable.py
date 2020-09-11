@@ -57,10 +57,8 @@ class jsonTable:
         table = []
         self.sMemory.refresh_table()
         sharedTable = self.sMemory.get_table()
-        print(sharedTable)
         del sharedTable[-1]
         for row in sharedTable:
-            print("123")
             r = row.split("|")
             table.append([r[1], r[2], r[3], r[4], r[5], r[6], r[7]])
         return table

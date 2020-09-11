@@ -41,14 +41,14 @@ id="window"
                 onclick="$('#t1').data('table').export('CSV', 'all', 'GuardianBot.csv')">
                 <span class="mif-download2"></span></button>
 
-        <button class="image-button alert m-1">
+        <button onclick="onclickblocks()" class="image-button alert m-1">
                             <span class="mif-blocked icon"></span>
-                            <span class="caption">Bloquear</span>
+                            <span class="caption">Fuente</span>
                         </button>
 
-                        <button class="image-button success m-1">
-                            <span class="mif-checkmark icon"></span>
-                            <span class="caption">Desbloquear</span>
+                        <button onclick="onclickblockd()" class="image-button alert m-1">
+                          <span class="mif-blocked icon"></span>
+                            <span class="caption">Destino</span>
                         </button>
                         <button onclick="onclickinfo()" class="image-button info m-1">
                           <span class="mif-info icon"></span>
@@ -89,7 +89,6 @@ id="window"
 
       >
 </table>
-
 <script>
   function showClassError(){
         var notify = Metro.notify;
@@ -97,6 +96,13 @@ id="window"
             cls: "alert"
         });
     }
+
+    function showClassOk(){
+          var notify = Metro.notify;
+          notify.create("Dirección bloqueada correctamente.", "Success", {
+              cls: "success"
+          });
+      }
 
 function loadIframe(iframeName, url) {
     var $iframe = $('#' + iframeName);
@@ -106,6 +112,26 @@ function loadIframe(iframeName, url) {
     }
     return true;
 }
+function onclickblocks(){
+  var tableshowip = $('#t1').data('table').getSelectedItems();
+  if(tableshowip.length < 1){
+      showClassError();
+  } else {
+    $.post( "/blockip", { ip: tableshowip[0][0], prefix: "32", time: "-1"} );
+    showClassOk();
+  }
+}
+
+function onclickblockd(){
+  var tableshowip = $('#t1').data('table').getSelectedItems();
+  if(tableshowip.length < 1){
+      showClassError();
+  } else {
+
+    $.post( "/blockip", { ip: tableshowip[0][1], prefix: "32", time: "-1" } );
+    showClassOk();
+  }
+}
 
 
 function onclickinfo(){
@@ -113,7 +139,6 @@ function onclickinfo(){
 if(tableshowip.length < 1){
 showClassError();
 } else {
-  console.log(tableshowip);
     loadIframe('inlineFrame','/getipinfo?sip='+tableshowip[0][0]+'&dip='+tableshowip[0][1])
     $('#window').data('window').show();
 

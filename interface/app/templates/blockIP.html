@@ -1,0 +1,142 @@
+{% extends "includes/header.html" %}
+{% block title %}{{title}}{% endblock %}
+{% block content %}
+
+<div class="row border-bottom bd-lightGray m-3">
+    <div class="cell-md-5 d-flex flex-align-center">
+        <h3 class="dashboard-section-title  text-center text-left-md w-100">Bloquear IP <small>Formato CIDR</small></h3>
+    </div>
+
+</div>
+
+<script>
+
+function validateIP(val)
+{
+    return /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])$|^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$/.test(val);
+}
+
+
+function invalidForm(){
+    var form  = $(this);
+    form.addClass("ani-ring");
+    setTimeout(function(){
+        form.removeClass("ani-ring");
+    }, 1000);
+}
+
+function validateForm(){
+    $(".login-form").animate({
+        opacity: 0
+    });
+}
+
+function validateForm(){
+    $(".login-form").animate({
+        opacity: 0
+    });
+}
+
+function stepperMethod (m){
+    var stepper = $("#stepper_methods").data('stepper');
+    stepper[m]();
+}
+</script>
+<div class="container-fluid" style="width: 70%;">
+  <form class="login-form" data-role="validator" data-clear-invalid="3000" data-on-error-form="invalidForm" data-on-validate-form="validateForm" method="post" >
+    <div class="form-group">
+        <label>Dirección IPv4 o IPv6:</label>
+        <input name="ip" data-validate="minlength=7 custom=validateIP" type="text"/>
+    </div>
+    <div class="form-group">
+        <label>Prefijo de red: </label>
+        <input name="prefix" type="text" data-validate="required max=32 min=0" data-role="spinner" value="32" data-min-value="0" data-max-value="32"/>
+        <small class="text-muted">Para bloquear solo una dirección introduce 32</small>
+
+    </div>
+    <div class="form-group">
+      <label>Tiempo de bloqueo: </label>
+      <select name="time" data-role="select" data-validate="required">
+        <option class="fg-green" value="3600">1 hora</option>
+        <option class="text-bold fg-cyan" value="86400">24 horas</option>
+        <option class="fg-cyan" value="604800">1 semana</option>
+        <option class="fg-cyan" value="2592000">1 mes</option>
+        <option class="fg-red" value="-1">Permanente</option>
+      </select>
+    </div>
+    <div class="form-group text-center mt-6">
+        <button type="submit" onclick="stepperMethod('next')" class="button alert">Bloquear dirección</button>
+    </div>
+</form>
+
+</div>
+
+
+<h3 id="_push_buttons">Bloqueos activos</h3>
+<div class="d-flex flex-justify-center flex-wrap">
+  <button  onclick="onclickblock()" class="image-button success m-1">
+      <span class="mif-checkmark icon"></span>
+      <span class="caption">Desbloquear</span>
+  </button>
+<div class="my-search-wrapper m-1"></div>
+  <button class="tool-button secondary rounded m-1"
+          onclick="$('#t1').data('table').export('CSV', 'all', 'GuardianBot.csv')">
+          <span class="mif-download2"></span></button>
+
+</div>
+
+<table id="tb" class="table compact table-border mt-5"
+       data-role="table"
+       data-rows="50"
+       data-table-search-title="Buscar: "
+       data-rows-steps="5, 10"
+       data-show-activity="false"
+       	data-show-rows-steps	="false"
+       data-source="/getblockip.json"
+      data-check="true"
+       data-check-style="2"
+       data-check-type="radio"
+       data-info-wrapper=".my-info-wrapper"
+      data-pagination-prev-title="Página Anterior"
+      data-pagination-next-title="Página Siguiente"
+      data-table-info-title="Mostrando $2/<b>$3</b>"
+      data-search-wrapper=".my-search-wrapper"
+      data-pagination-wrapper=".my-pagination-wrapper"
+
+      >
+</table>
+
+
+<script>
+  function onclickblock(){
+    var tableshowip = $('#tb').data('table').getSelectedItems();
+  if(tableshowip.length < 1){
+      var notify = Metro.notify;
+      notify.create("No has selecionado ningún elemento.", "Alert", {
+          cls: "alert"
+      });
+  } else {
+
+    $.post( "/unblock", { ip: tableshowip[0][0], prefix: tableshowip[0][1] } );
+    $('#tb').data('table').loadData('/getblockip.json');
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}

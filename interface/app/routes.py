@@ -1,5 +1,5 @@
 from app import app, request, render_template, url_for
-from app import sharedMemory, jsonTable
+from app import sharedMemory, jsonTable, blockIP
 
 global save
 save = [0]
@@ -29,7 +29,26 @@ def config():
 def lock():
     return render_template('lock.html', title = "Iniciar sesión")
 
+@app.route('/blockip', methods=['POST','GET'])
+def blockip():
+    if 'ip' in request.form and 'prefix' in request.form and 'time' in request.form:
+        block = blockIP.blockIP()
+        block.saveIP(request.form["ip"], request.form["prefix"], request.form["time"])
 
+    return render_template('blockIP.html', title = "Bloquear Dirección IP")
+
+@app.route('/getblockip.json')
+def getblockip():
+    block = blockIP.blockIP()
+    return block.getTable()
+
+@app.route('/unblock', methods=['POST','GET'])
+def unblock():
+    if 'ip' in request.form and 'prefix' in request.form:
+        block = blockIP.blockIP()
+        block.deleteIP(request.form["ip"], request.form["prefix"])
+        return "0"
+    return "1"
 
 @app.route('/getipinfo', methods=['POST','GET'])
 def getipinfo():
