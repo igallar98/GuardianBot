@@ -6,6 +6,12 @@
 
 
 #include "maps_kern.h"
+#define bpf_printk(fmt, ...)                                    \
+({                                                              \
+	char ____fmt[] = fmt;                                   \
+	bpf_trace_printk(____fmt, sizeof(____fmt),              \
+                         ##__VA_ARGS__);                        \
+})
 
 
 
@@ -26,12 +32,17 @@ __u32 xdp_stats_record_action(struct xdp_md *ctx)
 	struct tcphdr *tcphdr;
 	int tcp_type, udp_type;
 
+	struct keyipblock keyblock = {};
+
+
+
 	/* Packet parsing */
 	nh.pos = data;
 
 	struct datarec aux = {0, 0, 0, 0, 0};
 	struct record auxrec = {{0, 0}, {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}}};
 	aux.proto = 'n';
+
 
 
 	eth_type = parse_ethhdr(&nh, data_end, &eth);
@@ -46,6 +57,9 @@ __u32 xdp_stats_record_action(struct xdp_md *ctx)
 			key.ip_saddr = iph->saddr;
 			key.ip_daddr = iph->daddr;
 			key.isv6 = 0;
+			keyblock.ip_addr = iph->saddr;
+			keyblock.isv6 = 0;
+
 
 	} else if (eth_type == bpf_htons(ETH_P_IPV6)){
 			ip_type = parse_ip6hdr(&nh, data_end, &ipv6hdr);
@@ -57,9 +71,20 @@ __u32 xdp_stats_record_action(struct xdp_md *ctx)
 				key.ip6_saddr = ipv6hdr->saddr;
 				key.ip6_daddr = ipv6hdr->daddr;
 				key.isv6 = 1;
+				keyblock.ip6_addr = ipv6hdr->saddr;
+				keyblock.isv6 = 1;
 
 	} else {
 		return XDP_PASS;
+	}
+
+
+	/* Packet block */
+
+	time_t * timest = bpf_map_lookup_elem(&xdp_block_ip, &keyblock);
+
+	if(timest){
+		return XDP_DROP;
 	}
 
 

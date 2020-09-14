@@ -10,5 +10,6 @@ COMMON_DIR = ../common/
 # Extend with another COMMON_OBJS
 COMMON_OBJS += $(COMMON_DIR)/common_libbpf.o
 COMMON_OBJS += $(COMMON_DIR)/shared_memory.o
+COMMON_OBJS += $(COMMON_DIR)/checker.o
 
 include $(COMMON_DIR)/common.mk

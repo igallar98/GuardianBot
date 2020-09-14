@@ -6,7 +6,7 @@
 #ifndef MAPS_USER_EXPECTED_H
 #define MAPS_USER_EXPECTED_H
 #define IP_HASH_ENTRIES_MAX	16382
-
+#include <time.h>
 /* DATA IP MAP PER CPU */
 struct datarec {
 	__u64 rx_packets;
@@ -44,6 +44,22 @@ const struct bpf_map_info xdp_data_map_s_ex = {
 	.value_size  = sizeof(struct record),
 	.max_entries = IP_HASH_ENTRIES_MAX,
 };
+
+
+
+/*Block IP */
+struct keyipblock {
+	char isv6;
+	__be32 	ip_addr;
+	struct in6_addr ip6_addr;
+};
+
+const struct bpf_map_info xdp_block_ip_ex = {
+	.key_size    = sizeof(struct keyipblock),
+	.value_size  = sizeof(time_t),
+	.max_entries = IP_HASH_ENTRIES_MAX,
+};
+
 
 
 

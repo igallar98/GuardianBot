@@ -27,7 +27,7 @@ static const char *__doc__ = "XDP data program\n"
 
 #include "maps_expected_user.h"
 #include "../common/shared_memory.h"
-
+#include "../common/checker.h"
 
 static const struct option_wrapper long_options[] = {
 	{{"help",        no_argument,		NULL, 'h' },
@@ -233,54 +233,61 @@ static void stats_collect(int map_fd, int xdp_data_map_s_fd, int idrec)
 	}
 }
 
-static int stats_poll(const char *pin_dir, int map_fd, __u32 id, int interval, int xdp_data_map_s_fd)
+static int stats_poll(const char *pin_dir, int map_fd, __u32 id, int interval, int xdp_data_map_s_fd, int xdp_block_ip_fd)
 {
-	struct bpf_map_info info = {};
+
 
 	setlocale(LC_NUMERIC, "en_US");
 
 
+	reset_python_data();
+	get_guardian_data();
 
-	while (1) {
-
-
-		map_fd = open_bpf_map_file(pin_dir, "xdp_data_map", &info);
-		if (map_fd < 0) {
-			return EXIT_FAIL_BPF;
-		}
-		/* else if (id != info.id) {
-			printf("BPF map xdp_data_map changed its ID, restarting\n");
-			close(map_fd);
-			return 0;
-		} */
-
-		xdp_data_map_s_fd = open_bpf_map_file(pin_dir, "xdp_data_map_s", &info);
-		if (xdp_data_map_s_fd < 0) {
-			return EXIT_FAIL_BPF;
-		}
-		/* else if (id != info.id) {
-			printf("BPF map xdp_data_map changed its ID, restarting\n");
-			close(map_fd);
-			return 0;
-		} */
-
-
-		stats_collect(map_fd, xdp_data_map_s_fd, 0);
-		usleep(2000000);
-		stats_collect(map_fd, xdp_data_map_s_fd, 1);
-		int tam = 0;
-		char * data = stats_print(map_fd, xdp_data_map_s_fd, &tam);
-
-		send_to_python(data, tam);
-
-		free(data);
-		data = NULL;
-
-		close(map_fd);
-		close(xdp_data_map_s_fd);
-		sleep(interval);
+	/*
+	struct bpf_map_info info = {};
+	map_fd = open_bpf_map_file(pin_dir, "xdp_data_map", &info);
+	if (map_fd < 0) {
+		return EXIT_FAIL_BPF;
 	}
 
+	xdp_data_map_s_fd = open_bpf_map_file(pin_dir, "xdp_data_map_s", &info);
+	if (xdp_data_map_s_fd < 0) {
+		return EXIT_FAIL_BPF;
+	}*/
+
+
+
+
+	if(fork() == 0){
+		check_changes(map_fd, xdp_data_map_s_fd, xdp_block_ip_fd);
+
+		exit(1);
+
+	} else {
+
+			while (1) {
+
+
+
+				stats_collect(map_fd, xdp_data_map_s_fd, 0);
+				usleep(2000000);
+				stats_collect(map_fd, xdp_data_map_s_fd, 1);
+				int tam = 0;
+				char * data = stats_print(map_fd, xdp_data_map_s_fd, &tam);
+
+				send_to_python(data, tam);
+
+				free(data);
+				data = NULL;
+
+
+				sleep(interval);
+			}
+
+	}
+
+	close(map_fd);
+	close(xdp_data_map_s_fd);
 	return 0;
 }
 
@@ -297,6 +304,7 @@ int main(int argc, char **argv)
 	char pin_dir[PATH_MAX];
 	int stats_map_fd;
 	int xdp_data_map_s_fd;
+	int xdp_block_ip_fd;
 	int interval = 2;
 	int len, err;
 
@@ -348,16 +356,40 @@ int main(int argc, char **argv)
 			close(stats_map_fd);
 			return err;
 		}
-		if (verbose) {
-			printf("\nCollecting stats from BPF map\n");
-			printf(" - BPF map (bpf_map_type:%d) id:%d name:%s"
-			       " key_size:%d value_size:%d max_entries:%d\n",
-			       info.type, info.id, info.name,
-			       info.key_size, info.value_size, info.max_entries
-			       );
+
+
+		xdp_data_map_s_fd = open_bpf_map_file(pin_dir, "xdp_data_map_s", &info);
+		if (xdp_data_map_s_fd < 0) {
+			return EXIT_FAIL_BPF;
 		}
 
-		err = stats_poll(pin_dir, stats_map_fd, info.id, interval, xdp_data_map_s_fd);
+		/* check map info, e.g. datarec is expected size */
+		err = check_map_fd_info(&info, &xdp_data_map_s_ex);
+		if (err) {
+			fprintf(stderr, "ERR: map via FD not compatible\n");
+			close(stats_map_fd);
+			return err;
+		}
+
+
+
+		xdp_block_ip_fd = open_bpf_map_file(pin_dir, "xdp_block_ip", &info);
+		if (xdp_data_map_s_fd < 0) {
+			return EXIT_FAIL_BPF;
+		}
+
+		/* check map info, e.g. datarec is expected size */
+		err = check_map_fd_info(&info, &xdp_block_ip_ex);
+		if (err) {
+			fprintf(stderr, "ERR: map via FD not compatible\n");
+			close(stats_map_fd);
+			return err;
+		}
+
+
+
+
+		err = stats_poll(pin_dir, stats_map_fd, info.id, interval, xdp_data_map_s_fd, xdp_block_ip_fd);
 		close(stats_map_fd);
 		if (err < 0)
 			return err;

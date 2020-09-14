@@ -92,17 +92,17 @@ id="window"
 <script>
   function showClassError(){
         var notify = Metro.notify;
-        notify.create("No has selecionado ningún elemento.", "Alert", {
+        notify.create("No has selecionado ningún elemento.", "Alerta", {
             cls: "alert"
         });
     }
 
-    function showClassOk(){
-          var notify = Metro.notify;
-          notify.create("Dirección bloqueada correctamente.", "Success", {
-              cls: "success"
-          });
-      }
+function showClassOk(){
+      var notify = Metro.notify;
+      notify.create("Dirección bloqueada correctamente.", "Correcto", {
+          cls: "success"
+      });
+  }
 
 function loadIframe(iframeName, url) {
     var $iframe = $('#' + iframeName);
@@ -136,13 +136,13 @@ function onclickblockd(){
 
 function onclickinfo(){
   var tableshowip = $('#t1').data('table').getSelectedItems();
-if(tableshowip.length < 1){
-showClassError();
-} else {
-    loadIframe('inlineFrame','/getipinfo?sip='+tableshowip[0][0]+'&dip='+tableshowip[0][1])
-    $('#window').data('window').show();
+  if(tableshowip.length < 1){
+  showClassError();
+  } else {
+      loadIframe('inlineFrame','/getipinfo?sip='+tableshowip[0][0]+'&dip='+tableshowip[0][1])
+      $('#window').data('window').show();
 
-}
+  }
 }
 
 $( document ).ready(function() {

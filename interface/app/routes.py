@@ -1,6 +1,6 @@
 from app import app, request, render_template, url_for
-from app import sharedMemory, jsonTable, blockIP
-
+from app import sharedMemory, jsonTable, blockIP, checker
+import sys
 global save
 save = [0]
 
@@ -23,6 +23,16 @@ def rjsonTable():
 @app.route('/config')
 def config():
     return render_template('config.html', title = "Configuración del cortafuegos")
+
+
+@app.route('/shutdown', methods=['POST','GET'])
+def shutdown():
+    if 'shutdown' in  request.form:
+        chk = checker.Checker();
+        chk.updateValue('s')
+        chk.shutdown_server()
+    return render_template('shutdown.html', title = "Apagar el cortafuegos")
+
 
 
 @app.route('/lock')

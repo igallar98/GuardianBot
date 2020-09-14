@@ -1,0 +1,29 @@
+{% extends "includes/header.html" %}
+{% block title %}{{title}}{% endblock %}
+{% block content %}
+
+
+<div class="container">
+        <div class="text-center p-10 border border-radius-10 bd-transparent shadowed">
+            <div class="h3 text-light text-center">
+                <span class="reduce-1 enlarge-1-md">
+                    ¿Apagar el cortafuegos y sus componentes?
+                </span>
+            </div>
+
+            <br>
+          <form method="post" >
+             <button class="image-button icon alert" name="shutdown" value="shutdown">
+             <span class="mif-bug icon"></span>
+             <span class="caption">Si, apagar</span>
+             </button>
+
+          <a href="/index">
+          <button class="image-button icon success">
+          <span class="mif-beenhere icon"></span>
+          <span class="caption">No, seguir</span>
+          </button></a>
+          </div>
+          </div>
+          </form>
+{% endblock %}

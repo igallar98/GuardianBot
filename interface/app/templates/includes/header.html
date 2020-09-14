@@ -33,18 +33,24 @@
           <li class="divider"></li>
           <li><a><span class="mif-blocked icon"></span>Protocolos</a></li>
           <li><a><span class="mif-blocked icon"></span>Puertos</a></li>
-          <li><a><span class="mif-blocked icon"></span>Direcciones IP</a></li>
-          
+          <li><a href="/blockip"><span class="mif-blocked icon"></span>Direcciones IP</a></li>
+
           <li class="divider"></li>
           <li><a><span class="mif-books icon"></span>FAQ</a></li>
           <li><a href="/config"><span class="mif-tools icon"></span>Configuración</a></li>
       </ul>
   </aside>
+
   <div class="shifted-content-2 h-100 p-ab">
       <div class="appbar pos-absolute bg-darkCyan z-1" data-role="appbar">
           <button class="app-bar-item c-pointer" id="sidebar-toggle-4">
               <span class="mif-menu fg-white"></span>
           </button>
+          <div class="app-bar-container ml-auto">
+                <a href="/shutdown" class="app-bar-item">
+                    <span class="mif-power-cord fg-white"></span>
+                </a>
+            </div>
       </div>
 
       <div class="h-100 p-4">{% block content %}{% endblock %}</div>

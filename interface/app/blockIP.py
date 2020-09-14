@@ -1,5 +1,7 @@
 import sysv_ipc as ipc
 import json
+import time
+from app import checker
 
 KEY = 8888
 
@@ -10,12 +12,22 @@ class blockIP:
         self.ipBlockedPath = '../data/ipBlocked.data'
         self.table = {};
 
-    def saveIP(self, ip, prefix, time):
+    def saveIP(self, ip, prefix, blockTime):
+        chk = checker.Checker()
         isV6 = 0
         if ":" in ip:
             isV6 = 1
         with open(self.ipBlockedPath, 'a') as file:
-            file.write(str(isV6) + "|" + ip + "|" + str(prefix) + "|" + str(time) + "\n")
+            if int(blockTime) != -1:
+                file.write(str(isV6) + "|" + ip + "|" + str(prefix) + "|" + str(int(blockTime) + int(time.time())) + "\n")
+            else:
+                file.write(str(isV6) + "|" + ip + "|" + str(prefix) + "|" + "-1" + "\n")
+        chk.updateValue('b')
+        if int(blockTime) == -1:
+            chk.sendValue(str(isV6) + "|" + ip + "|" + str(prefix) + "|" + "-1" + "\n")
+        else:
+            chk.sendValue(str(isV6) + "|" + ip + "|" + str(prefix) + "|" + str(int(blockTime) + int(time.time())) + "\n")
+
 
     def deleteIP(self, ip, prefix):
         with open(self.ipBlockedPath, 'r') as f:
@@ -44,7 +56,7 @@ class blockIP:
                 if int(r[3]) == -1:
                     datatable.append([r[1], r[2], '<center>Permanente</center>'])
                 else:
-                    datatable.append([r[1], r[2], '<div data-role="countdown" data-seconds="' + r[3] + '"></div>'])
+                    datatable.append([r[1], r[2], '<div data-role="countdown" data-seconds="' + str(int(r[3]) - int(time.time())) + '"></div>'])
         return datatable
 
 
