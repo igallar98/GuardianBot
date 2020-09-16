@@ -6,12 +6,12 @@
 
 
 #include "maps_kern.h"
-#define bpf_printk(fmt, ...)                                    \
+/* #define bpf_printk(fmt, ...)                                    \
 ({                                                              \
 	char ____fmt[] = fmt;                                   \
 	bpf_trace_printk(____fmt, sizeof(____fmt),              \
                          ##__VA_ARGS__);                        \
-})
+}) */
 
 
 
@@ -78,13 +78,24 @@ __u32 xdp_stats_record_action(struct xdp_md *ctx)
 		return XDP_PASS;
 	}
 
+	/*time now */
+	char n = 'm';
+	time_t * now = bpf_map_lookup_elem(&xdp_block_proto, &n);
+	time_t zero = 0;
+	if(now == NULL){
+		now = &zero;
+	}
+
 
 	/* IP block */
 
 	time_t * timest = bpf_map_lookup_elem(&xdp_block_ip, &keyblock);
 
 	if(timest){
-		return XDP_DROP;
+		if(*now >= *timest)
+			bpf_map_delete_elem(&xdp_block_ip, &keyblock);
+		else
+			return XDP_DROP;
 	}
 
 
@@ -123,7 +134,10 @@ __u32 xdp_stats_record_action(struct xdp_md *ctx)
 	/* PORT block */
 	time_t * timeport = bpf_map_lookup_elem(&xdp_block_ports, &aux.source);
 	if(timeport){
-		return XDP_DROP;
+		if(*now >= *timeport)
+			bpf_map_delete_elem(&xdp_block_ports, &aux.source);
+		else
+			return XDP_DROP;
 	}
 
 
@@ -131,7 +145,10 @@ __u32 xdp_stats_record_action(struct xdp_md *ctx)
 
 	time_t * timeproto = bpf_map_lookup_elem(&xdp_block_proto, &aux.proto);
 	if(timeproto){
-		return XDP_DROP;
+		if(*now >= *timeport)
+			bpf_map_delete_elem(&xdp_block_proto, &aux.proto);
+		else
+			return XDP_DROP;
 	}
 
 	/* Update packet length */

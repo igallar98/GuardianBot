@@ -10,6 +10,8 @@ struct keyipblockchk {
 };
 
 int check_changes(int map_fd, int xdp_data_map_s_fd, int xdp_block_ip_fd, int xdp_block_portsfd, int xdp_block_protofd);
+int update_time(int xdp_block_protofd);
+
 int ipdatablock_to_bpfmap(char * data, int xdp_block_ip_fd);
 int delete_block_bpfmap(char * data, int xdp_block_ip_fd);
 

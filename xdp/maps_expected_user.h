@@ -6,7 +6,7 @@
 #ifndef MAPS_USER_EXPECTED_H
 #define MAPS_USER_EXPECTED_H
 #define IP_HASH_ENTRIES_MAX	16382
-#define MAX_PROTOCOL  5
+#define MAX_PROTOCOL 6
 #define MAX_PORTS 65535
 
 #include <time.h>
