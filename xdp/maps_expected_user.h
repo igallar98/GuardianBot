@@ -79,7 +79,7 @@ struct bpf_map_info xdp_block_proto = {
 
 struct bpf_map_info xdp_block_ports = {
 	.key_size    = sizeof(char),
-	.value_size  = sizeof(time_t),
+	.value_size  = sizeof(int),
 	.max_entries = MAX_PORTS,
 };
 

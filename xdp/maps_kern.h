@@ -87,7 +87,7 @@ struct bpf_map_def SEC("maps") xdp_block_proto = {
 struct bpf_map_def SEC("maps") xdp_block_ports = {
 	.type        = BPF_MAP_TYPE_HASH,
 	.key_size    = sizeof(char),
-	.value_size  = sizeof(time_t),
+	.value_size  = sizeof(int),
 	.max_entries = MAX_PORTS,
 };
 

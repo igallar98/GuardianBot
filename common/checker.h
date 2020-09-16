@@ -16,9 +16,12 @@ int delete_block_bpfmap(char * data, int xdp_block_ip_fd);
 uint32_t getDecimalValueOfIPV4_String(const char* ipAddress);
 
 int block_protocol_bpfmap(char * data, int xdp_block_protofd);
-int unblock_protocol_bpfmap(char * data, int xdp_block_protofd) ;
+int unblock_protocol_bpfmap(char * data, int xdp_block_protofd);
 
 char parse_proto(char *proto);
+
+int block_port_bpfmap(char * data, int xdp_block_portsfd);
+int unblock_port_bpfmap(char * data, int xdp_block_protofd);
 
 int IsDigit(char ch);
 #endif /* __SHARED_MEMORY_H */

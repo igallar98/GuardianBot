@@ -56,6 +56,25 @@ int check_changes(int map_fd, int xdp_data_map_s_fd, int xdp_block_ip_fd, int xd
           reset_python_data();
           break;
 
+
+        case '0': /* Block Port */
+          bdata = get_guardian_data();
+
+          block_port_bpfmap(bdata, xdp_block_portsfd);
+
+          reset_python_data();
+          break;
+
+
+        case '1': /* UnBlock Port */
+          bdata = get_guardian_data();
+
+          unblock_port_bpfmap(bdata, xdp_block_portsfd);
+
+          reset_python_data();
+          break;
+
+
         case 's': /* Shutdown */
             kill(getppid(), 9);
             free_memory();
@@ -78,6 +97,39 @@ int check_changes(int map_fd, int xdp_data_map_s_fd, int xdp_block_ip_fd, int xd
 
   }
 }
+
+
+int block_port_bpfmap(char * data, int xdp_block_portsfd){
+  char *port = strtok(data, "|");
+
+  if(port == NULL)
+    return -1;
+
+  int p = htonl(atoi(port));
+
+
+  time_t time = atoll(strtok(NULL, "|"));
+
+  bpf_map_update_elem(xdp_block_portsfd, &p, &time, BPF_ANY);
+
+  return 0;
+
+}
+
+int unblock_port_bpfmap(char * data, int xdp_block_protofd) {
+  char *port = strtok(data, "|");
+
+  if(port == NULL)
+    return -1;
+
+  int p = htonl(atoi(port));
+
+  bpf_map_delete_elem(xdp_block_protofd, &p);
+
+  return 0;
+
+}
+
 
 int unblock_protocol_bpfmap(char * data, int xdp_block_protofd) {
   char *proto = strtok(data, "|");

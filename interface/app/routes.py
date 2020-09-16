@@ -1,5 +1,5 @@
 from app import app, request, render_template, url_for
-from app import sharedMemory, jsonTable, blockIP, checker, blockProtocol
+from app import sharedMemory, jsonTable, blockIP, checker, blockProtocol, blockPort
 import sys
 global save
 save = [0]
@@ -56,6 +56,21 @@ def blockprotocol():
 
     return render_template('blockProtocol.html', title = "Bloquear Protocolos")
 
+@app.route('/blockport', methods=['POST','GET'])
+def blockport():
+    if 'time' in request.form and 'port' in request.form:
+        block = blockPort.BlockPort()
+        block.blockPort(request.form["port"], request.form["time"])
+
+    return render_template('blockPort.html', title = "Bloquear Puertos")
+
+
+@app.route('/getblockport.json')
+def getblockport():
+    block = blockPort.BlockPort()
+    return block.getTable()
+
+
 @app.route('/getblockprotocol.json')
 def getblockprotocol():
     block = blockProtocol.BlockProtocol()
@@ -80,6 +95,14 @@ def unblockprotocol():
     if 'protocol' in request.form:
         block = blockProtocol.BlockProtocol()
         block.unBlockProtocol(request.form["protocol"])
+        return "0"
+    return "1"
+
+@app.route('/unblockport', methods=['POST','GET'])
+def unblockport():
+    if 'port' in request.form:
+        block = blockPort.BlockPort()
+        block.unBlockPort(request.form["port"])
         return "0"
     return "1"
 

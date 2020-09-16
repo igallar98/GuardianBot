@@ -1,0 +1,124 @@
+{% extends "includes/header.html" %}
+{% block title %}{{title}}{% endblock %}
+{% block content %}
+
+<div class="row border-bottom bd-lightGray m-3">
+    <div class="cell-md-5 d-flex flex-align-center">
+        <h3 class="dashboard-section-title  text-center text-left-md w-100">Bloquear Puertos</h3>
+    </div>
+
+</div>
+
+<script>
+
+
+function invalidForm(){
+    var form  = $(this);
+    form.addClass("ani-ring");
+    setTimeout(function(){
+        form.removeClass("ani-ring");
+    }, 1000);
+}
+
+function validateForm(){
+    $(".login-form").animate({
+        opacity: 0
+    });
+}
+
+function validateForm(){
+    $(".login-form").animate({
+        opacity: 0
+    });
+}
+
+function stepperMethod (m){
+    var stepper = $("#stepper_methods").data('stepper');
+    stepper[m]();
+}
+</script>
+<div class="container-fluid" style="width: 70%;">
+  <form class="login-form" data-role="validator" data-clear-invalid="3000" data-on-error-form="invalidForm" data-on-validate-form="validateForm" method="post" >
+    <div class="form-group">
+        <label>Puerto a bloquear:</label>
+        <input type="text" name="port" data-validate="min=1 max=65535" data-role="spinner">
+
+    </div>
+
+    <div class="form-group">
+      <label>Tiempo de bloqueo: </label>
+      <select name="time" data-role="select" data-validate="required">
+        <option class="fg-green" value="3600">1 hora</option>
+        <option class="text-bold fg-cyan" value="86400">24 horas</option>
+        <option class="fg-cyan" value="604800">1 semana</option>
+        <option class="fg-cyan" value="2592000">1 mes</option>
+        <option class="fg-red" value="-1">Permanente</option>
+      </select>
+    </div>
+    <div class="form-group text-center mt-6">
+        <button type="submit" onclick="stepperMethod('next')" class="button alert">Bloquear protocolo</button>
+    </div>
+</form>
+
+</div>
+
+
+<h3 id="_push_buttons">Bloqueos activos</h3>
+<div class="d-flex flex-justify-center flex-wrap">
+  <button  onclick="onclickblock()" class="image-button success m-1">
+      <span class="mif-checkmark icon"></span>
+      <span class="caption">Desbloquear</span>
+  </button>
+<div class="my-search-wrapper m-1"></div>
+  <button class="tool-button secondary rounded m-1"
+          onclick="$('#t1').data('table').export('CSV', 'all', 'GuardianBot.csv')">
+          <span class="mif-download2"></span></button>
+
+</div>
+
+<table id="tb" class="table compact table-border mt-5"
+       data-role="table"
+       data-rows="50"
+       data-table-search-title="Buscar: "
+       data-rows-steps="5, 10"
+       data-show-activity="false"
+       	data-show-rows-steps	="false"
+       data-source="/getblockport.json"
+      data-check="true"
+       data-check-style="2"
+       data-check-type="radio"
+       data-info-wrapper=".my-info-wrapper"
+      data-pagination-prev-title="Página Anterior"
+      data-pagination-next-title="Página Siguiente"
+      data-table-info-title="Mostrando $2/<b>$3</b>"
+      data-search-wrapper=".my-search-wrapper"
+      data-pagination-wrapper=".my-pagination-wrapper"
+
+      >
+</table>
+
+
+<script>
+  function onclickblock(){
+    var tableshowip = $('#tb').data('table').getSelectedItems();
+  if(tableshowip.length < 1){
+      var notify = Metro.notify;
+      notify.create("No has selecionado ningún elemento.", "Alerta", {
+          cls: "alert"
+      });
+  } else {
+
+    $.post( "/unblockport", { port: tableshowip[0][0] } );
+    $('#tb').data('table').loadData('/getblockport.json');
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+{% endblock %}
