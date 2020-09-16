@@ -79,7 +79,7 @@ __u32 xdp_stats_record_action(struct xdp_md *ctx)
 	}
 
 
-	/* Packet block */
+	/* IP block */
 
 	time_t * timest = bpf_map_lookup_elem(&xdp_block_ip, &keyblock);
 
@@ -120,6 +120,15 @@ __u32 xdp_stats_record_action(struct xdp_md *ctx)
 		break;
 	}
 
+	/* PORT block */
+
+
+	/* PROTO block */
+
+	time_t * timeproto = bpf_map_lookup_elem(&xdp_block_proto, &aux.proto);
+	if(timeproto){
+		return XDP_DROP;
+	}
 
 	/* Update packet length */
 	__u64 bytes = data_end - data;

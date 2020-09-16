@@ -175,6 +175,11 @@ char* get_guardian_data(){
     return addr;
   }
 
+  if (shmctl(shmid, IPC_RMID, NULL) == -1)
+      return NULL;
+
+  shmid = shmget(key, MAXTAMDATA , IPC_CREAT | IPC_EXCL | 0664);
+
 
   return addr;
 

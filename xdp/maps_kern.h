@@ -6,8 +6,13 @@
 #ifndef XDP_ACTION_MAX
 #define XDP_ACTION_MAX (XDP_REDIRECT + 1)
 #include "../common/parsing_helpers.h"
-#define IP_HASH_ENTRIES_MAX	16382
 #include <time.h>
+
+
+#define IP_HASH_ENTRIES_MAX	16382
+#define MAX_PROTOCOL  5
+#define MAX_PORTS 65535
+
 
 
 /* DATA IP MAP PER CPU */
@@ -66,6 +71,25 @@ struct bpf_map_def SEC("maps") xdp_block_ip = {
 	.max_entries = IP_HASH_ENTRIES_MAX,
 };
 
+/* Block Protocol*/
+
+struct bpf_map_def SEC("maps") xdp_block_proto = {
+	.type        = BPF_MAP_TYPE_HASH,
+	.key_size    = sizeof(char),
+	.value_size  = sizeof(time_t),
+	.max_entries = MAX_PROTOCOL,
+};
+
+
+/* Block Ports */
+
+
+struct bpf_map_def SEC("maps") xdp_block_ports = {
+	.type        = BPF_MAP_TYPE_HASH,
+	.key_size    = sizeof(char),
+	.value_size  = sizeof(time_t),
+	.max_entries = MAX_PORTS,
+};
 
 #endif
 

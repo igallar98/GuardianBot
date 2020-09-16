@@ -233,7 +233,7 @@ static void stats_collect(int map_fd, int xdp_data_map_s_fd, int idrec)
 	}
 }
 
-static int stats_poll(const char *pin_dir, int map_fd, __u32 id, int interval, int xdp_data_map_s_fd, int xdp_block_ip_fd)
+static int stats_poll(const char *pin_dir, int map_fd, __u32 id, int interval, int xdp_data_map_s_fd, int xdp_block_ip_fd, int xdp_block_portsfd, int xdp_block_protofd)
 {
 
 
@@ -259,7 +259,7 @@ static int stats_poll(const char *pin_dir, int map_fd, __u32 id, int interval, i
 
 
 	if(fork() == 0){
-		check_changes(map_fd, xdp_data_map_s_fd, xdp_block_ip_fd);
+		check_changes(map_fd, xdp_data_map_s_fd, xdp_block_ip_fd, xdp_block_portsfd, xdp_block_protofd);
 
 		exit(1);
 
@@ -305,6 +305,8 @@ int main(int argc, char **argv)
 	int stats_map_fd;
 	int xdp_data_map_s_fd;
 	int xdp_block_ip_fd;
+	int xdp_block_portsfd;
+	int xdp_block_protofd;
 	int interval = 2;
 	int len, err;
 
@@ -388,8 +390,38 @@ int main(int argc, char **argv)
 
 
 
+		xdp_block_portsfd = open_bpf_map_file(pin_dir, "xdp_block_ports", &info);
+		if (xdp_block_portsfd < 0) {
+			return EXIT_FAIL_BPF;
+		}
 
-		err = stats_poll(pin_dir, stats_map_fd, info.id, interval, xdp_data_map_s_fd, xdp_block_ip_fd);
+		/* check map info, e.g. datarec is expected size */
+		err = check_map_fd_info(&info, &xdp_block_ports);
+		if (err) {
+			fprintf(stderr, "ERR: map via FD not compatible\n");
+			close(stats_map_fd);
+			return err;
+		}
+
+
+
+		xdp_block_protofd = open_bpf_map_file(pin_dir, "xdp_block_proto", &info);
+		if (xdp_block_protofd < 0) {
+			return EXIT_FAIL_BPF;
+		}
+
+		/* check map info, e.g. datarec is expected size */
+		err = check_map_fd_info(&info, &xdp_block_proto);
+		if (err) {
+			fprintf(stderr, "ERR: map via FD not compatible\n");
+			close(stats_map_fd);
+			return err;
+		}
+
+
+
+
+		err = stats_poll(pin_dir, stats_map_fd, info.id, interval, xdp_data_map_s_fd, xdp_block_ip_fd, xdp_block_portsfd, xdp_block_protofd);
 		close(stats_map_fd);
 		if (err < 0)
 			return err;

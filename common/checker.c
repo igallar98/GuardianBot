@@ -12,13 +12,13 @@
 
 #include <arpa/inet.h>
 
-int check_changes(int map_fd, int xdp_data_map_s_fd, int xdp_block_ip_fd)
+int check_changes(int map_fd, int xdp_data_map_s_fd, int xdp_block_ip_fd, int xdp_block_portsfd, int xdp_block_protofd)
 {
 
   while(1){
 
     char * data = get_python_data();
-    char * ipdata = NULL;
+    char * bdata = NULL;
 
 
     if(!data || *data == 'z'){
@@ -26,18 +26,44 @@ int check_changes(int map_fd, int xdp_data_map_s_fd, int xdp_block_ip_fd)
     } else {
 
       switch(*data) {
-        case 'b':
-          ipdata = get_guardian_data();
-          ipdata_to_bpfmap(ipdata, xdp_block_ip_fd);
+        case 'b': /* Block IP */
+          bdata = get_guardian_data();
+          ipdatablock_to_bpfmap(bdata, xdp_block_ip_fd);
+          reset_python_data();
+          break;
+
+        case 'u': /* UnBlock IP */
+          bdata = get_guardian_data();
+
+          delete_block_bpfmap(bdata, xdp_block_ip_fd);
 
           reset_python_data();
           break;
-        case 's':
+
+        case 'p': /* Block Protocol */
+          bdata = get_guardian_data();
+
+          block_protocol_bpfmap(bdata, xdp_block_protofd);
+
+          reset_python_data();
+          break;
+
+        case 'd': /* UnBlock Protocol */
+          bdata = get_guardian_data();
+
+          unblock_protocol_bpfmap(bdata, xdp_block_protofd);
+
+          reset_python_data();
+          break;
+
+        case 's': /* Shutdown */
             kill(getppid(), 9);
             free_memory();
             close(map_fd);
+            close(xdp_data_map_s_fd);
             close(xdp_block_ip_fd);
-            close(xdp_block_ip_fd);
+            close(xdp_block_portsfd);
+            close(xdp_block_protofd);
             exit(0);
             break;
         case '2':
@@ -53,11 +79,58 @@ int check_changes(int map_fd, int xdp_data_map_s_fd, int xdp_block_ip_fd)
   }
 }
 
+int unblock_protocol_bpfmap(char * data, int xdp_block_protofd) {
+  char *proto = strtok(data, "|");
+
+  if(proto == NULL)
+    return -1;
+  char p = parse_proto(proto);
+
+  bpf_map_delete_elem(xdp_block_protofd, &p);
+
+  return 0;
+
+}
 
 
-int ipdata_to_bpfmap(char * data, int xdp_block_ip_fd){
+
+int block_protocol_bpfmap(char * data, int xdp_block_protofd){
+  char *proto = strtok(data, "|");
+
+  if(proto == NULL)
+    return -1;
+
+  char p = parse_proto(proto);
+
+
+  time_t time = atoll(strtok(NULL, "|"));
+
+  bpf_map_update_elem(xdp_block_protofd, &p, &time, BPF_ANY);
+
+  return 0;
+
+}
+
+char parse_proto(char *proto){
+  char  p = 'x';
+  if (strcmp(proto, "IP") == 0)
+    p = 'p';
+  else if (strcmp(proto, "IPV6") == 0)
+    p = '6';
+  else if (strcmp(proto, "ICMP") == 0)
+    p = 'i';
+  else if (strcmp(proto, "TCP") == 0)
+    p = 't';
+  else if (strcmp(proto, "UDP") == 0)
+    p = 'u';
+
+  return p;
+}
+
+int ipdatablock_to_bpfmap(char * data, int xdp_block_ip_fd){
   char *token = strtok(data, "|");
-
+  if(token == NULL)
+    return -1;
 
 
   if(token[0] == '0'){
@@ -70,16 +143,18 @@ int ipdata_to_bpfmap(char * data, int xdp_block_ip_fd){
     token = strtok(NULL, "|");
 
 
-    int prefix = atoi(token);
+    //int prefix = atoi(token);
 
-    token = strtok(NULL, "|");
+    token = strtok(NULL, "\n");
 
 
     time_t time = atoll(token);
 
-    struct keyipblockh keyblock = {};
+    struct keyipblockchk keyblock = {};
     keyblock.isv6 = 0;
     keyblock.ip_addr = htonl(ipv4);
+
+
     //keyblock.prefix = prefix;
 
     bpf_map_update_elem(xdp_block_ip_fd, &keyblock, &time, BPF_ANY);
@@ -87,6 +162,30 @@ int ipdata_to_bpfmap(char * data, int xdp_block_ip_fd){
 
   } else {
     /* IPV6 */
+    struct in6_addr resultip;
+
+
+    token = strtok(NULL, "|");
+
+
+    if (inet_pton(AF_INET6, token, &resultip) != 1)
+      return -1;
+
+    token = strtok(NULL, "|");
+
+
+    //int prefix = atoi(token);
+
+    token = strtok(NULL, "\n");
+
+
+    time_t time = atoll(token);
+
+    struct keyipblockchk keyblock = {};
+    keyblock.isv6 = 1;
+    keyblock.ip6_addr = resultip;
+
+    bpf_map_update_elem(xdp_block_ip_fd, &keyblock, &time, BPF_ANY);
 
   }
 
@@ -95,30 +194,56 @@ int ipdata_to_bpfmap(char * data, int xdp_block_ip_fd){
   return 0;
 
 
+}
 
 
+int delete_block_bpfmap(char * data, int xdp_block_ip_fd){
+  char *token = strtok(data, "|");
+
+  if(token == NULL)
+    return -1;
 
 
+  if(token[0] == '0'){
+    /* IPV4 */
+    struct in6_addr resultip;
 
 
+    token = strtok(NULL, "|");
 
 
+    if (inet_pton(AF_INET6, token, &resultip) != 1)
+      return -1;
 
 
+    struct keyipblockchk keyblock = {};
+    keyblock.isv6 = 0;
+    keyblock.ip6_addr = resultip;
 
 
+    bpf_map_delete_elem(xdp_block_ip_fd, &keyblock);
 
 
+  } else {
+    /* IPv6 */
+
+    token = strtok(NULL, "\n");
+    int ipv4 = getDecimalValueOfIPV4_String(token);
+
+    struct keyipblockchk keyblock = {};
+    keyblock.isv6 = 0;
+    keyblock.ip_addr = htonl(ipv4);
 
 
+    bpf_map_delete_elem(xdp_block_ip_fd, &keyblock);
 
 
+  }
 
-
+  return 1;
 
 
 }
-
 
 int IsDigit(char ch)
 {

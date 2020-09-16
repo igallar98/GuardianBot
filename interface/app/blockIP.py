@@ -11,9 +11,9 @@ class blockIP:
     def __init__(self):
         self.ipBlockedPath = '../data/ipBlocked.data'
         self.table = {};
+        self.chk = checker.Checker()
 
     def saveIP(self, ip, prefix, blockTime):
-        chk = checker.Checker()
         isV6 = 0
         if ":" in ip:
             isV6 = 1
@@ -22,41 +22,41 @@ class blockIP:
                 file.write(str(isV6) + "|" + ip + "|" + str(prefix) + "|" + str(int(blockTime) + int(time.time())) + "\n")
             else:
                 file.write(str(isV6) + "|" + ip + "|" + str(prefix) + "|" + "-1" + "\n")
-        chk.updateValue('b')
+        self.chk.updateValue('b')
         if int(blockTime) == -1:
-            chk.sendValue(str(isV6) + "|" + ip + "|" + str(prefix) + "|" + "-1" + "\n")
+            self.chk.sendValue(str(isV6) + "|" + ip + "|" + str(prefix) + "|" + "-1" + "\n")
         else:
-            chk.sendValue(str(isV6) + "|" + ip + "|" + str(prefix) + "|" + str(int(blockTime) + int(time.time())) + "\n")
+            self.chk.sendValue(str(isV6) + "|" + ip + "|" + str(prefix) + "|" + str(int(blockTime) + int(time.time())) + "\n")
 
 
     def deleteIP(self, ip, prefix):
+        isV6 = 0
+        if ":" in ip:
+            isV6 = 1
         with open(self.ipBlockedPath, 'r') as f:
             lines = f.readlines()
         with open(self.ipBlockedPath, 'w') as f:
             for line in lines:
                 r = line.split("|")
-                if not (r[1] == ip and r[2] == prefix):
+                if not (r[1] == ip):
                     f.write(line)
 
+        self.chk.updateValue('u')
+        self.chk.sendValue(str(isV6) + "|" + ip + "\n")
 
 
-    def getBlocks(self):
-        with open(self.ipBlockedPath, 'r') as file:
-            for f in file:
-                table = f.split("|")
 
-        return table
 
     def getDataBlocked(self):
         datatable = []
-        with open(self.ipBlockedPath, 'r') as file:
+        with open(self.ipBlockedPath, 'r+') as file:
             lines = file.readlines()
             for row in lines:
                 r = row.split("|")
                 if int(r[3]) == -1:
-                    datatable.append([r[1], r[2], '<center>Permanente</center>'])
+                    datatable.append([r[1], '<center>Permanente</center>'])
                 else:
-                    datatable.append([r[1], r[2], '<div data-role="countdown" data-seconds="' + str(int(r[3]) - int(time.time())) + '"></div>'])
+                    datatable.append([r[1], '<div data-role="countdown" data-seconds="' + str(int(r[3]) - int(time.time())) + '"></div>'])
         return datatable
 
 
@@ -64,16 +64,13 @@ class blockIP:
         ip = {  "name": "ip",
                     "title": "Dirección",
                     "sortable": False}
-        prefix = {  "name": "prefix",
-                    "title": "Prefijo",
-                    "sortable": False}
 
         time = {  "name": "time",
                     "title": "Tiempo",
                     "sortable": False}
 
 
-        return [ip, prefix, time]
+        return [ip, time]
 
     def getTable(self):
         self.table["header"] = self.headerTable()

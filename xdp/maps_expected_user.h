@@ -6,6 +6,9 @@
 #ifndef MAPS_USER_EXPECTED_H
 #define MAPS_USER_EXPECTED_H
 #define IP_HASH_ENTRIES_MAX	16382
+#define MAX_PROTOCOL  5
+#define MAX_PORTS 65535
+
 #include <time.h>
 /* DATA IP MAP PER CPU */
 struct datarec {
@@ -60,6 +63,25 @@ const struct bpf_map_info xdp_block_ip_ex = {
 	.max_entries = IP_HASH_ENTRIES_MAX,
 };
 
+
+
+/* Block Protocol*/
+
+struct bpf_map_info xdp_block_proto = {
+	.key_size    = sizeof(char),
+	.value_size  = sizeof(time_t),
+	.max_entries = MAX_PROTOCOL,
+};
+
+
+/* Block Ports */
+
+
+struct bpf_map_info xdp_block_ports = {
+	.key_size    = sizeof(char),
+	.value_size  = sizeof(time_t),
+	.max_entries = MAX_PORTS,
+};
 
 
 

@@ -1,5 +1,5 @@
 from app import app, request, render_template, url_for
-from app import sharedMemory, jsonTable, blockIP, checker
+from app import sharedMemory, jsonTable, blockIP, checker, blockProtocol
 import sys
 global save
 save = [0]
@@ -41,11 +41,26 @@ def lock():
 
 @app.route('/blockip', methods=['POST','GET'])
 def blockip():
-    if 'ip' in request.form and 'prefix' in request.form and 'time' in request.form:
+    if 'ip' in request.form and 'time' in request.form:
         block = blockIP.blockIP()
-        block.saveIP(request.form["ip"], request.form["prefix"], request.form["time"])
+        block.saveIP(request.form["ip"], 0, request.form["time"])
 
     return render_template('blockIP.html', title = "Bloquear Dirección IP")
+
+
+@app.route('/blockprotocol', methods=['POST','GET'])
+def blockprotocol():
+    if 'time' in request.form and 'proto' in request.form:
+        block = blockProtocol.BlockProtocol()
+        block.blockProtocol(request.form["proto"], request.form["time"])
+
+    return render_template('blockProtocol.html', title = "Bloquear Protocolos")
+
+@app.route('/getblockprotocol.json')
+def getblockprotocol():
+    block = blockProtocol.BlockProtocol()
+    return block.getTable()
+
 
 @app.route('/getblockip.json')
 def getblockip():
@@ -54,9 +69,17 @@ def getblockip():
 
 @app.route('/unblock', methods=['POST','GET'])
 def unblock():
-    if 'ip' in request.form and 'prefix' in request.form:
+    if 'ip' in request.form:
         block = blockIP.blockIP()
-        block.deleteIP(request.form["ip"], request.form["prefix"])
+        block.deleteIP(request.form["ip"], 0)
+        return "0"
+    return "1"
+
+@app.route('/unblockprotocol', methods=['POST','GET'])
+def unblockprotocol():
+    if 'protocol' in request.form:
+        block = blockProtocol.BlockProtocol()
+        block.unBlockProtocol(request.form["protocol"])
         return "0"
     return "1"
 
