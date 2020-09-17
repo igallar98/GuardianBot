@@ -16,6 +16,7 @@ class BlockPort:
 
 
     def blockPort(self, port, blockTime):
+        self.unBlockPort(port, False)
         with open(self.ipBlockedPath, 'a') as file:
             if int(blockTime) != -1:
                 file.write(str(port) + "|" + str(int(blockTime) + int(time.time())) + "\n")
@@ -27,7 +28,7 @@ class BlockPort:
         else:
             self.chk.sendValue(str(port) + "|" + "-1" + "\n")
 
-    def unBlockPort(self, port):
+    def unBlockPort(self, port, upd = True):
         with open(self.ipBlockedPath, 'r') as f:
             lines = f.readlines()
         with open(self.ipBlockedPath, 'w') as f:
@@ -35,9 +36,9 @@ class BlockPort:
                 r = line.split("|")
                 if not (r[0] == port):
                     f.write(line)
-
-        self.chk.updateValue('1')
-        self.chk.sendValue(port)
+        if upd:
+            self.chk.updateValue('1')
+            self.chk.sendValue(port)
 
 
     def getDataBlocked(self):

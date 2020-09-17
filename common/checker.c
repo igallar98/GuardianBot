@@ -12,11 +12,17 @@
 #include <time.h>
 #include <arpa/inet.h>
 
+#define PATH "../data/"
+
 int check_changes(int map_fd, int xdp_data_map_s_fd, int xdp_block_ip_fd, int xdp_block_portsfd, int xdp_block_protofd)
 {
 
-  while(1){
 
+  loadData_onStart(0, "ipBlocked.data", xdp_block_ip_fd);
+  loadData_onStart(1, "portBlocked.data", xdp_block_portsfd);
+  loadData_onStart(2, "protocolBlocked.data", xdp_block_protofd);
+
+  while(1){
     char * data = get_python_data();
     char * bdata = NULL;
 
@@ -88,7 +94,7 @@ int check_changes(int map_fd, int xdp_data_map_s_fd, int xdp_block_ip_fd, int xd
             exit(0);
             break;
         case 'c':
-          sleep(2);
+          sleep(1);
           break;
 
 
@@ -100,6 +106,58 @@ int check_changes(int map_fd, int xdp_data_map_s_fd, int xdp_block_ip_fd, int xd
 
   }
 }
+
+
+int loadData_onStart(int type, char * datafile, int xdp_fd){
+  FILE *fptr;
+  char filep[100] = PATH;
+  long size = 0;
+  strcat(filep, datafile);
+  char *token;
+
+
+  fptr = fopen(filep,"a+");
+  if (fptr == NULL)
+        return 1;
+
+  fseek(fptr, 0, SEEK_END);
+  size = ftell(fptr);
+  fseek(fptr, 0, SEEK_SET);
+
+  if (size == 0)
+        return 0;
+
+
+  /* +1 for size 0 */
+  char fcontent[size+1];
+
+  fread(fcontent, 1, size, fptr);
+
+  token = strtok(fcontent, "\n");
+
+  while( token != NULL ) {
+    switch(type) {
+      case 0:
+        ipdatablock_to_bpfmap(token, xdp_fd);
+        break;
+      case 1:
+        block_port_bpfmap(token, xdp_fd);
+        break;
+      case 2:
+        block_protocol_bpfmap(token, xdp_fd);
+        break;
+
+  }
+    token = strtok(NULL, "\n");
+  }
+
+
+
+  return 0;
+
+
+}
+
 
 int update_time(int xdp_block_protofd){
   time_t now = time(0);
@@ -122,7 +180,7 @@ int block_port_bpfmap(char * data, int xdp_block_portsfd){
   if(port == NULL)
     return -1;
 
-  int p = htonl(atoi(port));
+  __u16 p = htons(atoi(port));
 
 
   time_t time = atoll(strtok(NULL, "|"));
@@ -139,7 +197,7 @@ int unblock_port_bpfmap(char * data, int xdp_block_protofd) {
   if(port == NULL)
     return -1;
 
-  int p = htonl(atoi(port));
+  __u16 p = htons(atoi(port));
 
   bpf_map_delete_elem(xdp_block_protofd, &p);
 

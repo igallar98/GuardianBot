@@ -16,6 +16,7 @@ class BlockProtocol:
 
 
     def blockProtocol(self, protocol, blockTime):
+        self.unBlockProtocol(protocol, False)
         with open(self.ipBlockedPath, 'a') as file:
             if int(blockTime) != -1:
                 file.write(str(protocol) + "|" + str(int(blockTime) + int(time.time())) + "\n")
@@ -28,7 +29,7 @@ class BlockProtocol:
             self.chk.sendValue(str(protocol) + "|" + "-1" + "\n")
 
 
-    def unBlockProtocol(self, protocol):
+    def unBlockProtocol(self, protocol, upd = True):
         with open(self.ipBlockedPath, 'r') as f:
             lines = f.readlines()
         with open(self.ipBlockedPath, 'w') as f:
@@ -36,9 +37,9 @@ class BlockProtocol:
                 r = line.split("|")
                 if not (r[0] == protocol):
                     f.write(line)
-
-        self.chk.updateValue('d')
-        self.chk.sendValue(protocol)
+        if upd:
+            self.chk.updateValue('d')
+            self.chk.sendValue(protocol)
 
 
     def getDataBlocked(self):

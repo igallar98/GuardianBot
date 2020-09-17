@@ -14,6 +14,9 @@ class blockIP:
         self.chk = checker.Checker()
 
     def saveIP(self, ip, prefix, blockTime):
+        self.deleteIP(ip, prefix, False)
+
+
         isV6 = 0
         if ":" in ip:
             isV6 = 1
@@ -29,7 +32,7 @@ class blockIP:
             self.chk.sendValue(str(isV6) + "|" + ip + "|" + str(prefix) + "|" + str(int(blockTime) + int(time.time())) + "\n")
 
 
-    def deleteIP(self, ip, prefix):
+    def deleteIP(self, ip, prefix, upd = True):
         isV6 = 0
         if ":" in ip:
             isV6 = 1
@@ -40,9 +43,9 @@ class blockIP:
                 r = line.split("|")
                 if not (r[1] == ip):
                     f.write(line)
-
-        self.chk.updateValue('u')
-        self.chk.sendValue(str(isV6) + "|" + ip + "\n")
+        if upd:
+            self.chk.updateValue('u')
+            self.chk.sendValue(str(isV6) + "|" + ip + "\n")
 
 
 

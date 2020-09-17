@@ -295,7 +295,7 @@ static int stats_poll(const char *pin_dir, int map_fd, __u32 id, int interval, i
 
 					}
 				}
-				
+
 				reset_python_data();
 
 
