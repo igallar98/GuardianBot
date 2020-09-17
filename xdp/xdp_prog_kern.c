@@ -121,18 +121,19 @@ __u32 xdp_stats_record_action(struct xdp_md *ctx)
 		 break;
 
 		case IPPROTO_UDP:
-		udp_type = parse_udphdr(&nh, data_end, &udphdr);
-		if(udp_type != -1){
-			aux.source = udphdr->source;
-			aux.dest = udphdr->dest;
-			aux.proto = 'u';
-		}
+			udp_type = parse_udphdr(&nh, data_end, &udphdr);
+			if(udp_type != -1){
+				aux.source = udphdr->source;
+				aux.dest = udphdr->dest;
+				aux.proto = 'u';
+			}
 
-		break;
+			break;
 	}
-
 	/* PORT block */
-	time_t * timeport = bpf_map_lookup_elem(&xdp_block_ports, &aux.source);
+
+	time_t *timeport = bpf_map_lookup_elem(&xdp_block_ports, &aux.source);
+
 	if(timeport){
 		if(*now >= *timeport)
 			bpf_map_delete_elem(&xdp_block_ports, &aux.source);
@@ -145,11 +146,12 @@ __u32 xdp_stats_record_action(struct xdp_md *ctx)
 
 	time_t * timeproto = bpf_map_lookup_elem(&xdp_block_proto, &aux.proto);
 	if(timeproto){
-		if(*now >= *timeport)
+		if(*now >= *timeproto)
 			bpf_map_delete_elem(&xdp_block_proto, &aux.proto);
 		else
 			return XDP_DROP;
 	}
+
 
 	/* Update packet length */
 	__u64 bytes = data_end - data;
