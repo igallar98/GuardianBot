@@ -9,6 +9,15 @@ struct keyipblockchk {
 	struct in6_addr ip6_addr;
 };
 
+struct keyipchk {
+	char isv6;
+	__be32 	ip_saddr;
+	__be32 	ip_daddr;
+	struct in6_addr ip6_saddr;
+	struct in6_addr ip6_daddr;
+};
+
+
 int check_changes(int map_fd, int xdp_data_map_s_fd, int xdp_block_ip_fd, int xdp_block_portsfd, int xdp_block_protofd);
 int update_time(int xdp_block_protofd);
 

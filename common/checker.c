@@ -87,7 +87,8 @@ int check_changes(int map_fd, int xdp_data_map_s_fd, int xdp_block_ip_fd, int xd
             close(xdp_block_protofd);
             exit(0);
             break;
-        case '2':
+        case 'c':
+          sleep(2);
           break;
 
 
@@ -99,7 +100,6 @@ int check_changes(int map_fd, int xdp_data_map_s_fd, int xdp_block_ip_fd, int xd
 
   }
 }
-
 
 int update_time(int xdp_block_protofd){
   time_t now = time(0);

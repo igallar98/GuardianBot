@@ -281,6 +281,24 @@ static int stats_poll(const char *pin_dir, int map_fd, __u32 id, int interval, i
 				data = NULL;
 
 
+				struct keyip key = {};
+
+				char * datapy = get_python_data();
+
+
+				if(*datapy == 'c') {
+
+					while (bpf_map_get_next_key(xdp_data_map_s_fd, &key, &key) == 0)
+					{
+						bpf_map_delete_elem(xdp_data_map_s_fd, &key);
+						bpf_map_delete_elem(map_fd, &key);
+
+					}
+				}
+				
+				reset_python_data();
+
+
 				sleep(interval);
 			}
 

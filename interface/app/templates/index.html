@@ -54,7 +54,7 @@ id="window"
                           <span class="mif-info icon"></span>
                           <span class="caption">Información</span>
                       </button>
-                      <button class="image-button warning  m-1">
+                      <button onclick="makeclean()" class="image-button warning  m-1">
                           <span class="mif-bin icon"></span>
                           <span class="caption">Limpiar</span>
                       </button>
@@ -90,12 +90,37 @@ id="window"
       >
 </table>
 <script>
-  function showClassError(){
-        var notify = Metro.notify;
-        notify.create("No has selecionado ningún elemento.", "Alerta", {
-            cls: "alert"
-        });
-    }
+
+
+function makeclean(){
+
+
+
+  $.post( "/makeclean", {clean: true } );
+
+  var notify = Metro.notify;
+  notify.create("Limpiando los datos del cortafuegos...", "Información", {
+      cls: "info"
+  });
+
+  setTimeout('updatetable()', 7000);
+
+}
+
+function updatetable() {
+  var notify = Metro.notify;
+  notify.create("Datos limpiados correctamente.", "Correcto", {
+      cls: "success"
+  });
+  $('#t1').data('table').loadData('/table.json');
+}
+
+function showClassError(){
+      var notify = Metro.notify;
+      notify.create("No has selecionado ningún elemento.", "Alerta", {
+          cls: "alert"
+      });
+  }
 
 function showClassOk(){
       var notify = Metro.notify;

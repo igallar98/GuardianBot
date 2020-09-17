@@ -92,7 +92,7 @@ __u32 xdp_stats_record_action(struct xdp_md *ctx)
 	time_t * timest = bpf_map_lookup_elem(&xdp_block_ip, &keyblock);
 
 	if(timest){
-		if(*now >= *timest)
+		if(*now >= *timest && *timest != -1)
 			bpf_map_delete_elem(&xdp_block_ip, &keyblock);
 		else
 			return XDP_DROP;
@@ -135,7 +135,7 @@ __u32 xdp_stats_record_action(struct xdp_md *ctx)
 	time_t *timeport = bpf_map_lookup_elem(&xdp_block_ports, &aux.source);
 
 	if(timeport){
-		if(*now >= *timeport)
+		if(*now >= *timeport && *timeport != -1)
 			bpf_map_delete_elem(&xdp_block_ports, &aux.source);
 		else
 			return XDP_DROP;
@@ -146,7 +146,7 @@ __u32 xdp_stats_record_action(struct xdp_md *ctx)
 
 	time_t * timeproto = bpf_map_lookup_elem(&xdp_block_proto, &aux.proto);
 	if(timeproto){
-		if(*now >= *timeproto)
+		if(*now >= *timeproto && *timeproto != -1)
 			bpf_map_delete_elem(&xdp_block_proto, &aux.proto);
 		else
 			return XDP_DROP;

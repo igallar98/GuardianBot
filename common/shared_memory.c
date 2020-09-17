@@ -40,7 +40,7 @@ int send_to_python(char * data, int tam)
 
     if ( shmdt(addr) < 0)
         return -1;
-    sleep(5);
+    sleep(3);
     if (shmctl(shmid, IPC_RMID, NULL) == -1)
         return -1;
 

@@ -35,9 +35,17 @@ def shutdown():
 
 
 
-@app.route('/lock')
+@app.route('/lock', methods=['POST','GET'])
 def lock():
     return render_template('lock.html', title = "Iniciar sesión")
+
+
+@app.route('/makeclean', methods=['POST','GET'])
+def makeclean():
+    if 'clean' in request.form:
+        chk = checker.Checker();
+        chk.updateValue('c')
+    return "ok"
 
 @app.route('/blockip', methods=['POST','GET'])
 def blockip():
