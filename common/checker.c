@@ -21,23 +21,31 @@ int check_changes(int map_fd, int xdp_data_map_s_fd, int xdp_block_ip_fd, int xd
   loadData_onStart(0, "ipBlocked.data", xdp_block_ip_fd);
   loadData_onStart(1, "portBlocked.data", xdp_block_portsfd);
   loadData_onStart(2, "protocolBlocked.data", xdp_block_protofd);
+  int time = 50000;
 
   while(1){
-    char * data = get_python_data();
+
+    char data = get_python_data();
     char * bdata = NULL;
 
     update_time(xdp_block_protofd);
 
 
-    if(!data || *data == 'z'){
-      sleep(1);
+    if(data == 'z'){
+      /*Espera ocupada*/
+      if(time <= 50000)
+        time+=50;
+
+      usleep(time);
+
     } else {
 
-      switch(*data) {
+      switch(data) {
         case 'b': /* Block IP */
           bdata = get_guardian_data();
           ipdatablock_to_bpfmap(bdata, xdp_block_ip_fd);
           reset_python_data();
+          time=0;
           break;
 
         case 'u': /* UnBlock IP */
@@ -46,6 +54,7 @@ int check_changes(int map_fd, int xdp_data_map_s_fd, int xdp_block_ip_fd, int xd
           delete_block_bpfmap(bdata, xdp_block_ip_fd);
 
           reset_python_data();
+          time=0;
           break;
 
         case 'p': /* Block Protocol */
@@ -54,6 +63,7 @@ int check_changes(int map_fd, int xdp_data_map_s_fd, int xdp_block_ip_fd, int xd
           block_protocol_bpfmap(bdata, xdp_block_protofd);
 
           reset_python_data();
+          time=0;
           break;
 
         case 'd': /* UnBlock Protocol */
@@ -62,6 +72,7 @@ int check_changes(int map_fd, int xdp_data_map_s_fd, int xdp_block_ip_fd, int xd
           unblock_protocol_bpfmap(bdata, xdp_block_protofd);
 
           reset_python_data();
+          time=0;
           break;
 
 
@@ -71,6 +82,7 @@ int check_changes(int map_fd, int xdp_data_map_s_fd, int xdp_block_ip_fd, int xd
           block_port_bpfmap(bdata, xdp_block_portsfd);
 
           reset_python_data();
+          time=0;
           break;
 
 
@@ -80,6 +92,7 @@ int check_changes(int map_fd, int xdp_data_map_s_fd, int xdp_block_ip_fd, int xd
           unblock_port_bpfmap(bdata, xdp_block_portsfd);
 
           reset_python_data();
+          time=0;
           break;
 
 
@@ -94,7 +107,6 @@ int check_changes(int map_fd, int xdp_data_map_s_fd, int xdp_block_ip_fd, int xd
             exit(0);
             break;
         case 'c':
-          sleep(1);
           break;
 
 

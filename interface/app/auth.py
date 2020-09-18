@@ -2,7 +2,7 @@ import string
 import random
 import os
 from flask_session import Session
-
+import crypt
 
 class Auth:
     def __init__(self):
@@ -26,3 +26,6 @@ class Auth:
             self.generateKey()
 
         return self.key
+
+    def checkPassword(self):
+        pass

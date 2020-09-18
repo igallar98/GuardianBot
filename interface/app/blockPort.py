@@ -27,7 +27,6 @@ class BlockPort:
             self.chk.sendValue(str(port) + "|" + str(int(blockTime) + int(time.time())) + "\n")
         else:
             self.chk.sendValue(str(port) + "|" + "-1" + "\n")
-        time.sleep(2)
 
     def unBlockPort(self, port, upd = True):
         with open(self.ipBlockedPath, 'r') as f:
@@ -40,7 +39,6 @@ class BlockPort:
         if upd:
             self.chk.updateValue('1')
             self.chk.sendValue(port)
-            time.sleep(2)
 
 
     def getDataBlocked(self):

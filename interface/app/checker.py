@@ -3,8 +3,6 @@ from flask import request
 
 
 
-
-
 class Checker:
     def __init__(self):
         self.table = [];

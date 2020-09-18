@@ -51,28 +51,31 @@ int send_to_python(char * data, int tam)
 
 
 
-char* get_python_data(){
+char get_python_data(){
 
   key_t key = PROJECTIDRV;
   int shmid;
+  char a = 'z';
 
   shmid = shmget(key, sizeof('z') , IPC_CREAT | IPC_EXCL | 0664);
   if ( shmid == -1 ) {
       if ( errno == EEXIST ) {
           shmid = shmget(key ,0, 0);
       } else {
-          return NULL;
+          return a;
       }
   }
 
   char *addr = NULL;
 
   if ( (addr = shmat(shmid, 0, 0) ) == (void*)-1) {
-    return addr;
+    return a;
   }
 
+  a = addr[0];
 
-  return addr;
+  shmdt(addr);
+  return a;
 
 }
 
