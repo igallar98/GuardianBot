@@ -1,4 +1,4 @@
-from app import app, request, render_template, url_for
+from app import app, request, render_template, url_for, redirect
 from app import sharedMemory, jsonTable, blockIP, checker, blockProtocol, blockPort, auth
 
 
@@ -9,27 +9,48 @@ save = [0]
 @app.route('/')
 @app.route('/index')
 def index():
-
-
+    ath =  auth.Auth()
+    if not ath.checkSession():
+            return redirect(url_for('lock'))
     return render_template('index.html', title = "Información general")
 
+@app.route('/exit')
+def exit():
+    ath =  auth.Auth().exit()
+    return redirect(url_for('lock'))
 
 
 @app.route('/table.json')
 @app.route('/API/v1/getStatics')
 def rjsonTable():
-
+    ath =  auth.Auth()
+    if not ath.checkSession():
+        if 'authkey' in  request.args:
+            if not ath.checkKey(request.args["authkey"]):
+                return "-1"
+        else:
+            return redirect(url_for('lock'))
     jTable = jsonTable.jsonTable()
     return jTable.getTable()
 
 
 @app.route('/config')
 def config():
+    ath =  auth.Auth()
+    if not ath.checkSession():
+            return redirect(url_for('lock'))
     return render_template('config.html', title = "Configuración del cortafuegos")
 
 
 @app.route('/shutdown', methods=['POST','GET'])
 def shutdown():
+    ath =  auth.Auth()
+    if not ath.checkSession():
+        if 'authkey' in  request.form:
+            if not ath.checkKey(request.form["authkey"]):
+                return "-1"
+        else:
+            return redirect(url_for('lock'))
     if 'shutdown' in  request.form:
         chk = checker.Checker();
         chk.updateValue('s')
@@ -40,12 +61,22 @@ def shutdown():
 
 @app.route('/lock', methods=['POST','GET'])
 def lock():
+    if 'password' in request.form:
+        if auth.Auth().checkPassword(request.form["password"]):
+            return redirect(url_for('index'))
     return render_template('lock.html', title = "Iniciar sesión")
 
 
 @app.route('/API/v1/makeClean', methods=['POST','GET'])
 @app.route('/makeclean', methods=['POST','GET'])
 def makeclean():
+    ath =  auth.Auth()
+    if not ath.checkSession():
+        if 'authkey' in  request.form:
+            if not ath.checkKey(request.form["authkey"]):
+                return "-1"
+        else:
+            return redirect(url_for('lock'))
     if 'clean' in request.form or 'authkey' in request.form:
         chk = checker.Checker();
         chk.updateValue('c')
@@ -55,7 +86,13 @@ def makeclean():
 @app.route('/API/v1/postIPBlock', methods=['POST','GET'])
 @app.route('/blockip', methods=['POST','GET'])
 def blockip():
-
+    ath =  auth.Auth()
+    if not ath.checkSession():
+        if 'authkey' in  request.form:
+            if not ath.checkKey(request.form["authkey"]):
+                return "-1"
+        else:
+            return redirect(url_for('lock'))
     if 'ip' in request.form and 'time' in request.form:
         block = blockIP.blockIP()
         block.saveIP(request.form["ip"], 0, request.form["time"])
@@ -69,6 +106,14 @@ def blockip():
 @app.route('/API/v1/postProtoBlock', methods=['POST','GET'])
 @app.route('/blockprotocol', methods=['POST','GET'])
 def blockprotocol():
+    ath =  auth.Auth()
+    if not ath.checkSession():
+        if 'authkey' in  request.form:
+            if not ath.checkKey(request.form["authkey"]):
+                return "-1"
+        else:
+            return redirect(url_for('lock'))
+
     if 'time' in request.form and 'proto' in request.form:
         block = blockProtocol.BlockProtocol()
         block.blockProtocol(request.form["proto"], request.form["time"])
@@ -80,6 +125,14 @@ def blockprotocol():
 @app.route('/API/v1/postPortsBlocks', methods=['POST','GET'])
 @app.route('/blockport', methods=['POST','GET'])
 def blockport():
+    ath =  auth.Auth()
+    if not ath.checkSession():
+        if 'authkey' in  request.form:
+            if not ath.checkKey(request.form["authkey"]):
+                return "-1"
+        else:
+            return redirect(url_for('lock'))
+
     if 'time' in request.form and 'port' in request.form:
         block = blockPort.BlockPort()
         block.blockPort(request.form["port"], request.form["time"])
@@ -91,24 +144,56 @@ def blockport():
 @app.route('/API/v1/getPortsBlocks', methods=['POST','GET'])
 @app.route('/getblockport.json')
 def getblockport():
+    ath =  auth.Auth()
+    if not ath.checkSession():
+        if 'authkey' in  request.args:
+            if not ath.checkKey(request.args["authkey"]):
+                return "-1"
+        else:
+            return redirect(url_for('lock'))
+
     block = blockPort.BlockPort()
     return block.getTable()
 
 @app.route('/API/v1/getProtoBlocks', methods=['POST','GET'])
 @app.route('/getblockprotocol.json')
 def getblockprotocol():
+    ath =  auth.Auth()
+    if not ath.checkSession():
+        if 'authkey' in  request.args:
+            if not ath.checkKey(request.args["authkey"]):
+                return "-1"
+        else:
+            return redirect(url_for('lock'))
+
     block = blockProtocol.BlockProtocol()
     return block.getTable()
 
 @app.route('/API/v1/getIPBlocks', methods=['POST','GET'])
 @app.route('/getblockip.json')
 def getblockip():
+    ath =  auth.Auth()
+    if not ath.checkSession():
+        if 'authkey' in  request.args:
+            if not ath.checkKey(request.args["authkey"]):
+                return "-1"
+        else:
+            return redirect(url_for('lock'))
+
     block = blockIP.blockIP()
     return block.getTable()
 
 @app.route('/API/v1/postIPUnblock', methods=['POST','GET'])
 @app.route('/unblock', methods=['POST','GET'])
 def unblock():
+    ath =  auth.Auth()
+    if not ath.checkSession():
+        if 'authkey' in  request.form:
+            if not ath.checkKey(request.form["authkey"]):
+                return "-1"
+        else:
+            return redirect(url_for('lock'))
+
     if 'ip' in request.form:
         block = blockIP.blockIP()
         block.deleteIP(request.form["ip"], 0)
@@ -117,6 +202,14 @@ def unblock():
 @app.route('/API/v1/postProtoUnblock', methods=['POST','GET'])
 @app.route('/unblockprotocol', methods=['POST','GET'])
 def unblockprotocol():
+    ath =  auth.Auth()
+    if not ath.checkSession():
+        if 'authkey' in  request.form:
+            if not ath.checkKey(request.form["authkey"]):
+                return "-1"
+        else:
+            return redirect(url_for('lock'))
+
     if 'protocol' in request.form:
         block = blockProtocol.BlockProtocol()
         block.unBlockProtocol(request.form["protocol"])
@@ -125,6 +218,13 @@ def unblockprotocol():
 @app.route('/API/v1/postPortsUnblocks', methods=['POST','GET'])
 @app.route('/unblockport', methods=['POST','GET'])
 def unblockport():
+    ath =  auth.Auth()
+    if not ath.checkSession():
+        if 'authkey' in  request.form:
+            if not ath.checkKey(request.form["authkey"]):
+                return "-1"
+        else:
+            return redirect(url_for('lock'))
     if 'port' in request.form:
         block = blockPort.BlockPort()
         block.unBlockPort(request.form["port"])
@@ -133,6 +233,9 @@ def unblockport():
 
 @app.route('/getipinfo', methods=['POST','GET'])
 def getipinfo():
+    ath =  auth.Auth()
+    if not ath.checkSession():
+        return redirect(url_for('lock'))
     global save
     if 'sip' in request.args and 'dip' in request.args:
         sMemory = sharedMemory.sharedMemory();
@@ -151,8 +254,10 @@ def getipinfo():
 
 @app.route('/API', methods=['POST','GET'])
 def api():
-    apiauth = auth.Auth()
+    ath =  auth.Auth()
+    if not ath.checkSession():
+        return redirect(url_for('lock'))
     if 'key' in request.args:
-        apiauth.generateKey()
+        ath.generateKey()
 
-    return render_template('api.html', title = "API REST", url = request.url_root, key = apiauth.getKey())
+    return render_template('api.html', title = "API REST", url = request.url_root, key = ath.getKey())

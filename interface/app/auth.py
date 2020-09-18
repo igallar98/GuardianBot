@@ -2,6 +2,7 @@ import string
 import random
 import os
 from flask_session import Session
+from flask import session
 import crypt
 
 class Auth:
@@ -27,5 +28,19 @@ class Auth:
 
         return self.key
 
-    def checkPassword(self):
-        pass
+    def checkKey(self, key):
+        self.getKey()
+        return (key== self.key)
+
+        
+    def exit(self):
+        self.getKey()
+        session['logged'] = False
+
+
+    def checkPassword(self, password):
+        if password == "123456":
+            session['logged'] = True
+        return session.get('logged', False)
+    def checkSession(self):
+        return session.get('logged', False)

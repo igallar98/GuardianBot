@@ -8,7 +8,7 @@
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/metro-all.min.css') }}">
     <script src="{{ url_for('static', filename='js/metro.min.js') }}"></script>
-
+    <title>GuardianBot</title>
   </head>
 
   <style>
@@ -21,9 +21,8 @@
     </style>
 </head>
 <body class="h-vh-100 bg-brandColor2">
-    <form action="?" method="POST" class="login-form bg-white p-6 mx-auto border bd-default win-shadow"
+    <form  method="POST" class="login-form bg-white p-6 mx-auto border bd-default win-shadow"
           data-role="validator"
-          action="javascript:"
           data-clear-invalid="2000"
           data-on-error-form="invalidForm"
           data-on-validate-form="validateForm">
@@ -31,11 +30,11 @@
         <h2 class="text-light">Zona restringida</h2>
         <hr class="thin mt-4 mb-4 bg-white">
         <div class="form-group">
-            <input type="password" data-role="input" data-prepend="<span class='mif-key'>" placeholder="Contraseña" data-validate="required minlength=6">
+            <input type="password" name="password" data-role="input" data-prepend="<span class='mif-key'>" placeholder="Contraseña" data-validate="required minlength=6">
         </div>
         <div class="form-group mt-10 text-center">
 
-            <button class="button">Submit form</button>
+            <button class="button">Entrar</button>
 
         </div>
     </form>
