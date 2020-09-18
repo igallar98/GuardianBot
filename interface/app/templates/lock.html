@@ -1,47 +1,61 @@
-{% extends "includes/header.html" %}
-{% block title %}{{title}}{% endblock %}
-{% block content %}
+<!DOCTYPE html>
+<html lang="es">
+  <head>
 
 
-<div class="lock-box text-center">
-       <form class="p-4"
-             action="javascript:"
-             data-role="validator"
-             data-clear-invalid="2000"
-             data-on-error-form="invalidForm"
-             onsubmit="alert('ku')"
-       >
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-           <h1 class="mb-4">Lock <span class="mif-lock"></span></h1>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/metro-all.min.css') }}">
+    <script src="{{ url_for('static', filename='js/metro.min.js') }}"></script>
 
-           <img src="images/jek_vorobey.jpg" class="avatar">
+  </head>
 
-           <div class="m-4 text-bold">Jack Sparrow</div>
+  <style>
+        .login-form {
+            width: 350px;
+            height: auto;
+            top: 50%;
+            margin-top: -160px;
+        }
+    </style>
+</head>
+<body class="h-vh-100 bg-brandColor2">
+    <form action="?" method="POST" class="login-form bg-white p-6 mx-auto border bd-default win-shadow"
+          data-role="validator"
+          action="javascript:"
+          data-clear-invalid="2000"
+          data-on-error-form="invalidForm"
+          data-on-validate-form="validateForm">
+        <span class="mif-vpn-lock mif-4x place-right" style="margin-top: -10px;"></span>
+        <h2 class="text-light">Zona restringida</h2>
+        <hr class="thin mt-4 mb-4 bg-white">
+        <div class="form-group">
+            <input type="password" data-role="input" data-prepend="<span class='mif-key'>" placeholder="Contraseña" data-validate="required minlength=6">
+        </div>
+        <div class="form-group mt-10 text-center">
 
-           <input type="password" data-role="input" data-custom-buttons="lockCustomButtons" data-validate="required">
-           <span class="invalid_feedback">Enter a password</span>
+            <button class="button">Submit form</button>
 
-           <div class="m-4 text-muted">Enter your password to retrieve your session</div>
+        </div>
+    </form>
 
-           <a href="#">Or sign in as a different user</a>
+    <script src="../../metro/js/metro.js"></script>
+    <script>
+        function invalidForm(){
+            var form  = $(this);
+            form.addClass("ani-ring");
+            setTimeout(function(){
+                form.removeClass("ani-ring");
+            }, 1000);
+        }
 
-           <div class="mt-4 reduce-1">Copyright &copy; 2019 <a href="#" class="no-decor text-bold fg-dark">Sergey Pimenov</a></div>
-           <div class="reduce-1">All rights reserved</a></div>
-       </form>
-   </div>
+        function validateForm(){
+            $(".login-form").animate({
+                opacity: 0
+            });
+        }
+    </script>
 
-
-   <script src="vendors/jquery/jquery-3.4.1.min.js"></script>
-   <script src="vendors/metro4/js/metro.min.js"></script>
-   <script>
-       function invalidForm(){
-           var form  = $(this);
-           form.addClass("ani-ring");
-           setTimeout(function(){
-               form.removeClass("ani-ring");
-           }, 1000);
-       }
-   </script>
-
-
-{% endblock %}
+</body>
+</html>

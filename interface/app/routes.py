@@ -1,6 +1,6 @@
 from app import app, request, render_template, url_for
-from app import sharedMemory, jsonTable, blockIP, checker, blockProtocol, blockPort
-from flask_session import Session
+from app import sharedMemory, jsonTable, blockIP, checker, blockProtocol, blockPort, auth
+
 
 import sys
 global save
@@ -43,12 +43,14 @@ def lock():
     return render_template('lock.html', title = "Iniciar sesión")
 
 
+@app.route('/API/v1/makeClean', methods=['POST','GET'])
 @app.route('/makeclean', methods=['POST','GET'])
 def makeclean():
-    if 'clean' in request.form:
+    if 'clean' in request.form or 'authkey' in request.form:
         chk = checker.Checker();
         chk.updateValue('c')
-    return "ok"
+        return "0"
+    return "-1"
 
 @app.route('/API/v1/postIPBlock', methods=['POST','GET'])
 @app.route('/blockip', methods=['POST','GET'])
@@ -147,6 +149,10 @@ def getipinfo():
         return render_template('getipinfo.html', sip = request.args["sip"],
                 dip = request.args["dip"], info = infot, proto = proto, save = save)
 
-@app.route('/API')
+@app.route('/API', methods=['POST','GET'])
 def api():
-    return render_template('api.html', title = "API REST", url = request.url_root, key = "NULL")
+    apiauth = auth.Auth()
+    if 'key' in request.args:
+        apiauth.generateKey()
+
+    return render_template('api.html', title = "API REST", url = request.url_root, key = apiauth.getKey())

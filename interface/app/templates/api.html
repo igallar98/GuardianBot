@@ -14,10 +14,14 @@
   <div class="form-group">
           <label>API KEY:</label>
           <input readonly value="{{key}}" name="key" type="text" data-role="input"
-    data-append="<span class='mif-key'></span>" disabled>
+    data-append="<span class='mif-key'></span>" >
       </div>
-
-
+      <div class="container text-center">
+      <a href="/API?key=ok"><button  class="image-button info m-1">
+                            <span class="mif-key icon"></span>
+                            <span class="caption">Regenerar clave</span>
+                        </button></a>
+</div>
 <div class="container mt-5">
 
 <div data-role="panel"
@@ -272,6 +276,43 @@
 
 
 
+</div>
+
+
+
+
+
+<div class="mt-5" data-role="panel"
+     data-title-caption="<span class='mif-equalizer-v'></span> Controlar el servidor"
+     data-collapsible="true">
+
+
+     <div data-role="accordion" data-one-frame="false" data-show-active="false">
+
+
+                          <div class="frame">
+                              <div class="heading"><span class="tally warning">POST</span> /API/v1/makeClean  -  <strong>Limpiar la lista de direcciones</strong></div>
+                              <div class="content">
+                                  <div class="p-2">
+                                    <p>Limpiar y resetear la lista de direcciones IP.</p>
+                                    <p><strong>Parámetros: </strong></p>
+                                    <ul>
+                                     <li>authkey - Clave de autenticación</li>
+                                   </ul>
+                                    Ejemplo: <code>curl -d "authkey={{key}}" {{url}}API/v1/makeClean</code>
+                                    <p><strong>Respuesta: </strong></p>
+                                    <ul>
+                                     <li>0 - Operación ejecutada correctamente</li>
+                                     <li>1 - Error</li>
+                                     <li>-1 - Clave de autenticación incorrecta</li>
+                                  </div>
+                              </div>
+                          </div>
+
+
+
+
+     </div>
 </div>
 
 
