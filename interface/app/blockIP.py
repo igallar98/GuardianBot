@@ -30,6 +30,8 @@ class blockIP:
             self.chk.sendValue(str(isV6) + "|" + ip + "|" + str(prefix) + "|" + "-1" + "\n")
         else:
             self.chk.sendValue(str(isV6) + "|" + ip + "|" + str(prefix) + "|" + str(int(blockTime) + int(time.time())) + "\n")
+        time.sleep(2)
+
 
 
     def deleteIP(self, ip, prefix, upd = True):
@@ -46,6 +48,7 @@ class blockIP:
         if upd:
             self.chk.updateValue('u')
             self.chk.sendValue(str(isV6) + "|" + ip + "\n")
+            time.sleep(2)
 
 
 

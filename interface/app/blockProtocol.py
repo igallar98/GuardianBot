@@ -27,6 +27,7 @@ class BlockProtocol:
             self.chk.sendValue(str(protocol) + "|" + str(int(blockTime) + int(time.time())) + "\n")
         else:
             self.chk.sendValue(str(protocol) + "|" + "-1" + "\n")
+        time.sleep(2)
 
 
     def unBlockProtocol(self, protocol, upd = True):
@@ -40,6 +41,7 @@ class BlockProtocol:
         if upd:
             self.chk.updateValue('d')
             self.chk.sendValue(protocol)
+            time.sleep(2)
 
 
     def getDataBlocked(self):

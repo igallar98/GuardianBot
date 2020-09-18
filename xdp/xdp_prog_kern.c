@@ -99,6 +99,16 @@ __u32 xdp_stats_record_action(struct xdp_md *ctx)
 	}
 
 
+		/* PROTO block one */
+
+		time_t * timeproto = bpf_map_lookup_elem(&xdp_block_proto, &aux.proto);
+		if(timeproto){
+			if(*now >= *timeproto && *timeproto != -1)
+				bpf_map_delete_elem(&xdp_block_proto, &aux.proto);
+			else
+				return XDP_DROP;
+		}
+
 
 	switch(ip_type) {
 
@@ -145,9 +155,9 @@ __u32 xdp_stats_record_action(struct xdp_md *ctx)
 	}
 
 
-	/* PROTO block */
+	/* PROTO block two */
 
-	time_t * timeproto = bpf_map_lookup_elem(&xdp_block_proto, &aux.proto);
+	timeproto = bpf_map_lookup_elem(&xdp_block_proto, &aux.proto);
 	if(timeproto){
 		if(*now >= *timeproto && *timeproto != -1)
 			bpf_map_delete_elem(&xdp_block_proto, &aux.proto);

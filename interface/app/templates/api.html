@@ -1,0 +1,290 @@
+{% extends "includes/header.html" %}
+{% block title %}{{title}}{% endblock %}
+{% block content %}
+
+<div class="row border-bottom bd-lightGray m-3">
+    <div class="cell-md-5 d-flex flex-align-center">
+        <h3 class="dashboard-section-title  text-center text-left-md w-100">API REST <small>Versión 1.0</small></h3>
+    </div>
+
+</div>
+
+
+<div class="container-fluid" style="width: 70%;">
+  <div class="form-group">
+          <label>API KEY:</label>
+          <input readonly value="{{key}}" name="key" type="text" data-role="input"
+    data-append="<span class='mif-key'></span>" disabled>
+      </div>
+
+
+<div class="container mt-5">
+
+<div data-role="panel"
+     data-title-caption="<span class='mif-info'></span> Información del tráfico"
+     data-collapsible="true">
+
+
+     <div data-role="accordion" data-one-frame="false" data-show-active="false">
+         <div class="frame">
+             <div class="heading"><span class="tally info">GET</span> /API/v1/getStatics  -  <strong>Estadísticas principales</strong></div>
+             <div class="content">
+                 <div class="p-2">
+                   <p>Obtener las estadísticas del protocolo IP mediante un archivo JSON.</p>
+                   <p><strong>Parámetros: </strong></p>
+                   <ul>
+                    <li>authkey - Clave de autenticación</li>
+                  </ul>
+                   Ejemplo: <code>curl {{url}}API/v1/getStatics?authkey={{key}}</code>
+                   <p><strong>Respuesta: </strong></p>
+                   <ul>
+                    <li>JSON - JSON con los datos</li>
+                    <li>-1 - Clave de autenticación incorrecta</li>
+                 </div>
+             </div>
+         </div>
+
+
+
+
+
+         <div class="frame">
+             <div class="heading"><span class="tally info">GET</span> /API/v1/getIPBlocks  -  <strong>Direcciones IP Bloqueadas</strong></div>
+             <div class="content">
+                 <div class="p-2">
+                   <p>Obtener las direcciones IP bloqueadas y el tiempo en formato JSON.</p>
+                   <p><strong>Parámetros: </strong></p>
+                   <ul>
+                    <li>authkey - Clave de autenticación</li>
+                  </ul>
+                   Ejemplo: <code>curl {{url}}API/v1/getIPBlocks?authkey={{key}}</code>
+                   <p><strong>Respuesta: </strong></p>
+                   <ul>
+                    <li>JSON - JSON con los datos</li>
+                    <li>-1 - Clave de autenticación incorrecta</li>
+                 </div>
+             </div>
+         </div>
+
+
+         <div class="frame">
+             <div class="heading"><span class="tally info">GET</span> /API/v1/getPortsBlocks  -  <strong>Puertos Bloqueados</strong></div>
+             <div class="content">
+                 <div class="p-2">
+                   <p>Obtener los puertos bloqueados y el tiempo en formato JSON.</p>
+                   <p><strong>Parámetros: </strong></p>
+                   <ul>
+                    <li>authkey - Clave de autenticación</li>
+                  </ul>
+                   Ejemplo: <code>curl {{url}}API/v1/getPortsBlocks?authkey={{key}}</code>
+                   <p><strong>Respuesta: </strong></p>
+                   <ul>
+                    <li>JSON - JSON con los datos</li>
+                    <li>-1 - Clave de autenticación incorrecta</li>
+                 </div>
+             </div>
+         </div>
+
+
+         <div class="frame">
+             <div class="heading"><span class="tally info">GET</span> /API/v1/getProtoBlocks  -  <strong>Protocolos Bloqueados</strong></div>
+             <div class="content">
+                 <div class="p-2">
+                   <p>Obtener los protocolos bloqueados y el tiempo en formato JSON.</p>
+                   <p><strong>Parámetros: </strong></p>
+                   <ul>
+                    <li>authkey - Clave de autenticación</li>
+                  </ul>
+                   Ejemplo: <code>curl {{url}}API/v1/getProtoBlocks?authkey={{key}}</code>
+                   <p><strong>Respuesta: </strong></p>
+                   <ul>
+                    <li>JSON - JSON con los datos</li>
+                    <li>-1 - Clave de autenticación incorrecta</li>
+                 </div>
+             </div>
+         </div>
+
+
+
+
+
+
+         </div>
+     </div>
+
+     <div class="mt-5" data-role="panel"
+          data-title-caption="<span class='mif-blocked'></span> Bloquear el tráfico"
+          data-collapsible="true">
+
+
+          <div data-role="accordion" data-one-frame="false" data-show-active="false">
+
+
+                   <div class="frame">
+                       <div class="heading"><span class="tally warning">POST</span> /API/v1/postIPBlock  -  <strong>Bloquear dirección IP</strong></div>
+                       <div class="content">
+                           <div class="p-2">
+                             <p>Bloquear una dirección ip durante un determinado tiempo en segundos.</p>
+                             <p><strong>Parámetros: </strong></p>
+                             <ul>
+                              <li>authkey - Clave de autenticación</li>
+                              <li>ip - Dirección IP</li>
+                              <li>time - Tiempo en segundos</li>
+                            </ul>
+                             Ejemplo: <code>curl -d "authkey={{key}}&ip=0.0.0.0&time=100" {{url}}API/v1/postIPBlock</code>
+                             <p><strong>Respuesta: </strong></p>
+                             <ul>
+                              <li>0 - Operación ejecutada correctamente</li>
+                              <li>1 - Error</li>
+                              <li>-1 - Clave de autenticación incorrecta</li>
+                           </div>
+                       </div>
+                   </div>
+
+                   <div class="frame">
+                       <div class="heading"><span class="tally warning">POST</span> /API/v1/postPortsBlocks  -  <strong>Bloquear un puerto</strong></div>
+                       <div class="content">
+                           <div class="p-2">
+                             <p>Bloquear un puerto durante un determinado tiempo en segundos.</p>
+                             <p><strong>Parámetros: </strong></p>
+                             <ul>
+                              <li>authkey - Clave de autenticación</li>
+                              <li>port - Puerto</li>
+                              <li>time - Tiempo en segundos</li>
+                            </ul>
+                             Ejemplo: <code>curl -d "authkey={{key}}&port=100&time=100" {{url}}API/v1/postPortsBlocks</code>
+                             <p><strong>Respuesta: </strong></p>
+                             <ul>
+                              <li>0 - Operación ejecutada correctamente</li>
+                              <li>1 - Error</li>
+                              <li>-1 - Clave de autenticación incorrecta</li>
+                           </div>
+                       </div>
+                   </div>
+
+                   <div class="frame">
+                       <div class="heading"><span class="tally warning">POST</span> /API/v1/postProtoBlock  -  <strong>Bloquear un protocolo</strong></div>
+                       <div class="content">
+                           <div class="p-2">
+                             <p>Bloquear un protocolo durante un determinado tiempo en segundos.</p>
+                             <p><strong>Parámetros: </strong></p>
+                             <ul>
+                              <li>authkey - Clave de autenticación</li>
+                              <li>proto - Protocolo [IP, IPV6, ICMP, TPC, UDP]</li>
+                              <li>time - Tiempo en segundos</li>
+                            </ul>
+                             Ejemplo: <code>curl -d "authkey={{key}}&proto=ICMP&time=100" {{url}}API/v1/postProtoBlock</code>
+                             <p><strong>Respuesta: </strong></p>
+                             <ul>
+                              <li>0 - Operación ejecutada correctamente</li>
+                              <li>1 - Error</li>
+                              <li>-1 - Clave de autenticación incorrecta</li>
+                           </div>
+                       </div>
+                   </div>
+
+
+                     </div>
+
+
+        </div>
+
+
+
+        <div class="mt-5" data-role="panel"
+             data-title-caption="<span class='mif-checkmark'></span> Desbloquear el tráfico"
+             data-collapsible="true">
+
+
+                <div data-role="accordion" data-one-frame="false" data-show-active="false">
+
+
+             <div class="frame">
+                 <div class="heading"><span class="tally warning">POST</span> /API/v1/postIPUnblock  -  <strong>Desbloquear dirección IP</strong></div>
+                 <div class="content">
+                     <div class="p-2">
+                       <p>Desbloquear una dirección ip durante un determinado tiempo en segundos.</p>
+                       <p><strong>Parámetros: </strong></p>
+                       <ul>
+                        <li>authkey - Clave de autenticación</li>
+                        <li>ip - Dirección IP</li>
+                        <li>time - Tiempo en segundos</li>
+                      </ul>
+                       Ejemplo: <code>curl -d "authkey={{key}}&ip=0.0.0.0&time=100" {{url}}API/v1/postIPUnblock</code>
+                       <p><strong>Respuesta: </strong></p>
+                       <ul>
+                        <li>0 - Operación ejecutada correctamente</li>
+                        <li>1 - Error</li>
+                        <li>-1 - Clave de autenticación incorrecta</li>
+                     </div>
+                 </div>
+             </div>
+
+             <div class="frame">
+                 <div class="heading"><span class="tally warning">POST</span> /API/v1/postPortsUnblocks  -  <strong>Desbloquear un puerto</strong></div>
+                 <div class="content">
+                     <div class="p-2">
+                       <p>Desbloquear un puerto durante un determinado tiempo en segundos.</p>
+                       <p><strong>Parámetros: </strong></p>
+                       <ul>
+                        <li>authkey - Clave de autenticación</li>
+                        <li>port - Puerto</li>
+                        <li>time - Tiempo en segundos</li>
+                      </ul>
+                       Ejemplo: <code>curl -d "authkey={{key}}&port=100&time=100" {{url}}API/v1/postPortsUnblocks</code>
+                       <p><strong>Respuesta: </strong></p>
+                       <ul>
+                        <li>0 - Operación ejecutada correctamente</li>
+                        <li>1 - Error</li>
+                        <li>-1 - Clave de autenticación incorrecta</li>
+                     </div>
+                 </div>
+             </div>
+
+
+
+              <div class="frame">
+                  <div class="heading"><span class="tally warning">POST</span> /API/v1/postProtoUnblock  -  <strong>Desbloquear un protocolo</strong></div>
+                  <div class="content">
+                      <div class="p-2">
+                        <p>Desbloquear un protocolo durante un determinado tiempo en segundos.</p>
+                        <p><strong>Parámetros: </strong></p>
+                        <ul>
+                         <li>authkey - Clave de autenticación</li>
+                         <li>protocol - Protocolo [IP, IPV6, ICMP, TPC, UDP]</li>
+                         <li>time - Tiempo en segundos</li>
+                       </ul>
+                        Ejemplo: <code>curl -d "authkey={{key}}&port=IP&time=100" {{url}}API/v1/postProtoUnblock</code>
+                        <p><strong>Respuesta: </strong></p>
+                        <ul>
+                         <li>0 - Operación ejecutada correctamente</li>
+                         <li>1 - Error</li>
+                         <li>-1 - Clave de autenticación incorrecta</li>
+                      </div>
+                  </div>
+              </div>
+
+
+
+
+           </div>
+
+
+
+
+</div>
+
+
+
+</div>
+   </div>
+
+
+
+
+
+</div>
+
+
+
+{% endblock %}

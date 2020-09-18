@@ -333,6 +333,23 @@ int delete_block_bpfmap(char * data, int xdp_block_ip_fd){
 
   if(token[0] == '0'){
     /* IPV4 */
+
+
+    token = strtok(NULL, "\n");
+    int ipv4 = getDecimalValueOfIPV4_String(token);
+
+    struct keyipblockchk keyblock = {};
+    keyblock.isv6 = 0;
+    keyblock.ip_addr = htonl(ipv4);
+
+
+    bpf_map_delete_elem(xdp_block_ip_fd, &keyblock);
+
+
+
+  } else {
+    /* IPv6 */
+
     struct in6_addr resultip;
 
 
@@ -349,21 +366,6 @@ int delete_block_bpfmap(char * data, int xdp_block_ip_fd){
 
 
     bpf_map_delete_elem(xdp_block_ip_fd, &keyblock);
-
-
-  } else {
-    /* IPv6 */
-
-    token = strtok(NULL, "\n");
-    int ipv4 = getDecimalValueOfIPV4_String(token);
-
-    struct keyipblockchk keyblock = {};
-    keyblock.isv6 = 0;
-    keyblock.ip_addr = htonl(ipv4);
-
-
-    bpf_map_delete_elem(xdp_block_ip_fd, &keyblock);
-
 
   }
 
