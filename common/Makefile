@@ -21,7 +21,7 @@ common_libbpf.o: common_libbpf.c common_libbpf.h
 shared_memory.o: shared_memory.c shared_memory.h
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-checker.o: checker.c checker.h shared_memory.h
+checker.o: checker.c checker.h shared_memory.h trace.h
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 trace.o: trace.c trace.h shared_memory.h

@@ -18,7 +18,7 @@ struct keyipchk {
 };
 
 
-int check_changes(int map_fd, int xdp_data_map_s_fd, int xdp_block_ip_fd, int xdp_block_portsfd, int xdp_block_protofd);
+int check_changes(int map_fd, int xdp_data_map_s_fd, int xdp_block_ip_fd, int xdp_block_portsfd, int xdp_block_protofd, int xdp_perf_e);
 int update_time(int xdp_block_protofd);
 int loadData_onStart(int type, char * datafile, int xdp_fd);
 

@@ -31,24 +31,7 @@
 
      <div data-role="accordion" data-one-frame="false" data-show-active="false">
 
-       <div class="frame">
-           <div class="heading"><span class="tally info">GET</span> /API/v1/getTrace  -  <strong>Muestra de tráfico</strong></div>
-           <div class="content">
-               <div class="p-2">
-                 <p>Obtener los útimos 60 segundos de muestra de tráfico.</p>
-                 <p><strong>Parámetros: </strong></p>
-                 <ul>
-                  <li>authkey - Clave de autenticación</li>
-                </ul>
-                 Ejemplo: <code>curl {{url}}API/v1/getTrace?authkey={{key}} --output -</code>
-                 <p><strong>Respuesta: </strong></p>
-                 <ul>
-                  <li>JSON - JSON con los datos</li>
-                  <li>-1 - Clave de autenticación incorrecta</li>
-                  <li>1 - Error al obtenerlo</li>
-               </div>
-           </div>
-       </div>
+
 
 
 
@@ -138,6 +121,72 @@
          </div>
      </div>
 
+
+
+     <div class="mt-5" data-role="panel"
+          data-title-caption="<span class='mif-bug'></span> Gestión de trazas"
+          data-collapsible="true">
+
+
+          <div data-role="accordion" data-one-frame="false" data-show-active="false">
+
+            <div class="frame">
+                <div class="heading"><span class="tally info">GET</span> /API/v1/StartTrace  -  <strong>Iniciar recogida de trazas</strong></div>
+                <div class="content">
+                    <div class="p-2">
+                      <p>Empezar a obtener trazas de tráfico.</p>
+                      <p><strong>Parámetros: </strong></p>
+                      <ul>
+                       <li>authkey - Clave de autenticación</li>
+                     </ul>
+                      Ejemplo: <code>curl {{url}}API/v1/StartTrace?authkey={{key}} --output -</code>
+                      <p><strong>Respuesta: </strong></p>
+                      <ul>
+                       <li>0 - Correcto</li>
+                       <li>-1 - Clave de autenticación incorrecta</li>
+                    </div>
+                </div>
+            </div>
+
+            <div class="frame">
+                <div class="heading"><span class="tally info">GET</span> /API/v1/getTrace  -  <strong>Muestra de tráfico</strong></div>
+                <div class="content">
+                    <div class="p-2">
+                      <p>Obtener los útimos 60 segundos de muestra de tráfico. Los datos se resetean cada 60 segundos.</p>
+                      <p><strong>Parámetros: </strong></p>
+                      <ul>
+                       <li>authkey - Clave de autenticación</li>
+                     </ul>
+                      Ejemplo: <code>curl {{url}}API/v1/getTrace?authkey={{key}} --output -</code>
+                      <p><strong>Respuesta: </strong></p>
+                      <ul>
+                       <li>JSON - JSON con los datos</li>
+                       <li>-1 - Clave de autenticación incorrecta</li>
+                       <li>1 - Error al obtenerlo o no inicializado</li>
+                    </div>
+                </div>
+            </div>
+
+            <div class="frame">
+                <div class="heading"><span class="tally info">GET</span> /API/v1/StopTrace  -  <strong>Parar recogida de trazas</strong></div>
+                <div class="content">
+                    <div class="p-2">
+                      <p>Parar recogida de trazados.</p>
+                      <p><strong>Parámetros: </strong></p>
+                      <ul>
+                       <li>authkey - Clave de autenticación</li>
+                     </ul>
+                      Ejemplo: <code>curl {{url}}API/v1/StopTrace?authkey={{key}} --output -</code>
+                      <p><strong>Respuesta: </strong></p>
+                      <ul>
+                       <li>0 - Correcto</li>
+                       <li>-1 - Clave de autenticación incorrecta</li>
+                    </div>
+                </div>
+            </div>
+
+          </div>
+        </div>
      <div class="mt-5" data-role="panel"
           data-title-caption="<span class='mif-blocked'></span> Bloquear el tráfico"
           data-collapsible="true">

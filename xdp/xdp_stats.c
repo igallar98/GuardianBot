@@ -28,7 +28,6 @@ static const char *__doc__ = "XDP data program\n"
 #include "maps_expected_user.h"
 #include "../common/shared_memory.h"
 #include "../common/checker.h"
-#include "../common/trace.h"
 
 static const struct option_wrapper long_options[] = {
 	{{"help",        no_argument,		NULL, 'h' },
@@ -270,15 +269,12 @@ static int stats_poll(const char *pin_dir, int map_fd, __u32 id, int interval, i
 
 
 	if(fork() == 0){
-		check_changes(map_fd, xdp_data_map_s_fd, xdp_block_ip_fd, xdp_block_portsfd, xdp_block_protofd);
+		check_changes(map_fd, xdp_data_map_s_fd, xdp_block_ip_fd, xdp_block_portsfd, xdp_block_protofd, xdp_perf_e);
 
 		exit(1);
 
 	} else {
-		if(fork() == 0) {
-			trace_guardianbot(xdp_perf_e);
-			exit(1);
-		} else {
+
 				while (1) {
 
 
@@ -317,7 +313,7 @@ static int stats_poll(const char *pin_dir, int map_fd, __u32 id, int interval, i
 
 					sleep(interval);
 				}
-			}
+
 
 	}
 

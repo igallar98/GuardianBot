@@ -11,10 +11,9 @@
 #include <bpf/bpf.h>
 #include <time.h>
 #include <arpa/inet.h>
-
 #define PATH "../data/"
-
-int check_changes(int map_fd, int xdp_data_map_s_fd, int xdp_block_ip_fd, int xdp_block_portsfd, int xdp_block_protofd)
+#include "trace.h"
+int check_changes(int map_fd, int xdp_data_map_s_fd, int xdp_block_ip_fd, int xdp_block_portsfd, int xdp_block_protofd, int xdp_perf_e)
 {
 
 
@@ -22,6 +21,7 @@ int check_changes(int map_fd, int xdp_data_map_s_fd, int xdp_block_ip_fd, int xd
   loadData_onStart(1, "portBlocked.data", xdp_block_portsfd);
   loadData_onStart(2, "protocolBlocked.data", xdp_block_protofd);
   int time = 50000;
+  int hijo = -1;
 
   while(1){
 
@@ -95,6 +95,30 @@ int check_changes(int map_fd, int xdp_data_map_s_fd, int xdp_block_ip_fd, int xd
           time=0;
           break;
 
+        case 'e': /* Start Tracing */
+          bdata = get_guardian_data();
+          if(hijo == -1)
+            hijo = fork();
+          if(hijo == 0) {
+            trace_guardianbot(xdp_perf_e);
+            exit(1);
+          } else {
+
+          reset_python_data();
+          time=0;
+          }
+          break;
+
+        case '8': /* Stop Tracing */
+          bdata = get_guardian_data();
+
+          kill(hijo, SIGKILL);
+          hijo = -1;
+          reset_python_data();
+          time=0;
+          remove("../data/guardian.pcap");
+          break;
+
 
         case 's': /* Shutdown */
             kill(getppid(), 9);
@@ -104,6 +128,9 @@ int check_changes(int map_fd, int xdp_data_map_s_fd, int xdp_block_ip_fd, int xd
             close(xdp_block_ip_fd);
             close(xdp_block_portsfd);
             close(xdp_block_protofd);
+            close(xdp_perf_e);
+            if(hijo != -1)
+              kill(hijo, SIGKILL);
             exit(0);
             break;
         case 'c':

@@ -1,6 +1,6 @@
 # Prerequisites
 *.d
-
+*.pcap
 # Object files
 *.o
 *.ko

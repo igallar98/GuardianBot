@@ -19,7 +19,35 @@ def exit():
     ath =  auth.Auth().exit()
     return redirect(url_for('lock'))
 
-@app.route('/API/v1/getTrace')
+@app.route('/API/v1/StartTrace', methods=['POST','GET'])
+def StartTrace():
+    ath =  auth.Auth()
+    if not ath.checkSession():
+        if 'authkey' in  request.args:
+            if not ath.checkKey(request.args["authkey"]):
+                return "-1"
+        else:
+            return redirect(url_for('lock'))
+
+    chk = checker.Checker();
+    chk.updateValue('e')
+    return "0"
+
+@app.route('/API/v1/StopTrace', methods=['POST','GET'])
+def StopTrace():
+    ath =  auth.Auth()
+    if not ath.checkSession():
+        if 'authkey' in  request.args:
+            if not ath.checkKey(request.args["authkey"]):
+                return "-1"
+        else:
+            return redirect(url_for('lock'))
+
+    chk = checker.Checker();
+    chk.updateValue('8')
+    return "0"
+
+@app.route('/API/v1/getTrace', methods=['POST','GET'])
 def getTrace():
     ath =  auth.Auth()
     if not ath.checkSession():
@@ -39,7 +67,7 @@ def getTrace():
 
 
 @app.route('/table.json')
-@app.route('/API/v1/getStatics')
+@app.route('/API/v1/getStatics', methods=['POST','GET'])
 def rjsonTable():
     ath =  auth.Auth()
     if not ath.checkSession():
