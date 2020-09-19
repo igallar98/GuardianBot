@@ -108,9 +108,10 @@ char * stats_print( int fd, int xdp_data_map_s_fd, int * tam)
 	double pps; /* packets per sec */
 	double bps; /* bits per sec */
 	struct keyip key = {};
-	char * data = "";
+	char * data = NULL;
 	char * ips;
 	char * ipd;
+	char * pointer = NULL;
 
 	while (bpf_map_get_next_key(xdp_data_map_s_fd, &key, &key) == 0)
 	{
@@ -148,6 +149,12 @@ char * stats_print( int fd, int xdp_data_map_s_fd, int * tam)
 		bps     = (bytes * 8)/ period / 1000000;
 
 		/* Reservar memoria e imprimir en string*/
+		if(data == NULL){
+			pointer = NULL;
+			data = "";
+		} else {
+			pointer = data;
+		}
 
 
 		*tam =  asprintf(&data, fmt, data, key.isv6, ips, ipd , rec->total[1].rx_packets, pps,
@@ -155,6 +162,9 @@ char * stats_print( int fd, int xdp_data_map_s_fd, int * tam)
 		       period, rec->total[1].source, rec->total[1].dest,  rec->total[1].proto);
 
 		/*printf("%s\n", data);*/
+
+		if(pointer)
+			free(pointer);
 
 		free(ips);
 		ips = NULL;
