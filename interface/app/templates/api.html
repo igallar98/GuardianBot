@@ -30,6 +30,28 @@
 
 
      <div data-role="accordion" data-one-frame="false" data-show-active="false">
+
+       <div class="frame">
+           <div class="heading"><span class="tally info">GET</span> /API/v1/getTrace  -  <strong>Muestra de tráfico</strong></div>
+           <div class="content">
+               <div class="p-2">
+                 <p>Obtener los útimos 60 segundos de muestra de tráfico.</p>
+                 <p><strong>Parámetros: </strong></p>
+                 <ul>
+                  <li>authkey - Clave de autenticación</li>
+                </ul>
+                 Ejemplo: <code>curl {{url}}API/v1/getTrace?authkey={{key}} --output -</code>
+                 <p><strong>Respuesta: </strong></p>
+                 <ul>
+                  <li>JSON - JSON con los datos</li>
+                  <li>-1 - Clave de autenticación incorrecta</li>
+                  <li>1 - Error al obtenerlo</li>
+               </div>
+           </div>
+       </div>
+
+
+
          <div class="frame">
              <div class="heading"><span class="tally info">GET</span> /API/v1/getStatics  -  <strong>Estadísticas principales</strong></div>
              <div class="content">

@@ -4,7 +4,6 @@ import sysv_ipc as ipc
 KEY = 8888
 
 
-
 class sharedMemory:
     def __init__(self):
         self.table = [];
@@ -24,6 +23,8 @@ class sharedMemory:
             return 1
         except ipc.ExistentialError:
             return -1
+
+
 
     def refresh_table(self):
         while self.__refresh_table() == -1:

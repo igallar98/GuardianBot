@@ -8,6 +8,8 @@
 #define IP_HASH_ENTRIES_MAX	16382
 #define MAX_PROTOCOL 6
 #define MAX_PORTS 65535
+#define MAX_CPUS 128
+
 
 #include <time.h>
 /* DATA IP MAP PER CPU */
@@ -81,6 +83,14 @@ struct bpf_map_info xdp_block_ports = {
 	.key_size    = sizeof(__u16),
 	.value_size  = sizeof(time_t),
 	.max_entries = MAX_PORTS,
+};
+
+/* PERF EVENT */
+
+struct bpf_map_info xdp_perf_map = {
+	.key_size = sizeof(int),
+	.value_size = sizeof(__u32),
+	.max_entries = MAX_CPUS,
 };
 
 

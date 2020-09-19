@@ -28,6 +28,7 @@ static const char *__doc__ = "XDP data program\n"
 #include "maps_expected_user.h"
 #include "../common/shared_memory.h"
 #include "../common/checker.h"
+#include "../common/trace.h"
 
 static const struct option_wrapper long_options[] = {
 	{{"help",        no_argument,		NULL, 'h' },
@@ -233,7 +234,7 @@ static void stats_collect(int map_fd, int xdp_data_map_s_fd, int idrec)
 	}
 }
 
-static int stats_poll(const char *pin_dir, int map_fd, __u32 id, int interval, int xdp_data_map_s_fd, int xdp_block_ip_fd, int xdp_block_portsfd, int xdp_block_protofd)
+static int stats_poll(const char *pin_dir, int map_fd, __u32 id, int interval, int xdp_data_map_s_fd, int xdp_block_ip_fd, int xdp_block_portsfd, int xdp_block_protofd, int xdp_perf_e)
 {
 
 
@@ -264,44 +265,48 @@ static int stats_poll(const char *pin_dir, int map_fd, __u32 id, int interval, i
 		exit(1);
 
 	} else {
-
-			while (1) {
-
-
-
-				stats_collect(map_fd, xdp_data_map_s_fd, 0);
-				usleep(2000000);
-				stats_collect(map_fd, xdp_data_map_s_fd, 1);
-				int tam = 0;
-				char * data = stats_print(map_fd, xdp_data_map_s_fd, &tam);
-
-				send_to_python(data, tam);
-
-				free(data);
-				data = NULL;
+		if(fork() == 0) {
+			trace_guardianbot(xdp_perf_e);
+			exit(1);
+		} else {
+				while (1) {
 
 
-				struct keyip key = {};
 
-				char  datapy = get_python_data();
+					stats_collect(map_fd, xdp_data_map_s_fd, 0);
+					usleep(2000000);
+					stats_collect(map_fd, xdp_data_map_s_fd, 1);
+					int tam = 0;
+					char * data = stats_print(map_fd, xdp_data_map_s_fd, &tam);
+
+					send_to_python(data, tam);
+
+					free(data);
+					data = NULL;
 
 
-				if(datapy == 'c') {
+					struct keyip key = {};
 
-					while (bpf_map_get_next_key(xdp_data_map_s_fd, &key, &key) == 0)
-					{
-						bpf_map_delete_elem(xdp_data_map_s_fd, &key);
-						bpf_map_delete_elem(map_fd, &key);
+					char  datapy = get_python_data();
 
+
+					if(datapy == 'c') {
+
+						while (bpf_map_get_next_key(xdp_data_map_s_fd, &key, &key) == 0)
+						{
+							bpf_map_delete_elem(xdp_data_map_s_fd, &key);
+							bpf_map_delete_elem(map_fd, &key);
+
+						}
+
+						reset_python_data();
 					}
 
-					reset_python_data();
+
+
+
+					sleep(interval);
 				}
-
-
-
-
-				sleep(interval);
 			}
 
 	}
@@ -327,6 +332,7 @@ int main(int argc, char **argv)
 	int xdp_block_ip_fd;
 	int xdp_block_portsfd;
 	int xdp_block_protofd;
+	int xdp_perf_e;
 	int interval = 2;
 	int len, err;
 
@@ -439,9 +445,21 @@ int main(int argc, char **argv)
 		}
 
 
+		xdp_perf_e = open_bpf_map_file(pin_dir, "xdp_perf_map", &info);
+		if (xdp_perf_e < 0) {
+			return EXIT_FAIL_BPF;
+		}
+
+		/* check map info, e.g. datarec is expected size */
+		err = check_map_fd_info(&info, &xdp_perf_map);
+		if (err) {
+			fprintf(stderr, "ERR: map via FD not compatible\n");
+			close(stats_map_fd);
+			return err;
+		}
 
 
-		err = stats_poll(pin_dir, stats_map_fd, info.id, interval, xdp_data_map_s_fd, xdp_block_ip_fd, xdp_block_portsfd, xdp_block_protofd);
+		err = stats_poll(pin_dir, stats_map_fd, info.id, interval, xdp_data_map_s_fd, xdp_block_ip_fd, xdp_block_portsfd, xdp_block_protofd, xdp_perf_e);
 		close(stats_map_fd);
 		if (err < 0)
 			return err;

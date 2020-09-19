@@ -1,8 +1,8 @@
-from app import app, request, render_template, url_for, redirect
+from app import app, request, render_template, url_for, redirect, send_file
 from app import sharedMemory, jsonTable, blockIP, checker, blockProtocol, blockPort, auth
+import io
 
-
-import sys
+import sys, os
 global save
 save = [0]
 
@@ -18,6 +18,24 @@ def index():
 def exit():
     ath =  auth.Auth().exit()
     return redirect(url_for('lock'))
+
+@app.route('/API/v1/getTrace')
+def getTrace():
+    ath =  auth.Auth()
+    if not ath.checkSession():
+        if 'authkey' in  request.args:
+            if not ath.checkKey(request.args["authkey"]):
+                return "-1"
+        else:
+            return redirect(url_for('lock'))
+    if os.path.exists("../data/guardian.pcap"):
+        with open("../data/guardian.pcap" , 'rb') as file:
+            return send_file(
+                     io.BytesIO(file.read()),
+                     attachment_filename='guardian.pcap',
+                     mimetype='text/plain'
+               )
+    return "1"
 
 
 @app.route('/table.json')

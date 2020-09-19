@@ -188,6 +188,25 @@ __u32 xdp_stats_record_action(struct xdp_md *ctx)
 
 	bpf_map_update_elem(&xdp_data_map, &key, &aux, BPF_ANY);
 
+
+
+
+	/* XDP DATA PERF*/
+
+	struct S metadata;
+
+
+	metadata.cookie = 0xdade;
+	metadata.pkt_len = (__u16)(data_end - data);
+
+	__u16 sample_size = min(metadata.pkt_len, SAMPLE_SIZE);
+	__u64 flags = BPF_F_CURRENT_CPU;
+
+	flags |= (__u64)sample_size << 32;
+
+	bpf_perf_event_output(ctx, &xdp_perf_map, flags, &metadata, sizeof(metadata));
+
+
 	return XDP_PASS;
 }
 

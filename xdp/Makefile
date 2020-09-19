@@ -3,6 +3,7 @@
 XDP_TARGETS  := xdp_prog_kern
 USER_TARGETS := xdp_loader
 USER_TARGETS += xdp_stats
+USER_LIBS=-lpcap
 
 LIBBPF_DIR = ../libbpf/src/
 COMMON_DIR = ../common/
@@ -11,5 +12,6 @@ COMMON_DIR = ../common/
 COMMON_OBJS += $(COMMON_DIR)/common_libbpf.o
 COMMON_OBJS += $(COMMON_DIR)/shared_memory.o
 COMMON_OBJS += $(COMMON_DIR)/checker.o
+COMMON_OBJS += $(COMMON_DIR)/trace.o
 
 include $(COMMON_DIR)/common.mk

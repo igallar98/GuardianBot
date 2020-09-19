@@ -8,6 +8,7 @@
 #define PROJECTID  8888
 #define PROJECTIDRV 2244
 #define GUARDIANDATA 2248
+#define TRACEDATA 4244
 #define MAXTAMDATA 5000
 #include <unistd.h>
 
@@ -47,9 +48,53 @@ int send_to_python(char * data, int tam)
 
     return 0;
 }
+int reset_trace(){
+
+    key_t key = TRACEDATA;
+    int shmid;
+
+    shmid = shmget(key ,0, 0);
+    if ( shmid == -1 )
+        return -1;
+
+    if (shmctl(shmid, IPC_RMID, NULL) == -1)
+        return -1;
+
+    return 1;
+}
+
+int send_trace(char * data, int tam)
+{
+
+    key_t key = TRACEDATA;
+    int shmid;
+
+    shmid = shmget(key, tam , IPC_CREAT | IPC_EXCL | 0664);
+    if ( shmid == -1 ) {
+        if ( errno == EEXIST ) {
+            shmid = shmget(key ,0, 0);
+        } else {
+            return -1;
+        }
+    }
+
+    char *addr;
+
+    if ( (addr = shmat(shmid, 0, 0) ) == (void*)-1) {
+        if (shmctl(shmid, IPC_RMID, NULL) == -1)
+            return -1;
+        return -1;
+    }
+
+    strcpy( addr, data );
 
 
 
+    if ( shmdt(addr) < 0)
+        return -1;
+
+    return 0;
+}
 
 char get_python_data(){
 
@@ -150,6 +195,16 @@ int free_memory(){
   if (shmctl(shmid, IPC_RMID, NULL) == -1)
       return -1;
 
+
+  key = TRACEDATA;
+  shmid = 0;
+
+  shmid = shmget(key ,0, 0);
+  if ( shmid == -1 )
+      return -1;
+
+  if (shmctl(shmid, IPC_RMID, NULL) == -1)
+      return -1;
 
   return 1;
 

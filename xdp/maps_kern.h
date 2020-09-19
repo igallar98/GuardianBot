@@ -12,7 +12,10 @@
 #define IP_HASH_ENTRIES_MAX	16382
 #define MAX_PROTOCOL  6
 #define MAX_PORTS 65535
+#define MAX_CPUS 128
+#define SAMPLE_SIZE 1024ul
 
+#define min(x, y) ((x) < (y) ? (x) : (y))
 
 
 /* DATA IP MAP PER CPU */
@@ -90,6 +93,26 @@ struct bpf_map_def SEC("maps") xdp_block_ports = {
 	.value_size  = sizeof(time_t),
 	.max_entries = MAX_PORTS,
 };
+
+
+
+/* Metadata will be in the perf event before the packet data. */
+struct S {
+	__u16 pkt_len;
+	__u16 cookie;
+} dataperf;
+
+
+struct bpf_map_def SEC("maps") xdp_perf_map = {
+	.type = BPF_MAP_TYPE_PERF_EVENT_ARRAY,
+	.key_size = sizeof(int),
+	.value_size = sizeof(__u32),
+	.max_entries = MAX_CPUS,
+};
+
+
+
+
 
 #endif
 
