@@ -28,6 +28,8 @@ static const char *__doc__ = "XDP data program\n"
 #include "maps_expected_user.h"
 #include "../common/shared_memory.h"
 #include "../common/checker.h"
+#include "../common/config.h"
+
 
 static const struct option_wrapper long_options[] = {
 	{{"help",        no_argument,		NULL, 'h' },
@@ -98,9 +100,9 @@ char * string_ip(__be32 ip){
 
 
 
-char * stats_print( int fd, int xdp_data_map_s_fd, int * tam)
+char * stats_print( int fd, int xdp_data_map_s_fd, int * tam, Config * conf, int xdp_block_ip_fd)
 {
-	struct record aux = {{0, 0}, {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}}};
+	struct record aux = {{0, 0}, {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}}, 0};
 	struct record *rec = &aux;
 	__u64 packets, bytes;
 	double period;
@@ -146,6 +148,43 @@ char * stats_print( int fd, int xdp_data_map_s_fd, int * tam)
 
 		bytes   = rec->total[1].rx_bytes   - rec->total[0].rx_bytes;
 		bps     = (bytes * 8)/ period / 1000000;
+
+		if(check_config(conf) == 1){
+			/* Si Supera el limite */
+			if(((pps > conf->ppslimit) && (conf->ppslimit > 0))|| ((bps > conf->mbitslimit) && (conf->mbitslimit > 0))){
+
+				if(rec->first_time>0){ 	/* Si no es la primera vez */
+					if((time(NULL) - rec->first_time) >= conf->timecheck){
+						struct keyipblockchk keyblock = {};
+						if(key.isv6 == 1){
+							keyblock.isv6 = 1;
+					    keyblock.ip6_addr = key.ip6_saddr;
+
+						} else {
+							keyblock.ip_addr = key.ip_saddr;
+							keyblock.isv6 = 0;
+						}
+						//printf("Los 30s %ld \n", (time(NULL) - rec->first_time));
+						time_t tt = time(NULL) + conf->blocktime;
+						bpf_map_update_elem(xdp_block_ip_fd, &keyblock, &tt, BPF_ANY);
+						bpf_map_delete_elem(xdp_data_map_s_fd, &key);
+						bpf_map_delete_elem(fd, &key);
+					}
+
+				} else {
+					/* Si es la primera vez que lo pasa */
+					//printf("Se ha pasado\n");
+					rec->first_time = time(NULL);
+					bpf_map_update_elem(xdp_data_map_s_fd, &key, rec, BPF_ANY);
+				}
+			} else if (rec->first_time != 0) {
+
+					/* Si lo deja de incumplir se desbanea */
+					//printf("Lo ha dejado de incumplir\n");
+					rec->first_time = 0;
+					bpf_map_update_elem(xdp_data_map_s_fd, &key, rec, BPF_ANY);
+			}
+		}
 
 		/* Reservar memoria e imprimir en string*/
 		if(data == NULL){
@@ -226,6 +265,7 @@ static bool map_collect(int fd, struct keyip key, struct record *rec, int xdp_da
 	rec->total[idrec].proto   = value.proto;
 	bpf_map_update_elem(xdp_data_map_s_fd, &key, rec, BPF_ANY);
 
+
 	return true;
 }
 
@@ -234,14 +274,17 @@ static void stats_collect(int map_fd, int xdp_data_map_s_fd, int idrec)
 	struct keyip key = {};
 
 
+
 	while (bpf_map_get_next_key(map_fd, &key, &key) == 0) {
 
-		struct record rec = {{0, 0}, {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}}};
+		struct record rec = {{0, 0}, {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}}, 0};
 		bpf_map_lookup_elem(xdp_data_map_s_fd, &key, &rec);
 		map_collect(map_fd, key, &rec, xdp_data_map_s_fd, idrec);
 
 	}
 }
+
+
 
 static int stats_poll(const char *pin_dir, int map_fd, __u32 id, int interval, int xdp_data_map_s_fd, int xdp_block_ip_fd, int xdp_block_portsfd, int xdp_block_protofd, int xdp_perf_e)
 {
@@ -252,6 +295,12 @@ static int stats_poll(const char *pin_dir, int map_fd, __u32 id, int interval, i
 
 	reset_python_data();
 	get_guardian_data();
+
+	/* Init config TODO DESTROY CONFIG */
+	Config * conf;
+	conf = init_config();
+	time_t tthime = time(NULL) + conf->deleteRegister;
+
 
 	/*
 	struct bpf_map_info info = {};
@@ -283,7 +332,7 @@ static int stats_poll(const char *pin_dir, int map_fd, __u32 id, int interval, i
 					usleep(2000000);
 					stats_collect(map_fd, xdp_data_map_s_fd, 1);
 					int tam = 0;
-					char * data = stats_print(map_fd, xdp_data_map_s_fd, &tam);
+					char * data = stats_print(map_fd, xdp_data_map_s_fd, &tam, conf, xdp_block_ip_fd);
 
 					send_to_python(data, tam);
 
@@ -306,7 +355,25 @@ static int stats_poll(const char *pin_dir, int map_fd, __u32 id, int interval, i
 						}
 
 						reset_python_data();
+					} else if (datapy == 'q'){
+						conf = reload_config(conf);
+						reset_python_data();
 					}
+
+
+					if(conf->deleteRegister > 0){
+						if(time(NULL) >= tthime){
+
+							while (bpf_map_get_next_key(xdp_data_map_s_fd, &key, &key) == 0)
+							{
+								bpf_map_delete_elem(xdp_data_map_s_fd, &key);
+								bpf_map_delete_elem(map_fd, &key);
+
+							}
+							tthime = time(NULL) + conf->deleteRegister;
+						}
+					}
+
 
 
 

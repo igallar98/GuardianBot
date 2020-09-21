@@ -49,6 +49,7 @@ struct bpf_map_def SEC("maps") xdp_data_map = {
 struct record {
 	__u64 timestamp[2];
 	struct datarec total[2];
+	time_t first_time;
 };
 
 

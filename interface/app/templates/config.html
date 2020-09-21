@@ -9,32 +9,42 @@
 
 </div>
 
+<div class="container-fluid" style="width: 70%;">
 
-<div class="m-3">
-     <div class="row">
-         <div class="cell-lg-6">
              <div class="bg-lightGray p-4 m-2">
                  <h4>Ajustes generales</h4>
-                 <form>
+                 <form method = "POST">
+
 
                      <div class="form-group">
-                         <label>Eliminar registro cada:</label><br>
-                         <small>Si la dirección no tiene actividad en ese tiempo (minutos) se borrará el registro.</small>
-                         <input type="text" data-role="spinner" data-min-value="1" data-max-value="60">
-
+                         <label>Limitar paquetes por segundo:</label>
+                         <input type="text" name="ppslimit" value="{{config[0]}}" data-role="spinner" data-min-value="0">
+                     </div>
+                     <div class="form-group">
+                         <label>Limitar MBits/s (separar con . EJ: 1.75):</label>
+                         <input type="text" name="mbitslimit" value="{{config[1]}}"  data-role="spinner" data-min-value="0" >
                      </div>
 
                      <div class="form-group">
-                         <label>Limitar paquetes por segundo globales:</label>
-                         <input type="text" data-role="spinner" data-min-value="1" data-max-value="60">
+                         <label>Bloquar una dirección si incumple durante (segundos):</label><br>
+                         <input type="text" data-role="spinner" name="timecheck" value="{{config[2]}}"   data-min-value="0" >
                      </div>
+
                      <div class="form-group">
-                         <label>Limitar MBits/s globales:</label>
-                         <input type="text" data-role="spinner" data-min-value="1" data-max-value="60">
+                         <label>La dirección se bloqueará durante (segundos):</label><br>
+                         <input type="text" name="blocktime"  data-role="spinner" value="{{config[3]}}"  data-min-value="0">
                      </div>
+
+                     <div class="form-group">
+                         <label>Eliminar registro cada (segundos):</label><br>
+                         <input type="text"  name="deleteRegister" value="{{config[4]}}"  data-role="spinner" data-min-value="0" >
+                     </div>
+
+
+                     <p>(0 = ilimitado o desactivado)</p>
+
                      <div class="form-group">
         <button class="button success">Guardar</button>
-        <input type="button" class="button" value="Cancelar">
     </div>
                  </form>
              </div>
@@ -42,35 +52,6 @@
 
 
          </div>
-
-         <div class="cell-lg-6">
-             <div class="bg-lightGray p-4 m-2">
-                 <h4>Protocolo IP</h4>
-                 <form>
-                   <div class="form-group">
-                       <label>Duración del bloqueo: </label><br>
-                       <small>Si la dirección se pasa de los límites o es detectada como maliciosa se bloqueará durante esos minutos. Una vez pasado se volverá a comprobar.</small>
-                       <input type="text" data-role="spinner" data-min-value="1" data-max-value="60">
-                   </div>
-                   <div class="form-group">
-                       <label>Limitar paquetes por segundo por ip:</label>
-                       <input type="text" data-role="spinner" data-min-value="0" data-max-value="60">
-                   </div>
-                   <div class="form-group">
-                       <label>Limitar MBits/s por ip:</label>
-                       <input type="text" data-role="spinner" data-min-value="0" data-max-value="60">
-                   </div>
-                     <div class="form-group">
-        <button class="button success">Guardar</button>
-        <input type="button" class="button" value="Cancelar">
-    </div>
-
-             </div>
-
-
-         </div>
-     </div>
-</div>
 
 
 

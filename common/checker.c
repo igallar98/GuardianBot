@@ -135,7 +135,8 @@ int check_changes(int map_fd, int xdp_data_map_s_fd, int xdp_block_ip_fd, int xd
             break;
         case 'c':
           break;
-
+        case 'q':
+          break;
 
       }
 

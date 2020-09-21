@@ -40,7 +40,7 @@ __u32 xdp_stats_record_action(struct xdp_md *ctx)
 	nh.pos = data;
 
 	struct datarec aux = {0, 0, 0, 0, 0};
-	struct record auxrec = {{0, 0}, {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}}};
+	struct record auxrec = {{0, 0}, {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}}, 0};
 	aux.proto = 'n';
 
 

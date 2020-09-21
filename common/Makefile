@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: (GPL-2.0)
 CC := gcc
 
-all: common_params.o common_user_bpf_xdp.o common_libbpf.o shared_memory.o checker.o trace.o
+all: common_params.o common_user_bpf_xdp.o common_libbpf.o shared_memory.o checker.o trace.o config.o
 
 CFLAGS := -g -Wall
 
@@ -25,6 +25,9 @@ checker.o: checker.c checker.h shared_memory.h trace.h
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 trace.o: trace.c trace.h shared_memory.h
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+config.o: config.c config.h
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 .PHONY: clean

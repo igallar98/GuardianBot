@@ -13,5 +13,7 @@ COMMON_OBJS += $(COMMON_DIR)/common_libbpf.o
 COMMON_OBJS += $(COMMON_DIR)/shared_memory.o
 COMMON_OBJS += $(COMMON_DIR)/checker.o
 COMMON_OBJS += $(COMMON_DIR)/trace.o
+COMMON_OBJS += $(COMMON_DIR)/config.o
+
 
 include $(COMMON_DIR)/common.mk

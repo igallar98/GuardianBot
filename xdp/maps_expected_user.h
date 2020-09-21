@@ -41,6 +41,7 @@ const struct bpf_map_info map_expect = {
 struct record {
 	__u64 timestamp[2];
 	struct datarec total[2];
+  time_t first_time;
 };
 
 

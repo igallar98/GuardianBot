@@ -1,8 +1,9 @@
 from app import app, request, render_template, url_for, redirect, send_file
-from app import sharedMemory, jsonTable, blockIP, checker, blockProtocol, blockPort, auth
-import io
+from app import sharedMemory, jsonTable, blockIP
+from app import checker, blockProtocol, blockPort, auth, config
+import sys, os, io
 
-import sys, os
+
 global save
 save = [0]
 
@@ -79,13 +80,16 @@ def rjsonTable():
     jTable = jsonTable.jsonTable()
     return jTable.getTable()
 
+@app.route('/config', methods=['POST','GET'])
+def configServer():
+    cnf = config.Config()
+    if 'timecheck' in  request.form:
+        cnf.updateConfig(request.form["ppslimit"], request.form["mbitslimit"], request.form["timecheck"], request.form["blocktime"], request.form["deleteRegister"])
 
-@app.route('/config')
-def config():
     ath =  auth.Auth()
     if not ath.checkSession():
             return redirect(url_for('lock'))
-    return render_template('config.html', title = "Configuración del cortafuegos")
+    return render_template('config.html', title = "Configuración del cortafuegos",config =  cnf.getConfig())
 
 
 @app.route('/shutdown', methods=['POST','GET'])
