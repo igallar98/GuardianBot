@@ -1,0 +1,35 @@
+\begin{figure}[Estadísticas generales]{FIG:scnEstadisticas}{Estadísticas generales de la aplicación.}
+  \begin{image}{}{}{pantallas/scnEstadisticas.png}
+  \end{image}
+\end{figure}
+
+La pantalla de estadísticas generales presenta el tráfico de la capa de internet mediante una tabla. Esta tabla aparece paginada y se puede cambiar de página mediante los botones (10). En esta tabla se muestra la dirección fuente y destino y los paquetes por segundo (11), KBytes y los Mbits/s se pueden ordenar pulsando sobre ellos en la cabecera. Por defecto, se ordenan por Kbytes totales transferidos. Al seleccionar una traza (9) se pueden realizar diferentes funciones en la tabla:
+\begin{itemize}
+\item Bloquear la dirección fuente (3)
+\item Bloquear la dirección destino (4)
+\item Mostrar más información (5)
+\end{itemize}
+Además, hay unos botones que permiten realizar las siguientes funciones en la tabla:
+\begin{itemize}
+\item Botón para actualizar y recargar la tabla (1)
+\item Botón para descargar un archivo en formato CSV con los datos de la tabla (2)
+\item Botón para vaciar los datos antiguos de la tabla (6). Mostrará un mensaje de éxito en caso de que la operación tenga éxito.
+\item Cuadro de búsqueda dinámico que permite al usuario buscar por una dirección fuente o destino (7)
+\item Botón tipo interruptor que permite actualizar la tabla automáticamente en tiempo real (8)
+\end{itemize}
+
+Si el usuario no selecciona ningún registro de la tabla y pulsa alguna de las acciones que requieren seleccionar uno, se mostrará un mensaje de error (2) o, por el contrario, un mensaje de éxito (1).
+\begin{figure}[Mensaje de error en las estadísticas.]{FIG:scnEstadisticasError}{Mensaje de error en las estadísticas.}
+  \begin{image}{}{}{pantallas/scnEstadisticasError.png}
+  \end{image}
+\end{figure}
+
+En cuanto al botón de mostrar más información (5) se abrirá una ventana dentro de la página con la información del registro.
+
+\begin{figure}[Información del registro]{FIG:scnInformacion}{Muestra la información del registro.}
+  \begin{image}{}{}{pantallas/scnInformacion.png}
+  \end{image}
+\end{figure}
+
+\break
+Esta ventana que se abre por encima de la tabla muestra la información en tiempo real de la tabla, pero además la amplia analizando los protocolos a nivel de aplicación actualmente más utilizados y dentro de estos, si el protocolo lo permite, da el puerto de origen y destino. Esta tabla guarda el historial de los protocolos y actualmente es compatible con ICMP, TCP y UDP. Esta información se actualiza automáticamente. La ventana se puede maximizar, minimizar o cerrar mediante los botones (1). También se puede cambiar el tamaño dentro de la pestaña.

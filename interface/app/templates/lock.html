@@ -21,6 +21,14 @@
     </style>
 </head>
 <body class="h-vh-100 bg-brandColor2">
+
+  {% if not error %}
+
+<script>
+  Metro.infobox.create("<p>Contraseña incorrecta</p>", "alert");
+</script>
+
+  {% endif %}
     <form  method="POST" class="login-form bg-white p-6 mx-auto border bd-default win-shadow"
           data-role="validator"
           data-clear-invalid="2000"

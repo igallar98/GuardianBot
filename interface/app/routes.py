@@ -111,10 +111,13 @@ def shutdown():
 
 @app.route('/lock', methods=['POST','GET'])
 def lock():
+
     if 'password' in request.form:
         if auth.Auth().checkPassword(request.form["password"]):
             return redirect(url_for('index'))
-    return render_template('lock.html', title = "Iniciar sesión")
+    else:
+        return render_template('lock.html', title = "Iniciar sesión", error = True)
+    return render_template('lock.html', title = "Iniciar sesión", error = False)
 
 
 @app.route('/API/v1/makeClean', methods=['POST','GET'])
@@ -290,6 +293,8 @@ def getipinfo():
     if 'sip' in request.args and 'dip' in request.args:
         sMemory = sharedMemory.sharedMemory();
         infot = sMemory.getRecord(request.args["sip"], request.args["dip"])
+        while infot == -1:
+            infot = sMemory.getRecord(request.args["sip"], request.args["dip"])
         proto = sMemory.parseProtocolo(infot[10])
         if save[0] == request.args["sip"] + request.args["sip"]:
             tupla = (proto, infot[8], infot[9])

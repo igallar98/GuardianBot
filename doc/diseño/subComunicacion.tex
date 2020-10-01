@@ -1,0 +1,5 @@
+El subsistema de comunicación permite aumentar la funcionalidad del cortafuegos mediante el uso de una API REST de forma muy sencilla y aprovechando las ventajas de XDP. En concreto, la API es capaz de realizar la siguientes funcionalidades:
+\\ Por un lado, mostrar información del tráfico, esto incluye, las estadísticas principales (fuente, destino, paquetes y tamaño del tráfico), las direcciones IP bloqueadas, los puertos bloqueados y los protocolos que han sido bloqueados.
+\\ Además, permite la gestión de las trazas de tráfico en formato PCAP para recoger información en tiempo real de los paquetes. Este sistema puede habilitarse y deshabilitarse, si no se usa, con el fin de gastar menos recursos.
+\\Por otro lado, mediante el uso de este subsistema se puede bloquear y desbloquear el tráfico, aportando la dirección IP, protocolo o puerto y el tiempo de bloqueo.
+\\Por último, la API incluye la opción de limpiar las estadísticas. Todas las opciones están protegidas mediante el sistema de autenticación y usan los otros sistemas para obtener la funcionalidad.

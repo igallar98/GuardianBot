@@ -1,5 +1,6 @@
 \documentclass[epsbased,copyright,final,printable,covers,extendedindex,firstnumbered,tfg,gnuplot]{tfgtfmthesisuam}
 \usepackage{needspace}
+\usepackage{mdwlist}
 \advisor{Luis de Pedro}
 \levelin{Ingeniería Informática}
 \title{Cortafuegos de alto rendimiento basado en XDP}
@@ -42,25 +43,60 @@
  
  
 \chapter{Estado del arte\label{CAP:ESTADODELARTE}}{estadodelarte/estadodelarte}
-    \section{Netfilter\label{SEC:NETFILTER}}{estadodelarte/netfilter}
     \section{Análisis de las diferentes soluciones\label{SEC:SOLUCIONES}}{estadodelarte/soluciones}
-    \section{Conclusiones: XDP\label{SEC:CONCLUSIONESXDP}}{estadodelarte/soluciones}
+                \subsection{Proveedores de alojamiento con contafuegos\label{SEC:EAAS}}{estadodelarte/proveedores}
+                \subsection{Aplicaciones similares\label{SEC:EAaplicacionesS}}{estadodelarte/aplicaciones}
+    \section{Técnicas de bloqueo de paquetes\label{SEC:controlpqt}}{estadodelarte/controlpqt}
+        \subsection{Análisis de las diferentes técnicas\label{SEC:NETFILTER}}{estadodelarte/tecnicas}
+        \subsection{Conclusiones: XDP\label{SEC:CONCLUSIONESXDP}}{estadodelarte/soluciones}
+
+    
 
 \chapter{Diseño\label{CAP:DISEÑO}}{diseño/diseño}
     \section{Descripción y objetivos de la aplicación\label{SEC:DOBJETIVOS}}{diseño/objetivos}
-        \subsection{Características generales del sistema: subsistemas\label{SEC:CGENERALES}}{diseño/cgenerales}
-            \subsubsection{Subsistema de tráfico\label{SEC:CARGADORXDP}}{diseño/cgenerales}
-            \subsubsection{Subsistema de bloqueo\label{SEC:CARGADORXDP}}{diseño/cgenerales}
-            \subsubsection{Subsistema de detección\label{SEC:CARGADORXDP}}{diseño/cgenerales}
-            \subsubsection{Subsistema de autenticación\label{SEC:CARGADORXDP}}{diseño/cgenerales}
+    \section{Características generales del sistema: subsistemas\label{SEC:CGENERALES}}{diseño/cgenerales}
+         \subsection{Subsistema de autenticación\label{SEC:subAutenticacion}}{diseño/subAutenticacion}
+        \subsection{Subsistema de análisis de tráfico\label{SEC:subAnalisisTrafico}}{diseño/subAnalisisTrafico}
+            \subsubsection{Subsistema de información en tiempo real\label{SEC:subInfoTiempoReal}}{diseño/subInfoTiempoReal}
+        \subsection{Subsistema de bloqueo de tráfico\label{SEC:subBloqueoTrafico}}{diseño/subBloqueoTrafico}
+        \subsection{Subsistema de control del tráfico\label{SEC:subControlTrafico}}{diseño/subControlTrafico}
+        \subsection{Subsistema de configuración\label{SEC:subConfiguracion}}{diseño/subConfiguracion}
+        \subsection{Subsistema de comunicación\label{SEC:subComunicacion}}{diseño/subComunicacion}
+        %\subsection{Relación entre los subistemas\label{SEC:CGENERALES}}{diseño/cgenerales}
+        
+        
 
+    \section{Requisitos funcionales\label{SEC:requisitos}}{diseño/requisitos}
+        \subsection{Subsistema de autenticación\label{SEC:reqAutenticacion}}{diseño/reqAutenticacion}
+        \subsection{Subsistema de análisis de tráfico\label{SEC:reqAnalisisTrafico}}{diseño/reqAnalisisTrafico}
+            \subsubsection{Subsistema de información en tiempo real\label{SEC:reqInfoTiempoReal}}{diseño/reqInfoTiempoReal}
+        \subsection{Subsistema de bloqueo de tráfico\label{SEC:reqBloqueoTrafico}}{diseño/reqBloqueoTrafico}
+        \subsection{Subsistema de control del tráfico\label{SEC:reqControlTrafico}}{diseño/reqControlTrafico}
+        \subsection{Subsistema de configuración\label{SEC:reqConfiguracion}}{diseño/reqConfiguracion}
+        \subsection{Subsistema de comunicación\label{SEC:reqComunicacion}}{diseño/reqComunicacion}
+        
+    \section{Requisitos no funcionales\label{SEC:reqNoFuncionales}}{diseño/reqNoFuncionales}
 
+    \section{Pantallas\label{SEC:scnMain}}{diseño/scnMain}
+    \subsection{Pantalla de inicio de sesión\label{SEC:scnInicio}}{diseño/scnInicio}
+    \subsection{Menús de navegación\label{SEC:scnMenu}}{diseño/scnMenu}
+    \subsection{Pantalla de información del tráfico\label{SEC:scnEstadisticas}}{diseño/scnEstadisticas}
+    \subsection{Pantalla para bloquear protocolos\label{SEC:scnblqProtocolos}}{diseño/scnblqProtocolos}
+    \subsection{Pantalla para bloquear puertos\label{SEC:scnblqPuertos}}{diseño/scnblqPuertos}
+    \subsection{Pantalla para bloquear direcciones IP\label{SEC:scnblqIP}}{diseño/scnblqIP}
+    \subsection{Pantalla de información sobre la API\label{SEC:scnAPI}}{diseño/scnAPI}
+    \subsection{Pantalla de configuración\label{SEC:scnConf}}{diseño/scnConf}
+    \subsection{Pantalla de apagado del cortafuegos\label{SEC:scnShutdown}}{diseño/scnShutdown}
+    
+    
+    
+    
 \chapter{Desarrollo\label{CAP:DESARROLLO}}{desarrollo/desarrollo}
     \section{Compilación y estructura de un programa\label{SEC:COMPILACIONXDP}}{desarrollo/compilacionxdp}
         \subsection{Mapas BPF\label{SEC:MAPASBPF}}{desarrollo/mapasbpf}
     \section{Cargador de eBPF\label{SEC:CARGADORXDP}}{desarrollo/cargadorxdp}
     
-
+    
 
 
 \chapter{Integración, pruebas y resultados\label{CAP:RESULTADOS}}{resultados/resultados}

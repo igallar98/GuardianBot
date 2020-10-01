@@ -191,6 +191,7 @@ int loadData_onStart(int type, char * datafile, int xdp_fd){
     token = strtok(NULL, "\n");
   }
 
+  fclose(fptr);
 
 
   return 0;

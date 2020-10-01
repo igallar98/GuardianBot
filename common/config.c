@@ -34,6 +34,8 @@ Config * init_config() {
   conf->blocktime = atoi(strtok(NULL, "|"));
   conf->deleteRegister = atoi(strtok(NULL, "\n"));
 
+  fclose(fp);
+
   return conf;
 
 }

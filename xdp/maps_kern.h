@@ -13,7 +13,8 @@
 #define MAX_PROTOCOL  6
 #define MAX_PORTS 65535
 #define MAX_CPUS 128
-#define SAMPLE_SIZE 1024ul
+//TODO Guardar entero
+#define SAMPLE_SIZE 65528ul
 
 #define min(x, y) ((x) < (y) ? (x) : (y))
 
