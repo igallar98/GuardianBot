@@ -141,7 +141,7 @@ char * stats_print( int fd, int xdp_data_map_s_fd, int * tam, Config * conf, int
 
 		period = calc_period(rec);
 		if (period == 0)
-		       return "";
+		       return (char*) malloc(sizeof(char));
 
 		packets = rec->total[1].rx_packets - rec->total[0].rx_packets;
 		pps     = packets / period;
