@@ -3,3 +3,4 @@ Flask_Session==0.3.2
 requests==2.18.4
 sysv_ipc==1.0.1
 Flask==1.1.1
+gevent==20.9.0
