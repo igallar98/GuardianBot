@@ -3,11 +3,12 @@ import random
 import os
 from flask_session import Session
 from flask import session
-import crypt
+import crypt, getpass
 
 class Auth:
     def __init__(self):
         self.PathKey = '../data/key.data'
+        self.PathmKey = '../data/mkey.data'
         self.key = "NULL";
 
     def random_string(self, length):
@@ -32,15 +33,18 @@ class Auth:
         self.getKey()
         return (key== self.key)
 
-        
+
     def exit(self):
         self.getKey()
         session['logged'] = False
 
 
     def checkPassword(self, password):
-        if password == "123456":
-            session['logged'] = True
-        return session.get('logged', False)
+        with open(self.PathmKey) as file:
+            if crypt.crypt(password, "gbot").strip() == file.readline().strip():
+                session['logged'] = True
+            return session.get('logged', False)
+
+
     def checkSession(self):
         return session.get('logged', False)

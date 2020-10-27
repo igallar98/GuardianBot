@@ -1,10 +1,11 @@
 Se pretende que la aplicación creada en XDP sea transparente para el usuario y solo se muestre la aplicación web que permitirá mostrar información del tráfico que pasa por el servidor a tiempo real. También tiene por objetivo bloquear tráfico y ayudar mitigar ataques de denegación del servicio.
-\\La aplicación debería permitir los siguientes servicios:
+\\La aplicación debe tener las siguientes características:
 \begin{itemize}
+        \item La interfaz deberá ser sencilla de utilizar.
         \item Mostrar información en tiempo real del tráfico permitiendo la compatibilidad con IP e IPV6, así como los principales protocolos de red.
         \item Bloquear direcciones, puertos y protocolos.
-        \item Limitar el tráfico y detener los ataques de denegación del servicio.
+        \item Limitar el tráfico, analizarlo y filtrarlo.
         \item Proteger la interfaz web del cortafuegos por medio de una contraseña maestra almacenada de forma segura.
-        \item Deberá poder gestionarse mediante una API.
+        \item Deberá ser muy sencillo para otros desarrolladores añadir otros programas mediante la API REST.
         \item Ofrecer un buen rendimiento.
 \end{itemize}

@@ -1,0 +1,15 @@
+En sección se encuentran los diagramas dónde se explica el diseño de la arquitectura de la aplicación. El primer diagrama tiene mayor nivel de abstracción que el segundo. 
+\\A nivel general (Figura 3.1), los paquetes llegan al núcleo de Linux donde se encuentra la aplicación XDP enganchada. Esta aplicación, mediante una lista de exclusiones que comparte con el programa del espacio de usuario en C es capaz de descartar paquetes muy rápidamente, ya que no pasan por la pila de red el sistema. Esta aplicación en C está a su vez conectada mediante memoria compartida con la interfaz en Python y pueden compartirse reglas entre sí. Por último, mediante la API REST se podrán conectar otras aplicaciones que permitirá, de forma muy sencilla, controlar el cortafuegos.
+\\En concreto (Figura 3.2), los paquetes del servidor llegan a la tarjeta de red y llegan al programa XDP sin pasar por la pila de red el sistema. Por cada CPU, el programa XDP cargado en el núcleo analiza mínimamente el paquete y si esta bloqueado, según las listas de excusión en el mapa BPF, lo descarta. Por otro lado, si el paquete se acepta se recogen las estadísticas y muestras correspondientes y se deja continuar por el núcleo hasta su destino. Estas estadísticas 
+se recogen mediante mapas BPF en la aplicación del espacio de usuario en C. En general, se utiliza un mapa BPF de tipo clave-valor por cada tipo de exclusión y un mapa BPF de tipo evento del núcleo de Linux para las estadísticas y muestras. Una vez en el espacio usuario, el programa en C suma todas las muestras de todas las CPU, controla el tráfico y se comunica con la interfaz en Python mediante memoria compartida. La interfaz permite controlar el cortafuegos y mediante la API REST otros desarrolladores pueden controlar el cortafuegos.
+\begin{figure}[Arquitectura de la aplicación en general.]{FIG:arqsimple}{Arquitectura de la aplicación en general.}
+  \begin{image}{}{}{arq/arqsimple.png}
+  \end{image}
+\end{figure}
+\begin{figure}[Arquitectura de la aplicación en específico.]{FIG:arqcomlpl}{Arquitectura de la aplicación en específico.}
+  \begin{image}{}{}{arq/arqcompl.png}
+  \end{image}
+\end{figure}
+
+
+\clearpage

@@ -1,6 +1,7 @@
 \documentclass[epsbased,copyright,final,printable,covers,extendedindex,firstnumbered,tfg,gnuplot]{tfgtfmthesisuam}
 \usepackage{needspace}
 \usepackage{mdwlist}
+
 \advisor{Luis de Pedro}
 \levelin{Ingeniería Informática}
 \title{Cortafuegos de alto rendimiento basado en XDP}
@@ -48,12 +49,13 @@
                 \subsection{Aplicaciones similares\label{SEC:EAaplicacionesS}}{estadodelarte/aplicaciones}
     \section{Técnicas de bloqueo de paquetes\label{SEC:controlpqt}}{estadodelarte/controlpqt}
         \subsection{Análisis de las diferentes técnicas\label{SEC:NETFILTER}}{estadodelarte/tecnicas}
-        \subsection{Conclusiones: XDP\label{SEC:CONCLUSIONESXDP}}{estadodelarte/soluciones}
+        %\subsection{Conclusiones: XDP\label{SEC:CONCLUSIONESXDP}}{estadodelarte/soluciones}
 
     
 
 \chapter{Diseño\label{CAP:DISEÑO}}{diseño/diseño}
     \section{Descripción y objetivos de la aplicación\label{SEC:DOBJETIVOS}}{diseño/objetivos}
+    \section{Arquitectura de la aplicación\label{SEC:Darq}}{diseño/arq}
     \section{Características generales del sistema: subsistemas\label{SEC:CGENERALES}}{diseño/cgenerales}
          \subsection{Subsistema de autenticación\label{SEC:subAutenticacion}}{diseño/subAutenticacion}
         \subsection{Subsistema de análisis de tráfico\label{SEC:subAnalisisTrafico}}{diseño/subAnalisisTrafico}
@@ -104,10 +106,18 @@
 
 \chapter{Conclusiones y trabajo futuro\label{CAP:CONCLUSIONES}}{conclusiones/conclusiones}
 
-\chapter{Bibliografía\label{CAP:CONCLUSIONES}}{bibliografia}
+
+
+%\chapter{Bibliografía\label{CAP:bibliografia}}{bibliografia}
+\newpage
+\phantomsection
+
+\addcontentsline{toc}{chapter}{Bibliografía}
+\bibliographystyle{unsrt}
+\bibliography{bibliografia}
+\chapter[Glosario, acrónimos y definiciones]{Glosario, acrónimos y definiciones\label{SEC:GLOSARIO}}{glosario}
 
 \appendix
-
 \chapter{Manual de instalación\label{CAP:INSTALACION}}{apendices/manualinstalacion}
 %  \section{Requisitos del sistema\label{SEC:REQUISITOS}}{apendices/manualinstalacion/requisitos}
   \section{Instalación de dependencias\label{SEC:DEPENDENCIAS}}{apendices/manualinstalacion/dependencias}
