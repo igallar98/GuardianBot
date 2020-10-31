@@ -147,7 +147,7 @@ char * stats_print( int fd, int xdp_data_map_s_fd, int * tam, Config * conf, int
 		pps     = packets / period;
 
 		bytes   = rec->total[1].rx_bytes   - rec->total[0].rx_bytes;
-		bps     = (bytes * 8)/ period / 1000000;
+		bps     = (bytes * 8)/ period;
 
 		if(check_config(conf) == 1){
 			/* Si Supera el limite */

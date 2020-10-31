@@ -60,5 +60,6 @@ class jsonTable:
         del sharedTable[-1]
         for row in sharedTable:
             r = row.split("|")
-            table.append([r[1], r[2], r[3], r[4], r[5], r[6], r[7]])
+            aux = int(r[6]) / 1000000
+            table.append([r[1], r[2], r[3], r[4], r[5], aux, r[7]])
         return table

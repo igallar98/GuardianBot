@@ -10,7 +10,7 @@ from tkinter import messagebox
 
 
 
-API = "http://127.0.0.1:5000/API/v1/StartTrace"
+API = "http://127.0.0.1:4020/API/v1/StartTrace"
 
 PARAMS = {'authkey':"8IVIcprqlq7SiMGwFUojgm3zoxh7Gn"}
 
@@ -27,12 +27,12 @@ rootnum = 0
 while True:
 
 
-    API = "http://127.0.0.1:5000/API/v1/getTrace"
+    API = "http://127.0.0.1:4020/API/v1/getTrace"
 
     PARAMS = {'authkey':"8IVIcprqlq7SiMGwFUojgm3zoxh7Gn"}
 
     with requests.get(url = API, params = PARAMS, stream=True) as r:
-        os.truncate(f, lh) 
+        os.truncate(f, lh)
         os.lseek(f, 0, 0)
         os.write(f, r.content)
         lh = len(r.content)
@@ -49,7 +49,7 @@ while True:
         #packet.show()
         if 'STANDARD' in a and packet.haslayer(IP):
             #packet.show()
-            API = "http://127.0.0.1:5000/API/v1/postIPBlock"
+            API = "http://127.0.0.1:4020/API/v1/postIPBlock"
             PARAMS = {'authkey':"8IVIcprqlq7SiMGwFUojgm3zoxh7Gn", 'ip' :packet[IP].src, 'time' : "100"}
 
             with requests.post(url = API, data = PARAMS) as r:
@@ -58,9 +58,9 @@ while True:
                     root.update()
                     rootnum = 1
 
-    
+
     time.sleep(1)
-    
+
 
 
 
