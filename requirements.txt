@@ -1,6 +1,6 @@
 scapy==2.4.3
 Flask_Session==0.3.2
-requests==2.18.4
+requests==2.20.0
 sysv_ipc==1.0.1
 Flask==1.1.1
 gevent==20.9.0
