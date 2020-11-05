@@ -1,4 +1,4 @@
-# GuardianBot
+h# GuardianBot
 
 ![](https://img.shields.io/cirrus/github/flutter/flutter) ![](https://img.shields.io/github/pipenv/locked/dependency-version/metabolize/rq-dashboard-on-heroku/flask)
 ![](https://img.shields.io/github/pipenv/locked/python-version/metabolize/rq-dashboard-on-heroku)
@@ -34,15 +34,29 @@ Compilación y creación de la contraseña maestra.
 bash install.sh
 ```
 ## Uso
+Para iniciar asegurese de que está en super usuario (sudo su).
+```bash
+bash start.sh
+```
+Accede a http://[IP]:4020 y usa la contraseña configurada en la instalación. La dirección IP puede ser la privada o la pública del servidor.
 
-Accede a 
+Para iniciar en modo manual en caso de que quira seleccionar la interfaz de forma manual:
+```bash
+cd xdp
+sudo mount -t bpf bpf /sys/fs/bpf/
+ulimit -l unlimited
+sudo ./xdp_loader --auto-mode --dev [INTERFAZ] --force --progsec xdp_pass
+sudo ./xdp_stats --dev [INTERFAZ] &
+cd ../interface
+sudo python3 run.py &
+```
+Cambiar [INTERFAZ] por la interfaz que desea usar.
 
+## Contribuciones
+Las solicitudes pull son bienvenidas. Para cambios importantes, abra un problema primero para discutir qué le gustaría cambiar.
 
-## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+Asegúrese de actualizar las pruebas según corresponda.
 
-Please make sure to update tests as appropriate.
-
-## License
+## Licencia
 [MIT](https://choosealicense.com/licenses/mit/)
 ---------------------
