@@ -4,6 +4,7 @@
 ![](https://img.shields.io/github/pipenv/locked/python-version/metabolize/rq-dashboard-on-heroku)
 
 Cortafuegos de alto rendimiento basado en eBPF XDP. Interfaz web sencilla en Flask Python que permite aportar fácilmente soluciones mediante una API REST.
+Demo: https://guardianbot.ga/
 ## Instalación
 Cambia de usuario a root.
 ```bash
