@@ -1,7 +1,7 @@
 Hoy en día existen numerosas aplicaciones que analizan, filtran, mitigan y controlan el tráfico. En esta sección se mostrarán estas soluciones.
 
 \paragraph{Principales cortafuegos de Linux}
-Aplicaciones como IPtables, IPFire o Suricata son potentes cortafuegos para Linux pero para utilizarlos es necesario tener altos conocimientos sobre la red. Por ejemplo, en IPtables para bloquear muchas direcciones IP hace falta crear un conjunto hash con ipset para aumentar la velocidad de la búsqueda y no ralentizar el tráfico en el servidor significativamente. Los comandos, ajustes avanzados hacen que un usuario sin grandes conocimientos de la red no los pueda usar.
+Aplicaciones como IPtables \cite{iptablesbook}, IPFire \cite{theipfire} o Suricata \cite{suricataex} son potentes cortafuegos para Linux, pero para utilizarlos es necesario tener altos conocimientos sobre la red. Por ejemplo, en IPtables para bloquear un conjunto muy grande direcciones del protocolo de internet  (en inglés\textit{ Internet protocol }o \textbf{IP})  hace falta crear un conjunto hash \cite{ipsetadv} para aumentar la velocidad de la búsqueda y no ralentizar el tráfico en el servidor significativamente. Los comandos, ajustes avanzados hacen que un usuario sin grandes conocimientos de la red no los pueda usar.
 
 \paragraph{Cortafuegos en Windows más sencillos de utilizar}
 
@@ -12,5 +12,5 @@ Aplicaciones como IPtables, IPFire o Suricata son potentes cortafuegos para Linu
   \end{image}
 \end{figure}
 
-Algunas empresas como FortGuard o BeeThink vender cortafuegos compatibles con Windows capaces de mostrar el tráfico del servidor, bloquear el tráfico y limitarlo. Su principal propósito es detener ataques de denegación del servicio. Además de su elevado coste y la incompatibilidad con el sistema operativo Linux, principal blanco de los ataques, las principales desventajas son, por una parte, la imposibilidad de que desarrolladores aporten sus propias soluciones y, por otro, la poca eficacia de bloquear los ataques limitando el tráfico.
+Algunas empresas como FortGuard \cite{FortGuard} BeeThink \cite{antiDDOSGuardian} vender cortafuegos compatibles con Windows capaces de mostrar el tráfico del servidor, bloquear el tráfico y limitarlo. Su principal propósito es detener ataques de denegación del servicio. Además de su elevado coste y la incompatibilidad con el sistema operativo Linux, principal blanco de los ataques, las principales desventajas son, por una parte, la imposibilidad de que desarrolladores aporten sus propias soluciones y, por otro, la poca eficacia de bloquear los ataques limitando el tráfico.
 \\Por tanto, la aplicación deberá permitir a los usuarios que no tienen grandes conocimientos de informática utilizarla y a los desarrolladores añadir soluciones personalizadas de forma sencilla. El sistema deberá ser compatible con las últimas soluciones contra ataques, como por ejemplo detectar huellas y compararlas con firmas de ataques.

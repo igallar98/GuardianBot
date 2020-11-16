@@ -2,24 +2,24 @@
 \usepackage{needspace}
 \usepackage{mdwlist}
 
-\advisor{Luis de Pedro}
+\advisor{Luis de Pedro Sánchez\\Ponente: Jorge Enrique López de Vergara Méndez}
+
 \levelin{Ingeniería Informática}
-\title{Cortafuegos de alto rendimiento basado en XDP}
-\subtitle{Si hace falta subtítulo}
+\title{Desarrollo de un sistema cortafuegos modular basado en XDP }
+%\subtitle{Si hace falta subtítulo}
 \author{Iván Gallardo Romero}
 \privateaddress{C\textbackslash\ Francisco Tomás y Valiente Nº 11}
 \copyrightdate{3 de Noviembre de 2017}
 
-\dedication{A mi mujer y a mis hijos}
-\famouscite{Lo peor es cuando has terminado un capítulo\\y la máquina de escribir no aplaude. \\[0.1em] \begin{flushright}Orson Welles\end{flushright}}
-\prefacefile{inicio/prefacio}
+%\dedication{A mi mujer y a mis hijos}
+%\famouscite{Lo peor es cuando has terminado un capítulo\\y la máquina de escribir no aplaude. \\[0.1em] \begin{flushright}Orson Welles\end{flushright}}
+%\prefacefile{inicio/prefacio}
 \ackfile{inicio/agradecimientos}
 \resumenfile{inicio/resumen}
 \abstractfile{inicio/abstract}
 
 \keywords{Algunas}
 \palabrasclave{Otras}
-
 
 
 \coverdata
@@ -94,10 +94,13 @@
     
     
 \chapter{Desarrollo\label{CAP:DESARROLLO}}{desarrollo/desarrollo}
-    \section{Compilación y estructura de un programa\label{SEC:COMPILACIONXDP}}{desarrollo/compilacionxdp}
-        \subsection{Mapas BPF\label{SEC:MAPASBPF}}{desarrollo/mapasbpf}
-    \section{Cargador de eBPF\label{SEC:CARGADORXDP}}{desarrollo/cargadorxdp}
-    
+    \section{Bloqueo de paquetes\label{SEC:DSRBLOQUEO}}{desarrollo/bloqueo}
+    \section{Comunicación interna\label{SEC:DSRCOMUNICACION}}{desarrollo/comunicacion}
+        \section{API REST\label{SEC:DSRAPI}}{desarrollo/api}
+    \section{Persistencia de datos\label{SEC:DSRPERSISTENCIA}}{desarrollo/persistencia}
+    \section{Metodología de desarrollo\label{SEC:DSRMETODOLOGIA}}{desarrollo/metodologia}
+
+
     
 
 
@@ -113,7 +116,7 @@
 \phantomsection
 
 \addcontentsline{toc}{chapter}{Bibliografía}
-\bibliographystyle{unsrt}
+\bibliographystyle{IEEEtran}
 \bibliography{bibliografia}
 \chapter[Glosario, acrónimos y definiciones]{Glosario, acrónimos y definiciones\label{SEC:GLOSARIO}}{glosario}
 
@@ -121,18 +124,34 @@
 \chapter{Manual de instalación\label{CAP:INSTALACION}}{apendices/manualinstalacion}
 %  \section{Requisitos del sistema\label{SEC:REQUISITOS}}{apendices/manualinstalacion/requisitos}
   \section{Instalación de dependencias\label{SEC:DEPENDENCIAS}}{apendices/manualinstalacion/dependencias}
-    \subsection{libbpf\label{SEC:LIBBPF}}{apendices/manualinstalacion/libbpf}
+
     \subsection{Paquetes necesarios\label{SEC:PAQUETES}}{apendices/manualinstalacion/paquetes}
-    
-\chapter{Manual de usuario\label{CAP: PROGRAMADOR}}{apendices/manualusuario}
-    \section{Mostrar información del tráfico\label{SEC:MOSTRARTRAFICO}}{apendices/manualusuario/mostrartrafico}
+    \subsection{Instalación\label{SEC:LIBBPF}}{apendices/manualinstalacion/libbpf}
+
+
+
+%\chapter{Manual de usuario\label{CAP: PROGRAMADOR}}{apendices/manualusuario}
+%    \section{Mostrar información del tráfico\label{SEC:MOSTRARTRAFICO}}{apendices/manualusuario/mostrartrafico}
 
 
 \chapter{Manual del programador\label{CAP: PROGRAMADOR}}{apendices/manualprogramador}
-    \section{Estructura de la aplicación\label{SEC:ESTRUCTURAAPlICACION}}{apendices/manualprogramador/estructuradirectorios}
+    \section{Estructura interna de la aplicación\label{SEC:ESTRUCTURAAPlICACION}}{apendices/manualprogramador/estructuradirectorios}
     \Needspace{50\baselineskip}
-    \section{Desarrollo de la aplicación XDP\label{SEC:ENTORNOC}}{apendices/manualprogramador/xdp}
+    \section{Desarrollo interno: Aplicación XDP\label{SEC:ENTORNOC}}{apendices/manualprogramador/xdp}
+    
+       \subsection{Compilación y estructura de un programa\label{SEC:COMPILACIONXDP}}{desarrollo/compilacionxdp}
+        \subsection{Mapas BPF\label{SEC:MAPASBPF}}{desarrollo/mapasbpf}
+   \section{Cargador de eBPF\label{SEC:CARGADORXDP}}{desarrollo/cargadorxdp}
+    
+    
+    
     \section{Desarrollo de la interfaz en Python\label{SEC:ENTORNOPYTHON}}{apendices/manualprogramador/python}
-    \section{Memoria compartida y comunicación entre las aplicaciones\label{SEC:ENTORNOPYTHON}}{apendices/manualprogramador/memoria}
+    \section{Desarrollo externo: API REST\label{SEC:ENTORNOPYTHON}}{apendices/manualprogramador/memoria}
 
+
+\chapter{Diagrama de Gantt\label{CAP:GANTT}}{apendices/gantt}
+
+
+
+\chapter{Github, demostración y ejemplos\label{CAP:Github}}{apendices/Github}
 \end{document}

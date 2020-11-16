@@ -1,0 +1,9 @@
+En este capítulo se va a mostrar cómo se ha realizado la integración de la aplicación en los dispositivos de los usuarios y algunas de las pruebas que se han realizado sobre la aplicación.
+
+Para las pruebas se ha aplicado la técnica de evaluación heurística. El objetivo de esta técnica es tener una primera toma de contacto con la aplicación, para verificar tanto la calidad como la usabilidad de esta, así como identificar posibles errores en la aplicación desarrollada y así poder solventarlos.
+\\El procedimiento que se ha llevado a cabo ha sido el testeo por un usuario externo. Este usuario no tenía conocimiento alguno de la aplicación. El usuario ha comprobado todas las funcionalidades que ofrece la aplicación, así como la observación de la usabilidad, documentación y calidad del producto a probar.
+Además, se ha comprobado que la aplicación cargada en el núcleo no tenía ningún problema, como por ejemplo un uso excesivo de memoria o bucles infinitos que podrían dejar colgado al núcleo. También se ha comprobado la correcta liberación de memoria en C. Por último, se ha lanzado la aplicación en producción y se han hecho pruebas de estrés creando flujos de tráfico mediante la herramienta perf de Linux. La aplicación ha pasado todas las pruebas en Ubuntu, Linux y funciona en los principales navegadores adaptándose al tamaño de la pantalla.
+\begin{figure}[Aplicación en el administrador de tareas.]{FIG:pro9}{Se puede observar como la aplicación apenas usa un 6\% de la memoria del ordenador y muy poco procesador, con un tiempo en línea de 3 días.}
+  \begin{image}{}{}{pro.png}
+  \end{image}
+\end{figure}

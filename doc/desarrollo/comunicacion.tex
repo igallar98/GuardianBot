@@ -1,0 +1,10 @@
+En cuanto a la comunicación, por una parte, se ha optado por usar los mapas BPF (ver más información sobre mapas BPF en el anexo manual del programador) para la comunicación\textbf{ entre el núcleo y el espacio usuario}. En concreto, se han usado mapas de tipo hash para el paso de información de las listas de bloqueo, como direcciones IP o puertos y mapas de tipo eventos del núcleo de Linux para pasar las trazas e información.
+Para la comunicación entre \textbf{Python y C} se ha optado por usar memoria compartida debido a su eficiencia, las escasas dependencias necesarias para su implementación, la compatibilidad y el tiempo que hay que emplear para su implementación. Al tener que comunicar una gran cantidad de datos se han descartado las tuberías.
+
+\begin{figure}[Comunicación interna de la aplicación.]{FIG:desarrollomemoria1}{Comunicación interna de la aplicación.}
+  \begin{image}{}{}{desarrollo/comunicacionxdp.png}
+  \end{image}
+\end{figure}
+En la figura se puede observar como el programa XDP en el núcleo se comunica con la aplicación del espacio usuario mediante los dos tipos de mapas. Estos datos no necesitan ningún control de \textbf{concurrencia} debido a que los datos se toman en el núcleo por cada procesador y se suman en el espacio de usuario, liberando de carga al núcleo. Las reglas se escriben en el espacio de usuario y se leen en el núcleo sin necesidad de controlar la concurrencia y, por tanto, ahorrando recursos.
+\\Por otra parte, la aplicación C y Python se comunican mediante dos memorias compartidas, la primera alerta a la interfaz de usuario de que hay nuevos datos y la segunda transmite esos grandes datos.
+

@@ -3279,7 +3279,7 @@ coordinates {(#1,0) (#2,0)};
 \AtBeginDocument
 {
 	\setnames
-	\if@coversbool \coverpage \fi
+	%\if@coversbool \coverpage \fi
 	\titlepage
 
 	\renewcommand{\thepage}{\roman{page}}

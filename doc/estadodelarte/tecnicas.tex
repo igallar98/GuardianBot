@@ -1,33 +1,8 @@
-\begin{figure}[Comparación métodos de eliminación de paquetes.]{FIG:CompCloudflare}{Comparación métodos de eliminación de paquetes de Cloudflare. \cite{CompCloudflare}.}
-  \begin{image}{}{}{estadodelarte/numbers-xdp-1.png}
+Actualmente, en Linux, se utiliza Netfilter \cite{kk3} para interceptar, bloquear y manipular paquetes. Este proyecto no solo ofrece componentes para interactuar con los paquetes, sino que también ofrece herramientas y librerías.
+
+\begin{figure}[Diagrama de flujo de datos de entrada de Netfilter.]{FIG:kk3}{Diagrama de flujo de datos de entrada de Netfilter. \cite{kk3}.}
+  \begin{image}{}{}{estadodelarte/netfilterlnx.png}
   \end{image}
 \end{figure}
 
-Linux tiene gran cantidad de formas para filtrar paquetes, cada una con sus diferentes características de rendimiento y y facilidad de uso. En general, como se puede observar en la gráfica, el rendimiento para filtrar IPV6 es menor debido a que los paquetes son ligeramente más grandes. En la gráfica se puede observar el rendimiento de las diferentes formas de filtrar paquetes en Linux:
-\begin{itemize}
-\item Descartar paquetes a nivel de aplicación: entregar paquetes a una aplicación e ignorarlos en el código del espacio de usuario.
-\item Limitar el número de conexiones limitando las entradas del conntrack.
-\item Filtro BPF clásico que filtrará los paquetes antes de que los reciba la aplicación.
-\item Filtrar con Iptables antes del enrutado.
-\item Filtrar paquetes antes del pre-enrutado.
-\item Eliminar con nftables antes de CONNTRACK es peor que iptables filtrando paquetes aunque nftables promete ser más rápido que iptables. Una de las razones es la carencia de especulaciones sobre saltos indirectos \cite{expnftables}.
-\item Eliminar paquetes antes del pre-enrutado mediante las entradas tc (control de tráfico).
-\item Usar eXpress Data Path para eliminar el paquete.
-\end{itemize}
-
-Se puede observar que cuanto menor sea el procesamiento del paquete antes de descartarlo mejor es el rendimiento, pero, por lo general, más complicado es para el programador. En concreto hay un forma de bloquear paquetes que destaca: XDP.
-
-\begin{figure}[Rendimiento de XDP filtrando.]{FIG:xdppapper}{A la izquierda el rendimiento de XDP con los paquetes bloqueados y a la derecha contra un ataque DoS. \cite{xdppapper}.}
-  \begin{image}{}{}{estadodelarte/xdppapper.png}
-  \end{image}
-\end{figure}
-
-Estos experimentos se han realizado en un solo núcleo, para ilustrar la situación donde el tráfico legítimo tiene que competir por los mismos recursos de hardware que el tráfico del atacante.
-\\Se puede observar que en la gráfica de la izquierda sin el filtro XDP, el rendimiento cae rápidamente, reduciéndose de la mitad a 3 Mpps y a cero en poco menos de 5 Mpps de tráfico de ataque. Sin embargo, con XDP en su lugar, el rendimiento de las conexiones TCP es estable hasta los 19,5 Mpps de tráfico de ataque, después vuelve a caer rápidamente.
-\\En las dos gráficas se observa como el rendimiento de XDP es considerablemente mayor al uso de otros métodos.
-
-\begin{figure}[Rendimiento de XDP filtrando.]{FIG:xdppapper}{A la izquierda el rendimiento de XDP con los paquetes bloqueados y a la derecha contra un ataque DoS. \cite{xdppapper}.}
-  \begin{image}{}{}{estadodelarte/cpupapperxdp.png}
-  \end{image}
-\end{figure}
-También es importante destacar el uso de CPU en el escenario de eliminación de paquetes. Estos datos, también tomados sobre una sola CPU, muestran como el rendimiento de XDP es mucho mayor a un paquete ya procesado por Linux.
+IPtables ha sido la herramienta principal para implementar cortafuegos y filtros en Linux durante muchos años \cite{ciliumio}. Con el crecimiento de las reglas de configuración y bloqueo se creó la herramienta IPset \cite{ipsecaa}, que permitió comprimir estas reglas en una tabla hash con el fin de aumentar la velocidad de respuesta a medida que las conexiones a internet aumentaban. Por desgracia, este aumento no fue suficiente y actualmente se siguen investigando nuevos avances. Con esta investigación surgió el filtro de paquetes de Berkeley (en inglés\textit{ Berkeley Packet Filter }o \textbf{BPF}) \cite{kk1}, una tecnología que permite analizar el tráfico de red sin procesar. También ha surgido ruta de datos exprés (en inglés  eXpress Data Path o \textbf{XDP}) \cite{kk2}, una ruta de datos de alto rendimiento basada en BPF que permite decidir al usuario el destino del paquete antes de ser procesado por el núcleo. Estas nuevas herramientas están actualmente en continuo desarrollo y evolución. En la figura 2.3 se puede observar el flujo de datos de entrada de paquetes de Netfilter. La principal idea es que cuanto antes se descarte el paquete, menos recursos se necesitarán para el procesamiento. Más adelante, en este documento, se analizarán las diferentes formas que hay para bloquear un paquete, por ejemplo, en la capa de aplicación.

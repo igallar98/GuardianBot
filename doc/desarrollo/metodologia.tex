@@ -1,0 +1,68 @@
+Con el objetivo de asegurar la calidad del proyecto se ha utilizado una metodología ágil. En concreto, se ha realizado un desarrollo iterativo que permite dividir la planificación en diversos bloques temporales e ir obteniendo resultados importantes y usables desde las primeras iteraciones. Esto permite que cada fase del trabajo sea una pequeña entrega parcial. Cada iteración está definida por los requisitos que la componen. En cuanto al tiempo, en los anexos se puede ver un diagrama de Gantt con toda la planificación. De manera regular, entre una iteración y otra se han comprobado y mitigado todos los problemas encontrados.
+
+\paragraph{Iteración 1 - Mostrar información}
+\begin{table}[Tabla de la iteración 1]{TB:it1}{Esta tabla muestra los requisitos de la iteración 1.}
+  \begin{tabular}{ccccc}
+  \multicolumn{5}{c}{\textbf{Requisito funcionales}} \\ \hline
+    \hline
+    1 & 2 & 3 & 4 & 5\\
+    6.1 & 6.2 & 6.3 & 6.4 & 6.5  \\
+    \hline
+  \end{tabular}
+\end{table}
+
+En la primera iteración ha sido la que más tiempo ha llevado realizar debido a que se ha implementado la base de la aplicación, tanto de la interfaz (menú de usuario, diseño...) como los programas XDP del núcleo y espacio usuario. Además, se han implementado en esta iteración lo referente al sistema de autenticación y de análisis de tráfico que permite mostrar las primeras estadísticas en el cortafuegos. 
+
+\paragraph{Iteración 2 - Trazas e información avanzada}
+\begin{table}[Tabla de la iteración 2]{TB:it2}{Esta tabla muestra los requisitos de la iteración 2.}
+  \begin{tabular}{ccc}
+  \multicolumn{3}{c}{\textbf{Requisito funcionales}} \\ \hline
+    \hline
+    7 & 8 & 9\\
+    \hline
+  \end{tabular}
+\end{table}
+
+La segunda iteración se ha mejorado el sistema que muestra la información del tráfico añadiendo datos en tiempo real sobre los protocolos más usados. También se ha implementado el mecanismo para poder recoger trazas de los paquetes y obtener muestras en tiempo real.
+\paragraph{Iteración 3 - Bloquear paquetes}
+\begin{table}[Tabla de la iteración 3]{TB:it3}{Esta tabla muestra los requisitos de la iteración 3.}
+  \begin{tabular}{ccccc}
+  \multicolumn{5}{c}{\textbf{Requisito funcionales}} \\ \hline
+    \hline
+    10 & 10.1 & 10.2 & 10.3 & 10.4 \\
+    10.5 & 10.6 & 11 & 11.1 & 11.2\\
+    11.3 & 11.4 & 11.5 & 11.6 & 12\\
+    12.1 & 12.2 & 12.3 & 12.4 & 12.5\\
+    12.6 & 12.7\\
+    \hline
+  \end{tabular}
+\end{table}
+En la tercera iteración se implementan los requisitos que sirven para bloquear direcciones IP, IPV6, puertos y protocolos en el cortafuegos. Así como mostrar su información, asegurar su persistencia, controlar el tiempo de bloqueo, etc... Lo que ha llevado más tiempo en la implementación de esta iteración han sido desarrollar las pequeñas funcionalidades asociadas a mostrar los bloqueos.
+
+
+\paragraph{Iteración 4 - Control del tráfico y configuración}
+\begin{table}[Tabla de la iteración 4]{TB:it4}{Esta tabla muestra los requisitos de la iteración 4.}
+  \begin{tabular}{ccccc}
+  \multicolumn{5}{c}{\textbf{Requisito funcionales}} \\ \hline
+    \hline
+    13 & 14 & 15 & 16 & 17\\
+    18 \\
+    \hline
+  \end{tabular}
+\end{table}
+
+En esta iteración se han implementado los requisitos referentes a la configuración del cortafuegos, como por ejemplo al borrado automático de los datos cada cierto tiempo o la posibilidad de apagar el cortafuegos desde la interfaz. También se han desarrollado el control de tráfico para que sea posible poner una limitación de velocidad.
+\paragraph{Iteración 5 - API REST}
+\begin{table}[Tabla de la iteración 5]{TB:it5}{Esta tabla muestra los requisitos de la iteración 5.}
+  \begin{tabular}{ccccc}
+  \multicolumn{5}{c}{\textbf{Requisito funcionales}} \\ \hline
+    \hline
+    19 & 19.1 & 19.2 & 19.3 & 19.4\\
+    20 & 20.1 & 20.2 & 20.3 & 21 \\
+    21.1 & 21.2 & 21.3 & 22 & 22.1 \\
+    22.2 & 22.3 & 23 \\
+    \hline
+  \end{tabular}
+\end{table}
+
+Por último, con el fin de permitir que otros desarrolladores puedan acoplar sus soluciones en esta iteración se ha implementado todo lo referente a la API REST. Desde la interfaz en la que se muestra la información hasta todas las funcionalidades de bloqueo, control, gestión y muestras.

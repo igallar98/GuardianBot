@@ -1,0 +1,34 @@
+\begin{figure}[Comparación métodos de eliminación de paquetes.]{FIG:CompCloudflare}{Comparación métodos de eliminación de paquetes de Cloudflare. \cite{CompCloudflare}.}
+  \begin{image}{}{}{estadodelarte/numbers-xdp-1.png}
+  \end{image}
+\end{figure}
+
+Linux tiene gran cantidad de formas para filtrar paquetes \cite{CompCloudflare}, cada una con sus diferentes características de rendimiento y facilidad de uso. En general, como se puede observar en la gráfica, el rendimiento para filtrar IPV6 es menor debido a que los paquetes son ligeramente más grandes. En la gráfica se puede observar el rendimiento de las diferentes formas de filtrar paquetes en Linux:
+\begin{itemize}
+\item Descartar paquetes a nivel de aplicación: entregar paquetes a una aplicación e ignorarlos en el código del espacio de usuario.
+\item Limitar el número de conexiones limitando las entradas del CONNTRACK (establecimiento de conexión).
+\item Filtro BPF clásico que filtrará los paquetes antes de que los reciba la aplicación.
+\item Filtrar con IPtables antes del enrutado.
+\item Filtrar paquetes, antes del pre-enrutado.
+\item Eliminar con Nftables antes de CONNTRACK (establecimiento de conexión) es peor que IPtables filtrando paquetes aunque Nftables promete ser más rápido que IPtables. Una de las razones es la carencia de especulaciones sobre saltos indirectos \cite{expnftables}.
+\item Eliminar paquetes antes del pre-enrutado mediante las entradas tc (control de tráfico).
+\item Usar eXpress Data Path para eliminar el paquete.
+\end{itemize}
+
+Como conclusión se puede observar en la gráfica que cuanto menor sea el procesamiento del paquete antes de descartarlo mejor es el rendimiento, pero, por lo general, más complicado es para el programador. En concreto hay una forma de bloquear paquetes que destaca: XDP.
+
+\begin{figure}[Rendimiento de XDP filtrando.]{FIG:xdppapper}{A la izquierda el rendimiento de XDP con los paquetes bloqueados y a la derecha contra un ataque DoS. \cite{xdppapper}.}
+  \begin{image}{}{}{estadodelarte/xdppapper.png}
+  \end{image}
+\end{figure}
+
+Estos experimentos de XDP \cite{xdppapper} se han realizado en un solo núcleo, para ilustrar la situación donde el tráfico legítimo tiene que competir por los mismos recursos de hardware que el tráfico del atacante.
+\\Se puede observar que en la gráfica de la izquierda sin el filtro XDP, el rendimiento cae rápidamente, reduciéndose de la mitad a 3 Mpps (millones de paquetes por segundo) y a cero en poco menos de 5 Mpps de tráfico de ataque. Sin embargo, con XDP en su lugar, el rendimiento de las conexiones TCP es estable hasta los 19,5 Mpps de tráfico de ataque, después vuelve a caer rápidamente.
+\\En las dos gráficas se observa como el rendimiento de XDP es considerablemente mayor al uso de otros métodos. En concreto, en la gráfica de la derecha se puede observar cómo XDP es capaz de detener más conexiones TCP cuando la máquina está bajo un ataque DDOS que otros métodos.
+
+\begin{figure}[Rendimiento de XDP por uso de CPU.]{FIG:xdppappertw}{Rendimiento de XDP por uso de CPU. \cite{xdppapper}.}
+  \begin{image}{}{}{estadodelarte/cpupapperxdp.png}
+  \end{image}
+\end{figure}
+\break
+También es importante destacar el uso de CPU en el escenario de eliminación de paquetes. Estos datos, también tomados sobre una sola CPU, muestran como el rendimiento de XDP es mucho mayor a un paquete ya procesado por Linux.

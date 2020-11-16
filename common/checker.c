@@ -101,7 +101,7 @@ int check_changes(int map_fd, int xdp_data_map_s_fd, int xdp_block_ip_fd, int xd
             hijo = fork();
           if(hijo == 0) {
             trace_guardianbot(xdp_perf_e);
-            exit(1);
+            exit(0);
           } else {
 
           reset_python_data();
@@ -111,8 +111,8 @@ int check_changes(int map_fd, int xdp_data_map_s_fd, int xdp_block_ip_fd, int xd
 
         case '8': /* Stop Tracing */
           bdata = get_guardian_data();
-
-          kill(hijo, SIGKILL);
+          if(hijo > 0)
+            kill(hijo, SIGKILL);
           hijo = -1;
           reset_python_data();
           time=0;

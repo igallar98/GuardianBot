@@ -1,0 +1,220 @@
+Si un desarrollador quiere implementar su propio sistema de detección y bloqueo de huellas o simplemente configurar el cortafuegos deberá hacer uso de la API REST. En esta sección se da un pequeño manual sobre cómo usarla.
+
+\paragraph{\textbf{GET} /API/v1/getStatics - Estadísticas principales}
+
+Obtener las estadísticas del protocolo IP mediante un archivo JSON.
+
+\textbf{Parámetros:}
+
+\begin{itemize}
+\item authkey - Clave de autenticación
+\end{itemize}
+\textbf{Respuesta:}
+\begin{itemize}
+\item JSON - JSON con los datos
+\item -1 - Clave de autenticación incorrecta
+\end{itemize}
+\paragraph{\textbf{GET} /API/v1/getIPBlocks - Direcciones IP Bloqueadas}
+Obtener las direcciones IP bloqueadas y el tiempo en formato JSON.
+
+\textbf{Parámetros:}
+
+\begin{itemize}
+\item authkey - Clave de autenticación
+\end{itemize}
+\textbf{Respuesta:}
+\begin{itemize}
+\item JSON - JSON con los datos
+\item -1 - Clave de autenticación incorrecta
+\end{itemize}
+
+\paragraph{\textbf{GET} /API/v1/getPortsBlocks - Puertos Bloqueados}
+Obtener los puertos bloqueados y el tiempo en formato JSON.
+
+\textbf{Parámetros:}
+
+\begin{itemize}
+\item authkey - Clave de autenticación
+\end{itemize}
+\textbf{Respuesta:}
+\begin{itemize}
+\item JSON - JSON con los datos
+\item -1 - Clave de autenticación incorrecta
+\end{itemize}
+\paragraph{\textbf{GET} /API/v1/getProtoBlocks - Protocolos Bloqueados}
+Obtener los protocolos bloqueados y el tiempo en formato JSON.
+
+\textbf{Parámetros:}
+
+\begin{itemize}
+\item authkey - Clave de autenticación
+\end{itemize}
+\textbf{Respuesta:}
+\begin{itemize}
+\item JSON - JSON con los datos
+\item -1 - Clave de autenticación incorrecta
+\end{itemize}
+
+\paragraph{\textbf{GET}  /API/v1/StartTrace - Iniciar recogida de trazas}
+Empezar a obtener trazas de tráfico.
+
+\textbf{Parámetros:}
+
+\begin{itemize}
+\item authkey - Clave de autenticación
+\end{itemize}
+\textbf{Respuesta:}
+\begin{itemize}
+\item 0 - Correcto
+\item -1 - Clave de autenticación incorrecta
+\end{itemize}
+
+\paragraph{\textbf{GET}  /API/v1/getTrace - Muestra de tráfico}
+Obtener los útimos 60 segundos de muestra de tráfico. Los datos se vacían cada 60 segundos.
+
+\textbf{Parámetros:}
+\begin{itemize}
+\item authkey - Clave de autenticación
+\end{itemize}
+\textbf{Respuesta:}
+\begin{itemize}
+\item JSON - JSON con los datos
+\item 1 - No inicializado
+\item -1 - Error con la clave de autenticación incorrecta
+\end{itemize}
+\paragraph{\textbf{GET}  /API/v1/StopTrace - Parar recogida de trazas}
+Detiene la recogida de trazas.
+
+\textbf{Parámetros:}
+
+\begin{itemize}
+\item authkey - Clave de autenticación
+\end{itemize}
+\textbf{Respuesta:}
+\begin{itemize}
+\item 0 - Correcto
+\item -1 - Clave de autenticación incorrecta
+\end{itemize}
+\paragraph{\textbf{POST}  /API/v1/postIPBlock - Bloquear dirección IP}
+Bloquear una dirección ip durante un determinado tiempo en segundos.
+
+\textbf{Parámetros:}
+
+\begin{itemize}
+\item authkey - Clave de autenticación
+\item ip - Dirección IP
+\item time - Tiempo en segundos
+\end{itemize}
+\textbf{Respuesta:}
+\begin{itemize}
+\item 0 - Operación ejecutada correctamente
+\item 1 - Error
+\item -1 - Clave de autenticación incorrecta
+\end{itemize}
+\paragraph{\textbf{POST} /API/v1/postPortsBlocks - Bloquear un puerto}
+Bloquear un puerto durante un determinado tiempo en segundos.
+
+\textbf{Parámetros:}
+
+\begin{itemize}
+\item authkey - Clave de autenticación
+\item port - Puerto
+\item time - Tiempo en segundos
+\end{itemize}
+\textbf{Respuesta:}
+\begin{itemize}
+\item 0 - Operación ejecutada correctamente
+\item 1 - Error
+\item -1 - Clave de autenticación incorrecta
+\end{itemize}
+\paragraph{\textbf{POST} /API/v1/postProtoBlock - Bloquear un protocolo}
+Bloquear un protocolo durante un determinado tiempo en segundos.
+
+\textbf{Parámetros:}
+
+\begin{itemize}
+\item authkey - Clave de autenticación
+\item proto - Protocolo [IP, IPV6, ICMP, TPC, UDP]
+\item time - Tiempo en segundos
+\end{itemize}
+\textbf{Respuesta:}
+\begin{itemize}
+\item 0 - Operación ejecutada correctamente
+\item 1 - Error
+\item -1 - Clave de autenticación incorrecta
+\end{itemize}
+\paragraph{\textbf{POST} /API/v1/postProtoBlock - Bloquear un protocolo}
+Bloquear un protocolo durante un determinado tiempo en segundos.
+
+\textbf{Parámetros:}
+
+\begin{itemize}
+\item authkey - Clave de autenticación
+\item proto - Protocolo [IP, IPV6, ICMP, TPC, UDP]
+\item time - Tiempo en segundos
+\end{itemize}
+\textbf{Respuesta:}
+\begin{itemize}
+\item 0 - Operación ejecutada correctamente
+\item 1 - Error
+\item -1 - Clave de autenticación incorrecta
+\end{itemize}
+\paragraph{\textbf{POST} /API/v1/postIPUnblock - Desbloquear dirección IP}
+Desbloquear una dirección IP.
+
+\textbf{Parámetros:}
+
+\begin{itemize}
+\item authkey - Clave de autenticación
+\item ip - Dirección ip
+\end{itemize}
+\textbf{Respuesta:}
+\begin{itemize}
+\item 0 - Operación ejecutada correctamente
+\item 1 - Error
+\item -1 - Clave de autenticación incorrecta
+\end{itemize}
+\paragraph{\textbf{POST} /API/v1/postPortsUnblocks - Desbloquear dirección IP}
+Desbloquear un puerto.
+
+\textbf{Parámetros:}
+
+\begin{itemize}
+\item authkey - Clave de autenticación
+\item port - Dirección puerto
+\end{itemize}
+\textbf{Respuesta:}
+\begin{itemize}
+\item 0 - Operación ejecutada correctamente
+\item 1 - Error
+\item -1 - Clave de autenticación incorrecta
+\end{itemize}
+\paragraph{\textbf{POST} /API/v1/postProtoUnblock - Desbloquear dirección IP}
+Desbloquear un protocolo.
+
+\textbf{Parámetros:}
+
+\begin{itemize}
+\item authkey - Clave de autenticación
+\item protocol - Protocolo [IP, IPV6, ICMP, TPC, UDP]
+\end{itemize}
+\textbf{Respuesta:}
+\begin{itemize}
+\item 0 - Operación ejecutada correctamente
+\item 1 - Error
+\item -1 - Clave de autenticación incorrecta
+\end{itemize}
+\paragraph{\textbf{POST} /API/v1/makeClean - Limpiar la lista de direcciones}
+Limpiar y resetear la lista de direcciones IP.
+
+\textbf{Parámetros:}
+
+\begin{itemize}
+\item authkey - Clave de autenticación
+\end{itemize}
+\textbf{Respuesta:}
+\begin{itemize}
+\item 0 - Operación ejecutada correctamente
+\item 1 - Error
+\item -1 - Clave de autenticación incorrecta
+\end{itemize}

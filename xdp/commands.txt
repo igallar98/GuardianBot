@@ -1,4 +1,0 @@
-sudo mount -t bpf bpf /sys/fs/bpf/
-
-sudo ./xdp_loader --skb-mode --dev wlp4s0 --force --progsec xdp_pass
-sudo ./xdp_stats --dev wlp4s0

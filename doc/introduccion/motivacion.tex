@@ -1,5 +1,4 @@
-El propósito principal de este documento es la descripción del estado del arte, diseño y desarrollo de una aplicación.
-\\Actualmente es de interés el desarrollo de herramientas de seguridad modulares que permitan aportaciones de la comunidad de desarrolladores. Con el aumento exponencial del volumen y uso de datos en la red, los ataques de internet, como por ejemplo los ataques de denegación del servicio distribuidos (DDOS), son cada vez más frecuentes. \cite{mtvDDOSEXP}.
+Actualmente es de interés  \cite{mtvINTR} el desarrollo de herramientas de seguridad modulares que permitan aportaciones de la comunidad de desarrolladores. Con el aumento exponencial del volumen y uso de datos en la red, los ataques de internet, como por ejemplo los ataques de denegación del servicio distribuidos, también llamados \textbf{DDOS} por sus siglas en inglés \textit{Distributed Denial of Service}, son cada vez más frecuentes. \cite{mtvMine}.
 
 \begin{figure}[Análisis de Cisco del historial y las predicciones totales de ataques DDoS.]{FIG:mtvDDOS}{Análisis de Cisco del historial y las predicciones totales de ataques DDoS \cite{mtvDDOSCISCO}.}
   \begin{image}{}{}{motivacion/mtvDDOS.png}
@@ -12,15 +11,16 @@ El propósito principal de este documento es la descripción del estado del arte
 \end{figure}
 
 
-El abaratamiento de los servidores dedicados, compartidos, y las instancias en la nube \cite{mtvPrecios} ha permitido que cada vez más usuarios sin conocimientos avanzados en informática son capaces de crear servidores para uso recreativo o, incluso, ganar dinero con la publicidad y subscripciones. Estos servidores son, por ejemplo:
+El abaratamiento de los servidores dedicados, compartidos, y las instancias en la nube \cite{mtvPrecios} ha permitido que cada vez más usuarios sin conocimientos avanzados en informática son capaces de crear servidores para uso recreativo o, incluso, ganar dinero con la publicidad  \cite{mtvGoogle} de su contenido y subscripciones \cite{mtvMine}.  Estos servidores son, por ejemplo:
+\\
 \begin{itemize}
-\item Servidores de juegos, como Minecraft.
-\item NextCloud y ownCloud (Servidor de archivos en internet).
-\item Mattermost es un servicio de chat en línea de código abierto y autohospedable.
-\item Semillas de torrents y descargador de torrents por web.
-\item Servidores de Discord y TeamSpeak 3 (Chat y habla en directo).
-\item Servidor HTTP, de correo, etc…
+\item Servidores de juegos, como Minecraft \cite{mtvMines}.
+\item NextCloud y ownCloud (Servidor de archivos en internet) \cite{mtvalmnube}.
+\item Mattermost es un servicio de chat en línea de código abierto y autohospedable \cite{mtvmt}.
+\item Semillas de torrents y descargador de torrents por web \cite{mtvtorrent}.
+\item Servidores de Discord y TeamSpeak 3 (chat y habla en directo) \cite{mtvts3}.
+\item Servidor web, de correo, etc…
 \end{itemize}
 
-La mayoría de los usuarios que crea este tipo de aplicaciones no cuenta con el conocimiento suficiente como para proteger la máquina y tampoco es una buena opción comprar un cortafuegos avanzado debido a su alto precio. Algunas empresas ofrecen en el alquiler de sus servidores más baratos un servicio de protección básico incluido, pero en la mayoría de las ocasiones este no cubre todos los ataques a la máquina, no muestra información sobre el ataque, no puedes personalizar la protección y tampoco garantizan la eficacia. Otras empresas, no incluyen protección en sus servidores, lo que conlleva un riesgo alto debido a las facilidades que existen para ejecutar un ataque. Las empresas que no ofrecen protección pueden ser de interés para el usuario debido a su localización, para reducir la latencia, u otras características.
-\\Una de las mayores empresas especializadas en detener ataques de red, CloudFlare, no utiliza hardware avanzado para realizar el filtrado de paquetes, sino que esta en cada uno de sus servidores. Esto les permite aumentar su capacidad de detección y bloqueo a medida que su infraestructura se hace más grande \cite{mtvDDOSCLoudflare}. El cortafuegos de Facebook también aplica esta estrategia \cite{mtvDDOSFacebook}. 
+La mayoría de los usuarios que crea este tipo de aplicaciones no cuenta con el conocimiento suficiente como para proteger la máquina y tampoco es una buena opción comprar un cortafuegos avanzado debido a su alto precio. Algunas empresas ofrecen en el alquiler de sus servidores más baratos un servicio de protección básico incluido \cite{mtvtonlinesas}, pero en la mayoría de las ocasiones este no cubre todos los ataques a la máquina, no muestra información sobre el ataque, no puedes personalizar la protección y tampoco garantizan la eficacia. Otras empresas, no incluyen protección en sus servidores \cite{mtvalamzena}, lo que conlleva un riesgo alto debido a las facilidades que existen para ejecutar un ataque. Las empresas que no ofrecen protección pueden ser de interés para el usuario debido a su localización, para reducir la latencia, u otras características.
+\\Una de las mayores empresas especializadas en detener ataques de red, CloudFlare \cite{mtvcls}, no utiliza hardware avanzado para realizar el filtrado de paquetes, sino que está en cada uno de sus servidores. Esto les permite aumentar su capacidad de detección y bloqueo a medida que su infraestructura se hace más grande \cite{mtvDDOSCLoudflare}. El cortafuegos de Facebook también aplica esta estrategia \cite{mtvDDOSFacebook}. 

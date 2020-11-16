@@ -278,14 +278,13 @@
                  <div class="heading"><span class="tally warning">POST</span> /API/v1/postIPUnblock  -  <strong>Desbloquear dirección IP</strong></div>
                  <div class="content">
                      <div class="p-2">
-                       <p>Desbloquear una dirección ip durante un determinado tiempo en segundos.</p>
+                       <p>Desbloquear una dirección ip.</p>
                        <p><strong>Parámetros: </strong></p>
                        <ul>
                         <li>authkey - Clave de autenticación</li>
                         <li>ip - Dirección IP</li>
-                        <li>time - Tiempo en segundos</li>
                       </ul>
-                       Ejemplo: <code>curl -d "authkey={{key}}&ip=0.0.0.0&time=100" {{url}}API/v1/postIPUnblock</code>
+                       Ejemplo: <code>curl -d "authkey={{key}}&ip=0.0.0.0" {{url}}API/v1/postIPUnblock</code>
                        <p><strong>Respuesta: </strong></p>
                        <ul>
                         <li>0 - Operación ejecutada correctamente</li>
@@ -299,14 +298,13 @@
                  <div class="heading"><span class="tally warning">POST</span> /API/v1/postPortsUnblocks  -  <strong>Desbloquear un puerto</strong></div>
                  <div class="content">
                      <div class="p-2">
-                       <p>Desbloquear un puerto durante un determinado tiempo en segundos.</p>
+                       <p>Desbloquear un puerto.</p>
                        <p><strong>Parámetros: </strong></p>
                        <ul>
                         <li>authkey - Clave de autenticación</li>
                         <li>port - Puerto</li>
-                        <li>time - Tiempo en segundos</li>
                       </ul>
-                       Ejemplo: <code>curl -d "authkey={{key}}&port=100&time=100" {{url}}API/v1/postPortsUnblocks</code>
+                       Ejemplo: <code>curl -d "authkey={{key}}&port=100" {{url}}API/v1/postPortsUnblocks</code>
                        <p><strong>Respuesta: </strong></p>
                        <ul>
                         <li>0 - Operación ejecutada correctamente</li>
@@ -322,14 +320,13 @@
                   <div class="heading"><span class="tally warning">POST</span> /API/v1/postProtoUnblock  -  <strong>Desbloquear un protocolo</strong></div>
                   <div class="content">
                       <div class="p-2">
-                        <p>Desbloquear un protocolo durante un determinado tiempo en segundos.</p>
+                        <p>Desbloquear un protocolo.</p>
                         <p><strong>Parámetros: </strong></p>
                         <ul>
                          <li>authkey - Clave de autenticación</li>
                          <li>protocol - Protocolo [IP, IPV6, ICMP, TPC, UDP]</li>
-                         <li>time - Tiempo en segundos</li>
                        </ul>
-                        Ejemplo: <code>curl -d "authkey={{key}}&port=IP&time=100" {{url}}API/v1/postProtoUnblock</code>
+                        Ejemplo: <code>curl -d "authkey={{key}}&port=IP" {{url}}API/v1/postProtoUnblock</code>
                         <p><strong>Respuesta: </strong></p>
                         <ul>
                          <li>0 - Operación ejecutada correctamente</li>

@@ -1,4 +1,4 @@
-En la actualidad, la mayoría de proveedores de alojamiento y alojamiento en la nube proporcionan un cortafuegos con el fin de proteger su infraestructura o a los demás cliente, como en el caso de el servidor sea compartido (VPS). Otros proveedores no ofrecen esta protección incluida.
+En la actualidad, la mayoría de los proveedores de alojamiento y alojamiento en la nube proporcionan un cortafuegos \cite{mayoriaAntiddos} con el fin de proteger su infraestructura o a los otros clientes, como en el caso en el cual el servidor sea compartido. Otros proveedores no ofrecen esta protección incluida. \cite{clubvps}
 
 \paragraph{Proveedores sin protección}
 En algunos casos un cliente puede verse obligado a seleccionar una empresa que no incluye protección contra ataques debido a las leyes de protección de datos o la localización del servidor para reducir la latencia, por ejemplo.
@@ -6,16 +6,16 @@ En algunos casos un cliente puede verse obligado a seleccionar una empresa que n
 \paragraph{Proveedores que ofrecen protección gratuita}
 En la mayoría de estos casos, al ser una protección gratuita y centrada en proteger la infraestructura del proveedor más que el cliente podemos encontrar numerosas desventajas:
 \begin{itemize}
-\item No se puede administrar ni configurar el cortafuegos.
-\item No se muestran estadísticas ni información del ataque con el fin de prevenirlo.
-\item No filtran todos los ataques, sobre todo a nivel de la capa de aplicación.
-\item En algunos casos, entre la detección del ataque y su mitigación puede producirse una demora que conlleva una pérdida momentánea del servicio.
-\item Analizan el tráfico de internet pero no el que proviene, por ejemplo, de una red privada (SDN).
-\item En caso de ataque, algunas empresas desvían el tráfico hacia la infraestructura de mitigación. Esto conlleva un aumento de la latencia.
-\end{itemize}
+\item No se puede administrar ni configurar el cortafuegos. \cite{atq1}
+\item No se muestran estadísticas ni información del ataque con el fin de prevenirlo. \cite{mtvtonlinesas} 
+\item No filtran todos los ataques, sobre todo a nivel de la capa de aplicación. \cite{atq2} 
+\item En algunos casos, entre la detección del ataque y su mitigación puede producirse una demora que conlleva una pérdida momentánea del servicio. \cite{ovhAntidDDOs}
+\item Analizan el tráfico de internet, pero no el que proviene, por ejemplo, de una red privada. \cite{ovhAntidDDOs}
+\item En caso de ataque, algunas empresas desvían el tráfico hacia la infraestructura de mitigación. Esto conlleva un aumento de la latencia. \cite{ovhAntidDDOs}
+\end{itemize} 
 \begin{figure}[Tecnología anti-DDoS de OVH.]{FIG:ovhAntidDDOs}{Tecnología anti-DDoS de OVH. \cite{ovhAntidDDOs}.}
   \begin{image}{}{}{motivacion/ovhAntidDDOs.png}
   \end{image}
 \end{figure}
-En la figura se muestra el cortafuegos de uno de los mayores proveedores de servicios en la nube, OVH. En sus paquetes más básicos no es posible configurar ninguna regla ni ver información del ataque. Este sistema analiza el netflow enviado por los routers, que analizan la dosmilésima parte del tráfico. Por tanto, no se activa de manera inmediata. Si el ataque coincide con alguna de sus firmas el tráfico desde la red pública hasta el servidor, sin analizar la red privada, pasa por una serie de cortafuegos llamados VAC. Este sistema es común a todos los servidores y, al activarse, el tráfico pasará por los cortafuegos del VAC aumentando la latencia. Además no da información del ataque con el fin de prevenirlo. La mayoría de proveedores utilizan una tecnología similar.
+En la figura se muestra el cortafuegos de uno de los mayores proveedores de servicios en la nube, OVH \cite{ovhAntidDDOs}. En sus paquetes más básicos no es posible configurar ninguna regla ni ver información del ataque. Este sistema envía una parte del tráfico enviado por los routers con el fin de analizar la dosmilésima parte del tráfico. Por tanto, no se activa de manera inmediata. Si el ataque coincide con alguna de sus firmas el tráfico desde la red pública hasta el servidor, sin analizar la red privada, pasa por una serie de cortafuegos llamados VAC. Este sistema es común a todos los servidores y, al activarse, el tráfico pasará por los cortafuegos del VAC aumentando la latencia. Además, no da información del ataque con el fin de prevenirlo. 
 \\Por tanto, es de interés crear una aplicación que permita añadir de forma muy sencilla soluciones personalizadas para detectar huellas y tráfico malicioso y de información sobre el tráfico de la máquina. También, será fácilmente administrable y estará en el propio servidor. Muchas empresas, como Cloudflare \cite{mtvDDOSCLoudflare} o Facebook \cite{mtvDDOSFacebook} prefieren tener un filtrado de paquetes en cada servidor debido a las numerosas ventajas, como ahorrarse los costes de hardware externo y aumentar la capacidad de mitigación a medida que la infraestructura crece. También para evitarse retrasos o fugas de seguridad.

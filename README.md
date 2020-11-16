@@ -35,11 +35,14 @@ Compilación y creación de la contraseña maestra.
 bash install.sh
 ```
 ## Uso
+ATENCIÓN: En el caso de que no pueda iniciar la aplicación correctamente o quiera seleccionar otra interfaz inicié en modo manual como se explica al final.
 Para iniciar asegurese de que está en super usuario (sudo su).
 ```bash
 bash start.sh
 ```
 Accede a http://[IP]:4020 y usa la contraseña configurada en la instalación. La dirección IP puede ser la privada o la pública del servidor.
+
+
 
 Para iniciar en modo manual en caso de que quira seleccionar la interfaz de forma manual:
 ```bash
@@ -49,9 +52,9 @@ ulimit -l unlimited
 sudo ./xdp_loader --auto-mode --dev [INTERFAZ] --force --progsec xdp_pass
 sudo ./xdp_stats --dev [INTERFAZ] &
 cd ../interface
-sudo python3 run.py &
+sudo python3 run.py
 ```
-Cambiar [INTERFAZ] por la interfaz que desea usar.
+Recuerde cambiar [INTERFAZ] por la interfaz que desea usar.
 
 ## Contribuciones
 Las solicitudes pull son bienvenidas. Para cambios importantes, abra un problema primero para discutir qué le gustaría cambiar.
